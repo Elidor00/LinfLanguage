@@ -1,17 +1,5 @@
 {
-int x = 4;
-
-print x;
-
-if (x) then {
-
-delete h;
-
-} else {
-
-print 4;
-
-}
-
-int x = 5;
+int x = 4 ;
+delete x ;
+int x = 5 ;
 }

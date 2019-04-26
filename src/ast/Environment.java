@@ -1,5 +1,7 @@
 package ast;
 
+import org.stringtemplate.v4.ST;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -76,7 +78,8 @@ public class Environment {
      * @param id
      */
     public void deleteName(String id) {
-        for (HashMap<String, STentry> scope : symbolsTable) {
+        for (int i = nestingLevel; i > -1; i--) {
+            HashMap<String, STentry> scope = symbolsTable.get(i);
             if (scope.containsKey(id)) {
                 scope.remove(id);
                 return;
