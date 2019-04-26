@@ -4,6 +4,9 @@ import parser.ComplexStaticAnalysisBaseVisitor;
 import parser.ComplexStaticAnalysisParser;
 
 public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Node> {
+
+    private boolean ifContext = false;
+
     @Override
     public Node visitBlock(ComplexStaticAnalysisParser.BlockContext ctx) {
         ComplexExtdStmtBlock res = new ComplexExtdStmtBlock();
@@ -41,8 +44,7 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
 
     @Override
     public Node visitDeletion(ComplexStaticAnalysisParser.DeletionContext ctx) {
-        // ComplexExtdStmtDel
-        return new ComplexExtdStmtDeletion();
+        return new ComplexExtdStmtDeletion(ctx.ID().getText(), ifContext);
     }
 
     @Override
@@ -52,7 +54,13 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
 
     @Override
     public Node visitIfthenelse(ComplexStaticAnalysisParser.IfthenelseContext ctx) {
-        return new ComplexExtdStmtIfThenElse();
+        ifContext = true;
+
+        ComplexExtdStmtIfThenElse res = new ComplexExtdStmtIfThenElse();
+
+        ifContext = false;
+
+        return res;
     }
 
     @Override
