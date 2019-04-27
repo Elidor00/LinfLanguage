@@ -1,10 +1,5 @@
 package ast;
 
-import utils.Environment;
-import utils.SemanticError;
-
-import java.util.ArrayList;
-
 public class ComplexExtdFactor extends ComplexExtdBinaryOp<ComplexExtdValue, ComplexExtdValue> {
 
 
@@ -14,28 +9,6 @@ public class ComplexExtdFactor extends ComplexExtdBinaryOp<ComplexExtdValue, Com
 
     public ComplexExtdValue getValue() {
         return getLeft();
-    }
-
-    @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ComplexExtdValue value = getLeft();
-        ComplexExtdValue right = getRight();
-        ArrayList<SemanticError> res = new ArrayList<>(value.checkSemantics(env));
-
-        if (value instanceof ComplexExtdIDValue) {
-            value.setType(env.getStEntry(value.toString()).getType());
-        }
-
-        if (right != null) {
-            res.addAll(right.checkSemantics(env));
-
-            if (right instanceof ComplexExtdIDValue) {
-                right.setType(env.getStEntry(right.toString()).getType());
-            }
-        }
-
-        return res;
-
     }
 
     @Override

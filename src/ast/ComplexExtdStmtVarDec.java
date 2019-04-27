@@ -26,12 +26,12 @@ public class ComplexExtdStmtVarDec extends ComplexExtdStmtDec {
 
     @Override
     public ComplexExtdType checkType(Environment env) {
-        ComplexExtdType dynamicType = exp.checkType(env);
-        if (!dynamicType.getClass().equals(type.getClass())) {
-            System.out.println(new TypeError("Cannot assign " + dynamicType + " to " + type));
+        ComplexExtdType rhSideType = exp.checkType(env);
+        if (!rhSideType.getClass().equals(type.getClass())) {
+            System.out.println(new TypeError("Cannot assign " + rhSideType + " to " + type));
             System.exit(-1);
         }
-        return null;
+        return rhSideType;
     }
 
     @Override

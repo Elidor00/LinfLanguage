@@ -43,9 +43,6 @@ public class App {
             blk.checkType(env);
 
 
-
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

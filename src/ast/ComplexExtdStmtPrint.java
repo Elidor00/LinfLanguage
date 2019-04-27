@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ComplexExtdStmtPrint extends ComplexExtdStmt {
     @Override
     public ComplexExtdType checkType(Environment env) {
-        return super.checkType(env);
+        return null;
     }
 
     @Override

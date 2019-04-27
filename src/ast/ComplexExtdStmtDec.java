@@ -10,11 +10,9 @@ public abstract class ComplexExtdStmtDec extends ComplexExtdStmt {
     protected String id;
     protected ComplexExtdType type;
 
-
-
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> res = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> res = new ArrayList<>();
 
         if (env.containsName(id)) {
             res.add(new SemanticError("Identifier " + id + " already declared."));

@@ -3,6 +3,8 @@ package ast;
 import parser.ComplexStaticAnalysisBaseVisitor;
 import parser.ComplexStaticAnalysisParser;
 
+import java.util.ArrayList;
+
 public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Node> {
 
     private boolean ifContext = false;
@@ -56,7 +58,14 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
     public Node visitIfthenelse(ComplexStaticAnalysisParser.IfthenelseContext ctx) {
         ifContext = true;
 
-        ComplexExtdStmtIfThenElse res = new ComplexExtdStmtIfThenElse();
+        ComplexExtdExp exp = (ComplexExtdExp) visit(ctx.exp());
+        ArrayList<ComplexExtdStmtBlock> blocks = new ArrayList<>();
+
+        for (ComplexStaticAnalysisParser.BlockContext blk : ctx.block()) {
+            blocks.add((ComplexExtdStmtBlock) visit(blk));
+        }
+
+        ComplexExtdStmtIfThenElse res = new ComplexExtdStmtIfThenElse(exp, blocks.get(0), blocks.get(1));
 
         ifContext = false;
 

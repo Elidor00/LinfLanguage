@@ -1,12 +1,5 @@
 package ast;
 
-import ast.ComplexExtdType;
-import ast.Node;
-import utils.Environment;
-import utils.SemanticError;
-
-import java.util.ArrayList;
-
 public abstract class ComplexExtdValue implements Node {
     private ComplexExtdType type;
     protected String value;
@@ -19,14 +12,8 @@ public abstract class ComplexExtdValue implements Node {
         this.type = type;
     }
 
-    @Override
-    public ComplexExtdType checkType(Environment env) {
+    public ComplexExtdType getType() {
         return type;
-    }
-
-    @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        return new ArrayList<>();
     }
 
     @Override

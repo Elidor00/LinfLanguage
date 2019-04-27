@@ -1,8 +1,6 @@
 package ast;
 
-import com.sun.istack.internal.NotNull;
 import utils.Environment;
-import utils.STentry;
 import utils.SemanticError;
 
 import java.util.ArrayList;
@@ -11,29 +9,27 @@ import java.util.List;
 public class ComplexExtdStmtFunDec extends ComplexExtdStmtDec {
     private List<ComplexExtdParameter> parList = new ArrayList<>();
     private ComplexExtdStmtBlock body;
-    ComplexExtdFunType type = new ComplexExtdFunType();
 
-    public ComplexExtdStmtFunDec(String id, ComplexExtdStmtBlock body) {
+    ComplexExtdStmtFunDec(String id, ComplexExtdStmtBlock body) {
         this.id = id;
         this.body = body;
+        this.type = new ComplexExtdFunType();
     }
 
-    public void addPar(@NotNull ComplexExtdParameter par) {
+    void addPar(ComplexExtdParameter par) {
         parList.add(par);
-        type.addParType(par.getType());
+        ComplexExtdFunType t = (ComplexExtdFunType) type;
+        t.addParType(par.getType());
     }
 
+    @Override
+    public ComplexExtdType checkType(Environment env) {
+        return body.checkType(env);
+    }
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> res = new ArrayList<>();
-
-        if (env.containsName(id)) {
-            res.add(new SemanticError("Identifier " + id + " already declared."));
-        } else {
-            STentry entry = new STentry(env.nestingLevel, type);
-            env.addName(id, entry);
-        }
+        ArrayList<SemanticError> res = super.checkSemantics(env);
 
         env.openScope();
 

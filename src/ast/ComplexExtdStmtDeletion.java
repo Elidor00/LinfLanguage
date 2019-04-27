@@ -17,7 +17,7 @@ public class ComplexExtdStmtDeletion extends ComplexExtdStmt {
 
     @Override
     public ComplexExtdType checkType(Environment env) {
-        return super.checkType(env);
+        return null;
     }
 
     @Override

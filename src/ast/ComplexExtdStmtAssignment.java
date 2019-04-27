@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ComplexExtdStmtAssignment extends ComplexExtdStmt {
     private String id;
     private ComplexExtdExp exp;
+    private ComplexExtdType lhSideType;
 
     public ComplexExtdStmtAssignment(String id, ComplexExtdExp exp) {
         this.id = id;
@@ -21,13 +22,12 @@ public class ComplexExtdStmtAssignment extends ComplexExtdStmt {
 
     @Override
     public ComplexExtdType checkType(Environment env) {
-        ComplexExtdType staticType = env.getStEntry(id).getType();
-        ComplexExtdType dynamicType = exp.checkType(env);
-        if (!dynamicType.getClass().equals(staticType.getClass())) {
-            System.out.println(new TypeError("Cannot assign " + dynamicType + " to " + staticType));
+        ComplexExtdType rhSideType = exp.checkType(env);
+        if (!rhSideType.getClass().equals(lhSideType.getClass())) {
+            System.out.println(new TypeError("Cannot assign " + rhSideType + " to " + lhSideType));
             System.exit(-1);
         }
-        return null;
+        return rhSideType;
     }
 
     @Override
@@ -37,7 +37,11 @@ public class ComplexExtdStmtAssignment extends ComplexExtdStmt {
 
         if (!env.containsName(id)) {
             res.add(new SemanticError("Identifier " + id + " used before being declared"));
+        } else {
+            lhSideType = env.getStEntry(id).getType();
         }
+
+        res.addAll(exp.checkSemantics(env));
 
         return res;
     }
