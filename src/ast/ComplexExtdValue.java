@@ -1,47 +1,36 @@
 package ast;
 
+import ast.ComplexExtdType;
+import ast.Node;
+import utils.Environment;
+import utils.SemanticError;
+
 import java.util.ArrayList;
 
-public class ComplexExtdValue extends ComplexExtdTerm {
-    private boolean isID = false;
-    private String value;
+public abstract class ComplexExtdValue implements Node {
+    private ComplexExtdType type;
+    protected String value;
 
-    ComplexExtdValue(String value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public void setID(boolean ID) {
-        isID = ID;
-    }
-
-    public String getIDName() {
-        return value;
-    }
-
-    public ComplexExtdType computeType() {
-        try {
-            ComplexExtdIntType res = new ComplexExtdIntType();
-            res.setRef(isID);
-            Integer.parseInt(value);
-            return res;
-        } catch (NumberFormatException e) {
-            ComplexExtdType res = new ComplexExtdBoolType();
-            res.setRef(isID);
-            return res;
-        }
+    public void setType(ComplexExtdType type) {
+        this.type = type;
     }
 
     @Override
     public ComplexExtdType checkType(Environment env) {
-        if (!isID) {
-            return this.computeType();
-        } else {
-            return env.getStEntry(value).getType();
-        }
+        return type;
     }
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         return new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

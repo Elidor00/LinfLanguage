@@ -1,5 +1,8 @@
 package ast;
 
+import utils.Environment;
+import utils.SemanticError;
+
 import java.util.ArrayList;
 
 
@@ -21,6 +24,7 @@ public class ComplexExtdStmtDeletion extends ComplexExtdStmt {
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
 
+        /*
         if (!env.containsName(id)) {
             res.add(new SemanticError("Identifier not found. Cannot delete " + id + " before declaring it."));
         } else {
@@ -30,6 +34,7 @@ public class ComplexExtdStmtDeletion extends ComplexExtdStmt {
                 env.deleteName(id);
             }
         }
+        */
 
         return res;
     }

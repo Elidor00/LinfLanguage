@@ -2,8 +2,8 @@ package app;
 
 import ast.ComplexExtdStmtBlock;
 import ast.ComplexExtdVisitorImpl;
-import ast.Environment;
-import ast.SemanticError;
+import utils.Environment;
+import utils.SemanticError;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

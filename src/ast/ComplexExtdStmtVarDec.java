@@ -1,5 +1,9 @@
 package ast;
 
+import utils.Environment;
+import utils.SemanticError;
+import utils.TypeError;
+
 import java.util.ArrayList;
 
 public class ComplexExtdStmtVarDec extends ComplexExtdStmtDec {
@@ -22,10 +26,9 @@ public class ComplexExtdStmtVarDec extends ComplexExtdStmtDec {
 
     @Override
     public ComplexExtdType checkType(Environment env) {
-        ComplexExtdType staticType = this.type;
-        ComplexExtdType dynamicType = exp.setValueType();
-        if (!dynamicType.getClass().equals(staticType.getClass())) {
-            System.out.println(new TypeError("Cannot assign " + dynamicType + " to " + staticType));
+        ComplexExtdType dynamicType = exp.checkType(env);
+        if (!dynamicType.getClass().equals(type.getClass())) {
+            System.out.println(new TypeError("Cannot assign " + dynamicType + " to " + type));
             System.exit(-1);
         }
         return null;

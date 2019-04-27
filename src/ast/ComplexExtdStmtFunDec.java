@@ -1,6 +1,9 @@
 package ast;
 
 import com.sun.istack.internal.NotNull;
+import utils.Environment;
+import utils.STentry;
+import utils.SemanticError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +35,15 @@ public class ComplexExtdStmtFunDec extends ComplexExtdStmtDec {
             env.addName(id, entry);
         }
 
+        env.openScope();
+
         for (ComplexExtdParameter par : parList) {
             res.addAll(par.checkSemantics(env));
         }
 
         res.addAll(body.checkSemantics(env));
+
+        env.closeScope();
 
         return res;
     }

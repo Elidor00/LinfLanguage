@@ -1,6 +1,10 @@
 package ast;
 
 
+import utils.Environment;
+import utils.STentry;
+import utils.SemanticError;
+
 import java.util.ArrayList;
 
 public class ComplexExtdParameter implements Node {

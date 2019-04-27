@@ -124,11 +124,9 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
         res.setTerm(term);
         res.setNegative(isNegative);
 
-        res.setValueType();
-
         if (ctx.right != null) {
             ComplexExtdExp right = (ComplexExtdExp) visit(ctx.right);
-            String op = ctx.getChild(2).getChild(0).getText();
+            String op = ctx.getChild(1).getText();
             res.setOp(op);
             res.setRight(right);
         }
@@ -143,7 +141,7 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
         res.setFactor(factor);
         if (ctx.right != null) {
             ComplexExtdTerm right = (ComplexExtdTerm) visit(ctx.right);
-            String op = ctx.getChild(2).getChild(0).getText();
+            String op = ctx.getChild(1).getText();
             res.setOp(op);
             res.setRight(right);
         }
@@ -153,8 +151,8 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
 
     @Override
     public Node visitFactor(ComplexStaticAnalysisParser.FactorContext ctx) {
-        ComplexExtdValue value = (ComplexExtdValue) visit(ctx.left);
         ComplexExtdFactor res = new ComplexExtdFactor();
+        ComplexExtdValue value = (ComplexExtdValue) visit(ctx.left);
         res.setValue(value);
         if (ctx.right != null) {
             ComplexExtdValue right = (ComplexExtdValue) visit(ctx.right);
@@ -163,18 +161,17 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
         }
 
         return res;
+
     }
 
     @Override
     public Node visitValue(ComplexStaticAnalysisParser.ValueContext ctx) {
         if (ctx.ID() != null) {
-            ComplexExtdValue res = new ComplexExtdValue(ctx.ID().getText());
-            res.setID(true);
-            return res;
+            return new ComplexExtdIDValue(ctx.ID().getText());
         } else if (ctx.INTEGER() != null) {
-            return new ComplexExtdValue(ctx.INTEGER().getText());
+            return new ComplexExtdIntValue(ctx.INTEGER().getText());
         } else if (ctx.getChild(0).getText().equals("true") || ctx.getChild(0).getText().equals("false")) {
-            return new ComplexExtdValue(ctx.getChild(0).getText());
+            return new ComplexExtdBoolValue(ctx.getChild(0).getText());
         } else {
             return visit(ctx.exp());
         }

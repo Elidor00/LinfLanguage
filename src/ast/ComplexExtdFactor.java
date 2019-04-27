@@ -1,55 +1,64 @@
 package ast;
 
+import utils.Environment;
+import utils.SemanticError;
+
 import java.util.ArrayList;
 
-public class ComplexExtdFactor extends ComplexExtdTerm {
+public class ComplexExtdFactor extends ComplexExtdBinaryOp<ComplexExtdValue, ComplexExtdValue> {
 
-    private ComplexExtdValue value;
-    private String op;
-    private ComplexExtdValue right;
 
     public void setValue(ComplexExtdValue value) {
-        this.value = value;
-    }
-
-    public void setRight(ComplexExtdValue right) {
-        this.right = right;
-    }
-
-    public String getOp() {
-        return op;
-    }
-
-    public void setOp(String op) {
-        this.op = op;
+        setLeft(value);
     }
 
     public ComplexExtdValue getValue() {
-        return value;
+        return getLeft();
     }
-
-    @Override
-    public ComplexExtdType checkType(Environment env) {
-        ComplexExtdType type = value.checkType(env);
-        if (right != null) if (type.getClass().equals(right.checkType(env).getClass())) {
-            return type;
-        } else {
-            System.out.println(new TypeError("Cannot type " + op + " with this parameters: " + type.getClass() + " and " + right.checkType(env).getClass()));
-            System.exit(-1);
-        }
-        return null; // this line will never execute
-    }
-
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
+        ComplexExtdValue value = getLeft();
+        ComplexExtdValue right = getRight();
         ArrayList<SemanticError> res = new ArrayList<>(value.checkSemantics(env));
+
+        if (value instanceof ComplexExtdIDValue) {
+            value.setType(env.getStEntry(value.toString()).getType());
+        }
 
         if (right != null) {
             res.addAll(right.checkSemantics(env));
+
+            if (right instanceof ComplexExtdIDValue) {
+                right.setType(env.getStEntry(right.toString()).getType());
+            }
         }
 
         return res;
 
+    }
+
+    @Override
+    public String toString() {
+        String ret;
+
+        if (getLeft() instanceof ComplexExtdExp) {
+            ret = "( " + getLeft() + " )";
+        } else {
+            ret = getLeft().toString();
+        }
+
+        if (getRight() != null) {
+            String rightString;
+
+            if (getRight() instanceof ComplexExtdExp) {
+                rightString = "( " + getRight() + " )";
+            } else {
+                rightString = getRight().toString();
+            }
+            ret += " " + getOp() + " " + rightString;
+        }
+
+        return ret;
     }
 }
