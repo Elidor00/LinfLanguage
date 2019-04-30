@@ -7,6 +7,12 @@ delete k;
 int k = 9;
 
 {
+pippo(){ delete k; }
+}
+
+int k = 9;
+
+{
 
 f(var int x, var int y){ delete x; delete y; }
 
