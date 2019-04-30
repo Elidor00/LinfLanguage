@@ -20,7 +20,7 @@ public class ComplexExtdIDValue extends ComplexExtdValue {
         ArrayList<SemanticError> res = new ArrayList<>();
 
         if (!env.containsName(value)) {
-            res.add(new SemanticError(value + "is not an identifier in current scope."));
+            res.add(new SemanticError(value + " is not an identifier in current scope."));
         } else {
             setType(env.getStEntry(value).getType());
         }

@@ -10,7 +10,7 @@ public class ComplexExtdStmtVarDec extends ComplexExtdStmtDec {
 
     private ComplexExtdExp exp;
 
-    public ComplexExtdStmtVarDec(ComplexExtdType type, String id, ComplexExtdExp exp) {
+    ComplexExtdStmtVarDec(ComplexExtdType type, String id, ComplexExtdExp exp) {
         this.type = type;
         this.id = id;
         this.exp = exp;

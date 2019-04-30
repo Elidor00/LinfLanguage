@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Node> {
 
-    private boolean ifContext = false;
-
     @Override
     public Node visitBlock(ComplexStaticAnalysisParser.BlockContext ctx) {
         ComplexExtdStmtBlock res = new ComplexExtdStmtBlock();
@@ -46,7 +44,7 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
 
     @Override
     public Node visitDeletion(ComplexStaticAnalysisParser.DeletionContext ctx) {
-        return new ComplexExtdStmtDeletion(ctx.ID().getText(), ifContext);
+        return new ComplexExtdStmtDeletion(ctx.ID().getText());
     }
 
     @Override
@@ -56,8 +54,6 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
 
     @Override
     public Node visitIfthenelse(ComplexStaticAnalysisParser.IfthenelseContext ctx) {
-        ifContext = true;
-
         ComplexExtdExp exp = (ComplexExtdExp) visit(ctx.exp());
         ArrayList<ComplexExtdStmtBlock> blocks = new ArrayList<>();
 
@@ -66,8 +62,6 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
         }
 
         ComplexExtdStmtIfThenElse res = new ComplexExtdStmtIfThenElse(exp, blocks.get(0), blocks.get(1));
-
-        ifContext = false;
 
         return res;
     }
@@ -118,9 +112,12 @@ public class ComplexExtdVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Nod
     @Override
     public Node visitParameter(ComplexStaticAnalysisParser.ParameterContext ctx) {
         boolean isVar = ctx.getChild(0).getText().equals("var");
+        String id = ctx.ID().getText();
         ComplexExtdType type = (ComplexExtdType) visit(ctx.type());
-        type.setRef(isVar);
-        return new ComplexExtdParameter(type, ctx.ID().getText());
+        if (isVar) {
+            type.setReference();
+        }
+        return new ComplexExtdParameter(type, id);
     }
 
     @Override

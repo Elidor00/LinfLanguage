@@ -9,11 +9,11 @@ import java.util.List;
 public class ComplexExtdFunType extends ComplexExtdType {
     private List<ComplexExtdType> parTypes = new ArrayList<>();
 
-    public List<ComplexExtdType> getParTypes() {
+    List<ComplexExtdType> getParTypes() {
         return parTypes;
     }
 
-    public void addParType(ComplexExtdType type){
+    void addParType(ComplexExtdType type){
         this.parTypes.add(type);
     }
 

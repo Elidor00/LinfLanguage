@@ -22,6 +22,11 @@ public class ComplexExtdStmtFunDec extends ComplexExtdStmtDec {
         t.addParType(par.getType());
     }
 
+    public ComplexExtdStmtBlock getBody() {
+        return body;
+    }
+
+
     @Override
     public ComplexExtdType checkType(Environment env) {
         return body.checkType(env);

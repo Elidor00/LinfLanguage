@@ -1,50 +1,50 @@
 package ast;
 
 import utils.Environment;
-import utils.STentry;
 import utils.SemanticError;
 import utils.TypeError;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
 public class ComplexExtdStmtFunCall extends ComplexExtdStmtDec {
     private List<ComplexExtdExp> actualParList = new ArrayList<>();
-    private STentry entry;
+    private List<ComplexExtdType> formalParTypes = new ArrayList<>();
 
 
-    public ComplexExtdStmtFunCall(String id) {
+    ComplexExtdStmtFunCall(String id) {
         this.id = id;
     }
 
-    public void addPar(ComplexExtdExp exp) {
+    void addPar(ComplexExtdExp exp) {
         actualParList.add(exp);
     }
 
     @Override
     public ComplexExtdType checkType(Environment env) {
-        ComplexExtdFunType funType = (ComplexExtdFunType) entry.getType();
-        List<ComplexExtdType> staticTypes = funType.getParTypes();
 
         // checking number of parameters
-        if (staticTypes.size() != actualParList.size()) {
-            System.out.println(new TypeError("Function" + id + " requires " + staticTypes.size() + " parameters, but " + actualParList.size() + " were given."));
+        if (formalParTypes.size() != actualParList.size()) {
+            System.out.println(new TypeError("Function" + id + " requires " + formalParTypes.size() + " parameters, but " + actualParList.size() + " were given."));
             System.exit(-1);
         } else {
-            for (int i = 0; i < staticTypes.size(); i++) {
-                ComplexExtdExp exp = actualParList.get(i);
-                ComplexExtdType sType = staticTypes.get(i);
-                ComplexExtdType dType = exp.checkType(env);
 
-                if (sType.isRef() && !(exp.isID())) {
+            for (int i = 0; i < formalParTypes.size(); i++) {
+                ComplexExtdExp exp = actualParList.get(i);
+                ComplexExtdType formalType = formalParTypes.get(i);
+                ComplexExtdType actualType = exp.checkType(env);
+
+                if (formalType.isReference() && !(exp.isID())) {
                     System.out.println(new TypeError("In function " + id + ", parameter should be passed by reference but \"" + exp + "\" was found."));
                     System.exit(-1);
                 }
 
+
                 // checking types of single parameters
-                if (!sType.getClass().equals(dType.getClass())) {
-                    System.out.println(new TypeError("In function " + id + ", " + sType + " is required but " + dType + " was found."));
+                if (!formalType.getClass().equals(actualType.getClass())) {
+                    System.out.println(new TypeError("In function " + id + ", " + formalType + " is required but " + actualType + " was found."));
                     System.exit(-1);
                 }
             }
@@ -55,16 +55,36 @@ public class ComplexExtdStmtFunCall extends ComplexExtdStmtDec {
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
+
         ArrayList<SemanticError> res = new ArrayList<>();
 
         if (!env.containsName(id)) {
             res.add(new SemanticError("Function " + id + " used before declaration."));
-        }
+        } else {
+            HashSet<String> deletedRefs = new HashSet<>();
+            ComplexExtdFunType funType = (ComplexExtdFunType) env.getStEntry(id).getType();
+            formalParTypes.addAll(funType.getParTypes());
 
-        entry = env.getStEntry(id);
+            for (int i = 0; i < formalParTypes.size(); i++) {
+                ComplexExtdExp exp = actualParList.get(i);
+                ComplexExtdType formalType = formalParTypes.get(i);
+                res.addAll(exp.checkSemantics(env));
 
-        for (ComplexExtdExp exp : actualParList) {
-            res.addAll(exp.checkSemantics(env));
+                if (formalType.isReference() && exp.isID()) {
+                    String id = exp.toString();
+                    formalType.setRefTo(id);
+
+                    if (formalType.isDeleted() && !deletedRefs.contains(id)) {
+                        deletedRefs.add(id);
+                    } else {
+                        res.add(new SemanticError("Double deletion! Identifier \"" + id + "\" will be deleted two or more times in function " + this.id + "."));
+                    }
+                }
+            }
+
+            for (String ref : deletedRefs) {
+                env.getStEntry(ref).getType().setDeleted(true);
+            }
         }
 
         return res;

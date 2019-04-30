@@ -1,18 +1,26 @@
 package ast;
 
 import utils.Environment;
+import utils.STentry;
 import utils.SemanticError;
 
 import java.util.ArrayList;
 
 
 public class ComplexExtdStmtDeletion extends ComplexExtdStmt {
-    private boolean ifContext;
     private String id;
+    private ComplexExtdType idType;
 
-    ComplexExtdStmtDeletion(String id, boolean ifContext) {
+    ComplexExtdStmtDeletion(String id) {
         this.id = id;
-        this.ifContext = ifContext;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    ComplexExtdType getIdType() {
+        return idType;
     }
 
     @Override
@@ -24,17 +32,14 @@ public class ComplexExtdStmtDeletion extends ComplexExtdStmt {
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
 
-        /*
-        if (!env.containsName(id)) {
+        STentry entry = env.getStEntry(id);
+
+        if (entry == null) {
             res.add(new SemanticError("Identifier not found. Cannot delete " + id + " before declaring it."));
         } else {
-            if (ifContext) {
-
-            } else {
-                env.deleteName(id);
-            }
+            env.deleteName(id);
+            idType = entry.getType();
         }
-        */
 
         return res;
     }

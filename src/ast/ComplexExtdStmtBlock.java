@@ -4,16 +4,19 @@ import utils.Environment;
 import utils.SemanticError;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class ComplexExtdStmtBlock extends ComplexExtdStmt {
     private ArrayList<ComplexExtdStmt> stmtList = new ArrayList<>();
+    private HashSet<String> deletedRefs = new HashSet<>();
 
-    public ComplexExtdStmtBlock() {
+    void addStmt(ComplexExtdStmt stmt) {
+        stmtList.add(stmt);
     }
 
-    public void addStmt(ComplexExtdStmt stmt) {
-        stmtList.add(stmt);
+    HashSet<String> getDeletedRefs() {
+        return deletedRefs;
     }
 
     @Override
@@ -26,13 +29,16 @@ public class ComplexExtdStmtBlock extends ComplexExtdStmt {
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        //declare resulting list
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope();
 
         for (ComplexExtdStmt stmt : stmtList) {
-            errors.addAll(stmt.checkSemantics(env));
+            ArrayList<SemanticError> errs = stmt.checkSemantics(env);
+            errors.addAll(errs);
+            if (stmt instanceof ComplexExtdStmtDeletion && ((ComplexExtdStmtDeletion) stmt).getIdType().isReference()) {
+                deletedRefs.add(((ComplexExtdStmtDeletion) stmt).getId());
+            }
         }
 
         env.closeScope();

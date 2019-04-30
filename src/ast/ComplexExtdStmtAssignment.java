@@ -1,6 +1,7 @@
 package ast;
 
 import utils.Environment;
+import utils.STentry;
 import utils.SemanticError;
 import utils.TypeError;
 
@@ -11,7 +12,7 @@ public class ComplexExtdStmtAssignment extends ComplexExtdStmt {
     private ComplexExtdExp exp;
     private ComplexExtdType lhSideType;
 
-    public ComplexExtdStmtAssignment(String id, ComplexExtdExp exp) {
+    ComplexExtdStmtAssignment(String id, ComplexExtdExp exp) {
         this.id = id;
         this.exp = exp;
     }
@@ -35,10 +36,12 @@ public class ComplexExtdStmtAssignment extends ComplexExtdStmt {
         //create result list
         ArrayList<SemanticError> res = new ArrayList<>();
 
-        if (!env.containsName(id)) {
+        STentry entry = env.getStEntry(id);
+
+        if (entry == null) {
             res.add(new SemanticError("Identifier " + id + " used before being declared"));
         } else {
-            lhSideType = env.getStEntry(id).getType();
+            lhSideType = entry.getType();
         }
 
         res.addAll(exp.checkSemantics(env));

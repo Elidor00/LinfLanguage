@@ -2,15 +2,16 @@ package app;
 
 import ast.ComplexExtdStmtBlock;
 import ast.ComplexExtdVisitorImpl;
-import utils.Environment;
-import utils.SemanticError;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import parser.ComplexStaticAnalysisLexer;
 import parser.ComplexStaticAnalysisParser;
+import utils.Environment;
+import utils.SemanticError;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class App {
 
@@ -36,12 +37,15 @@ public class App {
 
             Environment env = new Environment();
 
-            for (SemanticError e : blk.checkSemantics(env)){
+            ArrayList<SemanticError> errors = blk.checkSemantics(env);
+
+            for (SemanticError e : errors) {
                 System.out.println(e);
             }
 
-            blk.checkType(env);
-
+            if (errors.isEmpty()) {
+                blk.checkType(env);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

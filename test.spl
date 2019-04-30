@@ -1,20 +1,18 @@
 {
 
+int k = 0 ;
 
+delete k;
 
-bool value = false && true;
+int k = 9;
 
-if (value == false) then {
-    int x = 345 * ( 456 + 5);
-} else {
-    bool x = false + value;
+{
+
+f(var int x, var int y){ delete x; delete y; }
+
+int x = 3; f(x,x) ;
+
 }
-
-
-
-int k = 4 ;
-delete k ;
-int k = 5 ;
 
 
 
@@ -22,7 +20,13 @@ int k = 5 ;
 
 f(var int x, var int y){ delete x; delete y; }
 
-int x = 3 ; f(x,x) ;
+int x = 3;
+
+x = 4;
+
+int y = 3 ; f(x,y) ;
+
+x = 3;
 
 }
 
@@ -44,7 +48,6 @@ int x = 3 ; f(x,x) ;
 }
 
 
-
 {
 
 f(var int x, var int y){ int z = x ; delete x ; y = y+z ;}
@@ -62,6 +65,8 @@ f(var int z){ g(z,z) ; }
 int x = 3 ; f(x) ;
 
 }
+
+
 
 
 }
