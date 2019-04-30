@@ -62,28 +62,33 @@ public class ComplexExtdStmtFunCall extends ComplexExtdStmtDec {
             res.add(new SemanticError("Function " + id + " used before declaration."));
         } else {
             HashSet<String> deletedRefs = new HashSet<>();
-            ComplexExtdFunType funType = (ComplexExtdFunType) env.getStEntry(id).getType();
-            formalParTypes.addAll(funType.getParTypes());
+            ComplexExtdType envType = env.getStEntry(id).getType();
+            if (envType instanceof ComplexExtdFunType) {
+                ComplexExtdFunType funType = (ComplexExtdFunType) envType;
+                formalParTypes.addAll(funType.getParTypes());
 
-            for (int i = 0; i < formalParTypes.size(); i++) {
-                ComplexExtdExp exp = actualParList.get(i);
-                ComplexExtdType formalType = formalParTypes.get(i);
-                res.addAll(exp.checkSemantics(env));
+                for (int i = 0; i < formalParTypes.size(); i++) {
+                    ComplexExtdExp exp = actualParList.get(i);
+                    ComplexExtdType formalType = formalParTypes.get(i);
+                    res.addAll(exp.checkSemantics(env));
 
-                if (formalType.isReference() && exp.isID()) {
-                    String id = exp.toString();
-                    formalType.setRefTo(id);
+                    if (formalType.isReference() && exp.isID()) {
+                        String id = exp.toString();
+                        formalType.setRefTo(id);
 
-                    if (formalType.isDeleted() && !deletedRefs.contains(id)) {
-                        deletedRefs.add(id);
-                    } else {
-                        res.add(new SemanticError("Double deletion! Identifier \"" + id + "\" will be deleted two or more times in function " + this.id + "."));
+                        if (formalType.isDeleted() && !deletedRefs.contains(id)) {
+                            deletedRefs.add(id);
+                        } else {
+                            res.add(new SemanticError("Double deletion! Identifier \"" + id + "\" will be deleted two or more times in function " + this.id + "."));
+                        }
                     }
                 }
-            }
 
-            for (String ref : deletedRefs) {
-                env.getStEntry(ref).getType().setDeleted(true);
+                for (String ref : deletedRefs) {
+                    env.getStEntry(ref).getType().setDeleted(true);
+                }
+            } else {
+                res.add(new SemanticError(id + " used as a function, but is binded to " + envType + "."));
             }
         }
 

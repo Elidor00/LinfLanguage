@@ -1,5 +1,20 @@
 {
 
+int k = 5;
+
+k=6;
+
+k(6);
+
+
+ciao(int ciao){
+
+int a = 5;
+
+ciao(a);
+
+}
+
 int k = 0 ;
 
 delete k;
@@ -71,8 +86,5 @@ f(var int z){ g(z,z) ; }
 int x = 3 ; f(x) ;
 
 }
-
-
-
 
 }

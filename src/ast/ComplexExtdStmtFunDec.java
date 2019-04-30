@@ -39,6 +39,9 @@ public class ComplexExtdStmtFunDec extends ComplexExtdStmtDec {
         env.openScope();
 
         for (ComplexExtdParameter par : parList) {
+            if(par.getId().equals(id)){
+                res.add(new SemanticError("Error, can't use " + id + " both as function identifier and formal parameter."));
+            }
             res.addAll(par.checkSemantics(env));
         }
 
