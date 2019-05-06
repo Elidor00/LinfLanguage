@@ -36,7 +36,7 @@ public class ComplexExtdStmtBlock extends ComplexExtdStmt {
         for (ComplexExtdStmt stmt : stmtList) {
             ArrayList<SemanticError> errs = stmt.checkSemantics(env);
             errors.addAll(errs);
-            if (stmt instanceof ComplexExtdStmtDeletion && ((ComplexExtdStmtDeletion) stmt).getIdType().isReference()) {
+            if (stmt instanceof ComplexExtdStmtDeletion && !env.isLocal(((ComplexExtdStmtDeletion) stmt).getId())) {
                 deletedRefs.add(((ComplexExtdStmtDeletion) stmt).getId());
             }
         }

@@ -1,5 +1,18 @@
 {
 
+/*
+
+int x = 0;
+
+if(true) then {
+    delete x;
+} else {
+    x = x + 1;
+}
+
+
+
+
 int k = 5;
 
 k=6;
@@ -51,7 +64,7 @@ x = 3;
 
 }
 
-
+*/
 
 {
 
@@ -68,7 +81,7 @@ int x = 3 ; f(x,x) ;
 
 }
 
-
+/*
 {
 
 f(var int x, var int y){ int z = x ; delete x ; y = y+z ;}
@@ -86,5 +99,7 @@ f(var int z){ g(z,z) ; }
 int x = 3 ; f(x) ;
 
 }
+
+*/
 
 }

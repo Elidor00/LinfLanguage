@@ -20,6 +20,10 @@ public class Environment {
         symbolsTable.peek().put(id, val);
     }
 
+    public boolean isLocal(String id) {
+        return symbolsTable.peek().containsKey(id);
+    }
+
     /**
      * Inserts a new scope into the environment.
      * When a scope is inserted old scope is clone so previous defined
