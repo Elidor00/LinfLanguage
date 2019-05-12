@@ -17,7 +17,7 @@ public class ComplexExtdBoolValue extends ComplexExtdValue {
     }
 
     @Override
-    public ComplexExtdType checkType(Environment env) {
+    public ComplexExtdType checkType() {
         return getType();
     }
 }

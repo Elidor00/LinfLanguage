@@ -14,7 +14,7 @@ public abstract class ComplexExtdStmtDec extends ComplexExtdStmt {
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
 
-        if (env.containsName(id)) {
+        if (env.isLocalName(id)) {
             res.add(new SemanticError("Identifier " + id + " already declared."));
         } else {
             STentry entry = new STentry(env.nestingLevel, type);

@@ -12,7 +12,7 @@ public class ComplexExtdIntType extends ComplexExtdType {
     }
 
     @Override
-    public ComplexExtdType checkType(Environment env) {
+    public ComplexExtdType checkType() {
         return null;
     }
 

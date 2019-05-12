@@ -44,7 +44,7 @@ public class App {
             }
 
             if (errors.isEmpty()) {
-                blk.checkType(env);
+                blk.checkType();
             }
 
         } catch (IOException e) {

@@ -8,35 +8,33 @@ import utils.SemanticError;
 import java.util.ArrayList;
 
 public class ComplexExtdParameter implements Node {
-    private ComplexExtdType type;
-    private String id;
+    private ComplexExtdIDValue id;
 
-    ComplexExtdParameter(ComplexExtdType type, String id) {
-        this.type = type;
-        this.id = id;
+    ComplexExtdParameter(ComplexExtdType type, String name) {
+        this.id = new ComplexExtdIDValue(name);
+        id.setType(type);
+    }
+
+    STentry getEntry() {
+        return id.getEntry();
     }
 
     public ComplexExtdType getType() {
-        return type;
+        return id.getType();
     }
 
-    public String getId() {
+    public ComplexExtdIDValue getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     @Override
-    public ComplexExtdType checkType(Environment env) {
+    public ComplexExtdType checkType() {
         return null;
     }
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        STentry entry = new STentry(env.nestingLevel, type);
-        env.addName(id, entry);
+        id.setEntry(new STentry(env.nestingLevel + 1, id.getType()));
         return new ArrayList<>();
     }
 }

@@ -17,37 +17,27 @@ public class ComplexExtdStmtIfThenElse extends ComplexExtdStmt {
         this.elseBranch = elseBranch;
     }
 
-    public ComplexExtdStmtBlock getThenBranch() {
+    ComplexExtdStmtBlock getThenBranch() {
         return thenBranch;
     }
 
-    public ComplexExtdStmtBlock getElseBranch() {
+    ComplexExtdStmtBlock getElseBranch() {
         return elseBranch;
     }
 
     @Override
-    public ComplexExtdType checkType(Environment env) {
-        exp.checkType(env);
-        thenBranch.checkType(env);
-        elseBranch.checkType(env);
+    public ComplexExtdType checkType() {
+        exp.checkType();
+        thenBranch.checkType();
+        elseBranch.checkType();
         return null;
     }
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>(exp.checkSemantics(env));
-        ArrayList<SemanticError> thenErrors = thenBranch.checkSemantics(env);
-        ArrayList<SemanticError> elseErrors = elseBranch.checkSemantics(env);
-
-
-        if (!thenBranch.getDeletedRefs().equals(elseBranch.getDeletedRefs())) {
-            res.add(new SemanticError("Deletion mismatch between \"then\" and \"else\" branches. The same identifiers must be deleted in both branches."));
-        }
-
-        res.addAll(thenErrors);
-        res.addAll(elseErrors);
-
-
+        res.addAll(thenBranch.checkSemantics(env));
+        res.addAll(elseBranch.checkSemantics(env));
         return res;
     }
 }

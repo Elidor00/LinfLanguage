@@ -1,46 +1,6 @@
 {
 
-/*
-
-int x = 0;
-
-if(true) then {
-    delete x;
-} else {
-    x = x + 1;
-}
-
-
-
-
-int k = 5;
-
-k=6;
-
-k(6);
-
-
-ciao(int ciao){
-
-int a = 5;
-
-ciao(a);
-
-}
-
-int k = 0 ;
-
-delete k;
-
-int k = 9;
-
-{
-pippo(){ delete k; }
-}
-
-int k = 9;
-
-{
+{ // NON CORRETTO
 
 f(var int x, var int y){ delete x; delete y; }
 
@@ -48,25 +8,15 @@ int x = 3; f(x,x) ;
 
 }
 
+{ // NON CORRETTO
 
+f(var int x, var int y){ int z = x ; delete x ; y = y+z ;}
 
-{
-
-f(var int x, var int y){ delete x; delete y; }
-
-int x = 3;
-
-x = 4;
-
-int y = 3 ; f(x,y) ;
-
-x = 3;
+int x = 3 ; f(x,x) ;
 
 }
 
-*/
-
-{
+{ // NON CORRETTO -> rami if then else non bilanciati
 
 f(var int x, int y){
     if (y == 0) then {
@@ -81,16 +31,8 @@ int x = 3 ; f(x,x) ;
 
 }
 
-/*
-{
 
-f(var int x, var int y){ int z = x ; delete x ; y = y+z ;}
-
-int x = 3 ; f(x,x) ;
-
-}
-
-{
+{ // NON CORRETTO double deletion g(z,z)
 
 g(var int x, var int y){ delete x ; delete y ;}
 
@@ -100,6 +42,83 @@ int x = 3 ; f(x) ;
 
 }
 
-*/
+{ // CORRETTO! Nessun errore di tipo.
+
+int x = 1;
+
+{
+    int x = 2;
+    delete x;
+}
+
+delete x;
+
+}
+
+{ // CORRETTO!
+
+int x = 1;
+
+foo(var int a){delete a;}
+
+{ int x = 2; foo(x);  }
+
+foo(x);
+
+}
+
+{ // NON CORRETTO! (Double Deletion)
+
+int x = 1;
+
+foo(){delete x;}
+
+{
+int x = 2; foo();
+}
+
+foo();
+}
+
+{
+
+int x = 3;
+
+foo(var int a) {
+    a = x + 1;
+    delete a;
+    x = 35;
+}
+
+int y = 2;
+
+foo(y);
+
+// x = 35;
+
+foo(x); // <--- QUI DEVE DARE ERRORE!
+
+
+bar(var int a){
+    a = a + 1;
+    delete a;
+}
+
+}
+
+{ // NON CORRETTO
+
+f(var int x, var int y){ delete x; delete y; }
+
+int x = 3;
+
+x = 4;
+
+int y = 3 ; f(x,y) ;
+
+x = 3;
+
+}
+
 
 }

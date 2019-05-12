@@ -1,5 +1,6 @@
 package utils;
 
+import ast.ComplexExtdIDValue;
 import ast.ComplexExtdType;
 
 import java.util.HashMap;
@@ -20,8 +21,20 @@ public class Environment {
         symbolsTable.peek().put(id, val);
     }
 
-    public boolean isLocal(String id) {
+    public HashMap<String, STentry> local() {
+        if (nestingLevel <= -1) {
+            return null;
+        } else {
+            return new HashMap<>(symbolsTable.peek());
+        }
+    }
+
+    public boolean isLocalName(String id) {
         return symbolsTable.peek().containsKey(id);
+    }
+
+    public boolean isLocalName(ComplexExtdIDValue id) {
+        return isLocalName(id.toString());
     }
 
     /**
@@ -29,9 +42,18 @@ public class Environment {
      * When a scope is inserted old scope is clone so previous defined
      * variables still exist
      */
-    public void openScope() {
+    void openScope() {
         symbolsTable.push(new HashMap<>());
         nestingLevel++;
+    }
+
+    public void openScope(HashMap<String, STentry> scope) {
+        if (scope == null) {
+            openScope();
+        } else {
+            symbolsTable.push(scope);
+            nestingLevel++;
+        }
     }
 
     /**
@@ -71,6 +93,10 @@ public class Environment {
         return getStEntry(id) != null;
     }
 
+    public boolean containsName(ComplexExtdIDValue id) {
+        return containsName(id.toString());
+    }
+
     /**
      * Given an id determines its type inside the environment
      *
@@ -92,6 +118,10 @@ public class Environment {
 
     public STentry getStEntry(String id) {
         return getStEntry(id, nestingLevel);
+    }
+
+    public STentry getStEntry(ComplexExtdIDValue id) {
+        return getStEntry(id.toString());
     }
 
     /**

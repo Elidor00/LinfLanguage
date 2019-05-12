@@ -36,11 +36,11 @@ public abstract class ComplexExtdBinaryOp<LeftType extends Node, RightType exten
     }
 
     @Override
-    public ComplexExtdType checkType(Environment env) {
-        ComplexExtdType type = left.checkType(env);
+    public ComplexExtdType checkType() {
+        ComplexExtdType type = left.checkType();
         if (right != null) {
-            if (!type.getClass().equals(right.checkType(env).getClass())) {
-                System.out.println(new TypeError("Cannot type " + op + " in \"" + toString() + "\" with this parameters: " + type + " and " + right.checkType(env)));
+            if (!type.getClass().equals(right.checkType().getClass())) {
+                System.out.println(new TypeError("Cannot type " + op + " in \"" + toString() + "\" with this parameters: " + type + " and " + right.checkType()));
                 System.exit(-1);
             }
         }

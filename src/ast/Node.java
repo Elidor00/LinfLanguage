@@ -6,7 +6,8 @@ import utils.SemanticError;
 import java.util.ArrayList;
 
 public interface Node {
-    ComplexExtdType checkType(Environment env);
+    ComplexExtdType checkType();
+
     ArrayList<SemanticError> checkSemantics(Environment env);
 }
 
