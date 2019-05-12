@@ -1,5 +1,32 @@
 {
 
+{ // CORRETTO! Nessun errore di tipo.
+
+int x = 1;
+
+{
+    int x = 2;
+    delete x;
+}
+
+delete x;
+
+}
+
+{ // CORRETTO!
+
+int x = 1;
+
+foo(var int a){delete a;}
+
+{ int x = 2; foo(x);  }
+
+foo(x);
+
+}
+
+/*
+
 { // NON CORRETTO
 
 f(var int x, var int y){ delete x; delete y; }
@@ -39,31 +66,6 @@ g(var int x, var int y){ delete x ; delete y ;}
 f(var int z){ g(z,z) ; }
 
 int x = 3 ; f(x) ;
-
-}
-
-{ // CORRETTO! Nessun errore di tipo.
-
-int x = 1;
-
-{
-    int x = 2;
-    delete x;
-}
-
-delete x;
-
-}
-
-{ // CORRETTO!
-
-int x = 1;
-
-foo(var int a){delete a;}
-
-{ int x = 2; foo(x);  }
-
-foo(x);
 
 }
 
@@ -120,5 +122,6 @@ x = 3;
 
 }
 
+*/
 
 }

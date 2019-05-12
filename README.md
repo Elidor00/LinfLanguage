@@ -22,12 +22,7 @@
 
 1. Estrarre lo `.zip`
 2. Lanciare il metodo `main` di `app/App.java`
-
-## Scelte implementative
-
-- Scope statico
-- Funzioni problematiche:
-  + 
+3. Nel file `test.spl` sono presenti le funzioni "problematiche"
 
 ## Output
 
