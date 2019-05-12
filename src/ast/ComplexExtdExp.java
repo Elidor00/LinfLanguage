@@ -54,7 +54,10 @@ public class ComplexExtdExp extends ComplexExtdBinaryOp<ComplexExtdTerm, Complex
         }
 
         for (ComplexExtdIDValue id : rwIDs) {
-            env.getStEntry(id).getType().setRwAccess();
+            STentry entry = env.getStEntry(id);
+            if (entry != null) {
+                entry.getType().setRwAccess();
+            }
         }
         return res;
     }
