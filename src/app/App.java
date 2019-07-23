@@ -1,14 +1,14 @@
 package app;
 
-import ast.ComplexExtdStmtBlock;
-import ast.ComplexExtdVisitorImpl;
+import linf.statement.StmtBlock;
+import linf.LinfVisitorImpl;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import parser.ComplexStaticAnalysisLexer;
-import parser.ComplexStaticAnalysisParser;
-import utils.Environment;
-import utils.SemanticError;
+import linf.parser.ComplexStaticAnalysisLexer;
+import linf.parser.ComplexStaticAnalysisParser;
+import linf.utils.Environment;
+import linf.utils.SemanticError;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,15 +25,15 @@ public class App {
             ComplexStaticAnalysisLexer lexer = new ComplexStaticAnalysisLexer(input);
 
 
-            //create parser
+            //create linf.parser
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             ComplexStaticAnalysisParser parser = new ComplexStaticAnalysisParser(tokens);
 
             parser.setBuildParseTree(true);
 
-            ComplexExtdVisitorImpl visitor = new ComplexExtdVisitorImpl();
+            LinfVisitorImpl visitor = new LinfVisitorImpl();
 
-            ComplexExtdStmtBlock blk = (ComplexExtdStmtBlock) visitor.visit(parser.block());
+            StmtBlock blk = (StmtBlock) visitor.visit(parser.block());
 
             Environment env = new Environment();
 

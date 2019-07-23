@@ -17,7 +17,9 @@ delete x;
 
 int x = 1;
 
-foo(var int a){delete a;}
+foo(var int a){
+delete a;
+}
 
 { int x = 2; foo(x);  }
 
