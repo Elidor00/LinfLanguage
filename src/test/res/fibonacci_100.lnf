@@ -1,0 +1,15 @@
+{
+    fibonacci(int max_steps, int x, int y, var int out) {
+        out = x + y;
+        if ( max_steps > 0 ) then {
+            print out;
+            fibonacci(max_steps - 1, y, out, out);
+        }
+    }
+
+    int out = 0;
+    int x = 0;
+    int y = 1;
+
+    fibonacci(100, x, y, out);
+}

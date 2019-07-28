@@ -1,0 +1,176 @@
+{
+
+printfactorial(int x) {
+      fact(var int out, int x) {
+            if ( x > 1 ) then {
+                int other = out;
+                fact(other, x - 1);
+                out = other;
+            } else {}
+      }
+
+      int out = 1;
+      fact(out, x);
+
+      print out;
+  }
+
+  printfactorial(10);
+
+funz(int x) {
+    print x;
+
+    nuovafunz(int k) {
+        delete k;
+    }
+
+    nuovafunz(5);
+
+    funz(x);
+}
+
+
+{
+    int u = 1;
+    
+    f(var int x, int n) {
+        if(n==0) then {
+            print(x);
+        } else {
+            int y = x*n;
+            f(y, n-1);
+        }
+        delete x;
+    }
+    f(u,6);
+
+}
+
+
+{ // CORRETTO! Nessun errore di tipo.
+
+int x = 1;
+
+{
+    int x = 2;
+    delete x;
+}
+
+delete x;
+
+}
+
+{ // CORRETTO!
+
+int x = 1;
+
+foo(var int a){
+delete a;
+}
+
+{ int x = 2; foo(x);  }
+
+foo(x);
+
+}
+
+/*
+
+{ // NON CORRETTO
+
+f(var int x, var int y){ delete x; delete y; }
+
+int x = 3; f(x,x) ;
+
+}
+
+{ // NON CORRETTO
+
+f(var int x, var int y){ int z = x ; delete x ; y = y+z ;}
+
+int x = 3 ; f(x,x) ;
+
+}
+
+{ // NON CORRETTO -> rami if then else non bilanciati
+
+f(var int x, int y){
+    if (y == 0) then {
+        delete x;
+    } else {
+        x=x+y ;
+    }
+}
+
+int x = 3 ; f(x,x) ;
+
+
+}
+
+
+{ // NON CORRETTO double deletion g(z,z)
+
+g(var int x, var int y){ delete x ; delete y ;}
+
+f(var int z){ g(z,z) ; }
+
+int x = 3 ; f(x) ;
+
+}
+
+{ // NON CORRETTO! (Double Deletion)
+
+int x = 1;
+
+foo(){delete x;}
+
+{
+int x = 2; foo();
+}
+
+foo();
+}
+
+{
+
+int x = 3;
+
+foo(var int a) {
+    a = x + 1;
+    delete a;
+    x = 35;
+}
+
+int y = 2;
+
+foo(y);
+
+// x = 35;
+
+foo(x); // <--- QUI DEVE DARE ERRORE!
+
+
+bar(var int a){
+    a = a + 1;
+    delete a;
+}
+
+}
+
+{ // NON CORRETTO
+
+f(var int x, var int y){ delete x; delete y; }
+
+int x = 3;
+
+x = 4;
+
+int y = 3 ; f(x,y) ;
+
+x = 3;
+
+}
+
+*/
+
+}

@@ -1,0 +1,18 @@
+{
+  printfactorial(int x) {
+      fact(var int out, int x) {
+            if ( x > 1 ) then {
+                int other = out;
+                fact(other, x - 1);
+                out = other;
+            } else {}
+      }
+
+      int out = 1;
+      fact(out, x);
+
+      print out;
+  }
+
+  printfactorial(10);
+}
