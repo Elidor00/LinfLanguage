@@ -1,11 +1,11 @@
 package linf.statement;
 
+import linf.error.semantic.SemanticError;
 import linf.error.type.IncompatibleTypesError;
+import linf.error.type.TypeError;
 import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
-import linf.error.semantic.SemanticError;
-import linf.error.type.TypeError;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class VarDec extends StmtDec {
     }
 
     @Override
-    public LinfType checkType() throws TypeError{
+    public LinfType checkType() throws TypeError {
         LinfType rhSideType = exp.checkType();
         if (!rhSideType.getClass().equals(type.getClass())) {
             throw new IncompatibleTypesError(type, rhSideType);

@@ -30,7 +30,7 @@ public final class TestUtils {
         return mainBlock;
     }
 
-    public static List<SemanticError> checkSemantics(String code){
+    public static List<SemanticError> checkSemantics(String code) {
         return makeAST(code).checkSemantics(new Environment());
     }
 

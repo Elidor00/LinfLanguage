@@ -15,7 +15,7 @@ import static utils.TestUtils.checkSemantics;
 @RunWith(JUnit4.class)
 public class FunDecTest {
     @Test
-    public void  CheckSemantics_ShouldPass_WithSimpleDeclaration() {
+    public void CheckSemantics_ShouldPass_WithSimpleDeclaration() {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "f(var int x, bool y) {"
@@ -28,7 +28,7 @@ public class FunDecTest {
     }
 
     @Test
-    public void  CheckSemantics_ShouldFail_WithParameterFunctionShadowing() {
+    public void CheckSemantics_ShouldFail_WithParameterFunctionShadowing() {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int x = 7;"
@@ -42,7 +42,7 @@ public class FunDecTest {
     }
 
     @Test
-    public void  CheckSemantics_ShouldFail_WithAlreadyDeclaredID() {
+    public void CheckSemantics_ShouldFail_WithAlreadyDeclaredID() {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "f(var int x, bool y) {"

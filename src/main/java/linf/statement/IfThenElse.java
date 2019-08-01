@@ -1,10 +1,10 @@
 package linf.statement;
 
+import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
 import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
-import linf.error.semantic.SemanticError;
 
 import java.util.ArrayList;
 

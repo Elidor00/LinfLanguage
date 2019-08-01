@@ -1,8 +1,8 @@
 package linf.type;
 
+import linf.error.semantic.SemanticError;
 import linf.expression.IDValue;
 import linf.utils.Environment;
-import linf.error.semantic.SemanticError;
 
 import java.util.ArrayList;
 import java.util.HashSet;

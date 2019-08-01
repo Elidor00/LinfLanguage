@@ -1,7 +1,7 @@
 package linf.type;
 
-import linf.utils.Environment;
 import linf.error.semantic.SemanticError;
+import linf.utils.Environment;
 
 import java.util.ArrayList;
 

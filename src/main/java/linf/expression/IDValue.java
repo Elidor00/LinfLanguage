@@ -1,10 +1,10 @@
 package linf.expression;
 
+import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;
 import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
-import linf.error.semantic.SemanticError;
 
 import java.util.ArrayList;
 import java.util.Objects;

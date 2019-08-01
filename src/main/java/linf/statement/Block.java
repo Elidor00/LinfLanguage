@@ -99,7 +99,7 @@ public class Block extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env)  {
+    public ArrayList<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope(localEnv);

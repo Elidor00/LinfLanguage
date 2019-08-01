@@ -1,9 +1,9 @@
 package linf.expression;
 
+import linf.error.semantic.SemanticError;
 import linf.type.BoolType;
 import linf.type.LinfType;
 import linf.utils.Environment;
-import linf.error.semantic.SemanticError;
 
 import java.util.ArrayList;
 

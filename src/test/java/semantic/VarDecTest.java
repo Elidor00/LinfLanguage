@@ -43,7 +43,7 @@ public class VarDecTest {
     }
 
     @Test
-    public void  CheckSemantics_ShouldFail_WithAlreadyDeclaredID() {
+    public void CheckSemantics_ShouldFail_WithAlreadyDeclaredID() {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int x = 10 + 1;"

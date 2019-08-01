@@ -40,7 +40,7 @@ public class Assignment extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(Environment env) {
         //create result list
         ArrayList<SemanticError> res = new ArrayList<>();
 

@@ -90,7 +90,7 @@ public class FunCall extends StmtDec {
 
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(Environment env) {
 
         ArrayList<SemanticError> res = new ArrayList<>();
 

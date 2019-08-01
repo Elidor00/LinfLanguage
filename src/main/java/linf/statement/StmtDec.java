@@ -1,10 +1,10 @@
 package linf.statement;
 
 import linf.error.semantic.DoubleDeclarationError;
+import linf.error.semantic.SemanticError;
 import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
-import linf.error.semantic.SemanticError;
 
 import java.util.ArrayList;
 

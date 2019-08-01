@@ -15,7 +15,7 @@ import static utils.TestUtils.checkSemantics;
 @RunWith(JUnit4.class)
 public class FunCallTest {
     @Test
-    public void  CheckSemantics_ShouldPass_WithSimpleFunCall() {
+    public void CheckSemantics_ShouldPass_WithSimpleFunCall() {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "f(int x) { print x; }"
@@ -26,7 +26,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void  CheckSemantics_ShouldFail_WithUndeclaredFunction() {
+    public void CheckSemantics_ShouldFail_WithUndeclaredFunction() {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "g(int x) { print x; }"
@@ -41,7 +41,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void  CheckSemantics_ShouldFail_WithVariableUsedAsFunction() {
+    public void CheckSemantics_ShouldFail_WithVariableUsedAsFunction() {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "bool f = true;"
