@@ -1,16 +1,14 @@
 package lvm;
 
-// ExecuteVM
-
 import lvm.parser.LVMParser;
-
 import static lvm.utils.Registers.*;
+import static lvm.utils.Strings.IP;
 
 
 public class LvmVisitorImpl {
 
     public static final int CODESIZE = 10000;
-    public static final int MEMSIZE = 1000;
+    public static final int MEMSIZE = 10000;
 
     private final int[] code;
     private final int[] memory = new int[MEMSIZE];
@@ -31,12 +29,15 @@ public class LvmVisitorImpl {
 
     public void cpu() {
         while (true) {
-            int bytecode = code[ip++];
+            if (sp > MEMSIZE || sp <= 0) {
+                System.out.println("Error: Out of memory");
+            }
+            int bytecode = code[ip++]; //fetch
             int v1, v2, address, offset;
             String r1, r2;
             switch (bytecode){
                 case LVMParser.PUSH:
-                    push(GET_REGISTER_VALUE.get(INT_TO_STRING_REGISTER.get(code[ip++])).apply(this));
+                    push(code[ip++]);
                     if (sp < 0)
                         System.out.println("Stack Overflow");
                         System.exit(1);
@@ -126,19 +127,78 @@ public class LvmVisitorImpl {
                     r2 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     v1 = GET_REGISTER_VALUE.get(r2).apply(this);
                     memory[v1 + offset] = GET_REGISTER_VALUE.get(r1).apply(this);
-
-
+                    break;
+                case LVMParser.LOADW:
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    offset = code[ip++]/4;
+                    r2 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    v1 = GET_REGISTER_VALUE.get(r2).apply(this);
+                    SET_REGISTER_VALUE.get(r1).apply(this, memory[v1 + offset]);
+                    break;
+                case LVMParser.PRINT:
+                    System.out.println((sp < MEMSIZE) ? memory[sp] : "Empty stack!");
+                    System.out.println(a0);
+                    break;
+                case LVMParser.MOVE:
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    r2 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    v1 = GET_REGISTER_VALUE.get(r2).apply(this);
+                    SET_REGISTER_VALUE.get(r1).apply(this, v1);
+                    break;
+                case LVMParser.LOADI:
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    v1 = code[ip++];
+                    SET_REGISTER_VALUE.get(r1).apply(this, v1);
+                    break;
+                case LVMParser.TOP:
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    SET_REGISTER_VALUE.get(r1).apply(this, memory[sp]);
+                    break;
+                case LVMParser.JAL:
+                    ra = ip + 1;
+                    SET_REGISTER_VALUE.get(IP).apply(this, code[ip]);
+                    break;
+                case LVMParser.JR:
+                    SET_REGISTER_VALUE.get(IP).apply(this, ra);
+                    break;
+                case LVMParser.ADDI:
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    r2 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    v2 = GET_REGISTER_VALUE.get(r2).apply(this);
+                    v1 = code[ip++]/4;
+                    SET_REGISTER_VALUE.get(r1).apply(this, v2 + v1);
+                    break;
+                case LVMParser.SUBI:
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    r2 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    v2 = GET_REGISTER_VALUE.get(r2).apply(this);
+                    v1 = code[ip++]/4;
+                    SET_REGISTER_VALUE.get(r1).apply(this,v2 - v1);
+                    break;
+                case LVMParser.HALT:
+                    System.out.println("Done");
+                    return;
             }
         }
-
     }
 
     private int pop() {
-        return memory[sp++];
+        int tmp = sp;
+        if (sp + 4  <= MEMSIZE) {
+            sp = sp + 4;
+        } else {
+            System.err.println("Out of memory");
+            System.exit(1);
+        }
+        return memory[tmp];
     }
 
     private void push(int v) {
-        memory[--sp] = v;
+        if (sp - 4 > 0)
+            memory[sp - 4] = v;
+         else
+            System.out.println("Error: Out of memory");
+            System.exit(1);
     }
 
     public int getIp() {
