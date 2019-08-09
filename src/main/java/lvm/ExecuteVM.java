@@ -1,11 +1,12 @@
 package lvm;
 
 import lvm.parser.LVMParser;
+//import java.util.HashMap;
 import static lvm.utils.Registers.*;
 import static lvm.utils.Strings.IP;
 
 
-public class LvmVisitorImpl {
+public class ExecuteVM {
 
     public static final int CODESIZE = 10000;
     public static final int MEMSIZE = 10000;
@@ -18,17 +19,29 @@ public class LvmVisitorImpl {
     private int sp = MEMSIZE;
     private int fp = MEMSIZE;
     private int a0 = 0; //ACC
-    private int al = 0;
+    private int al = MEMSIZE;
     private int t1 = 0; //TMP
     private int ra;
 
+    /*
+    private int ip = 0;
+    private HashMap<String,Integer> registers = new HashMap<String,Integer>(){{
+        put("$fp", MEMSIZE);
+        put("$al", MEMSIZE);
+        put("$ra", 0);
+        put("$a0", 0);
+        put("$t1", 0);
+        put("$sp", MEMSIZE);
+    }};
+    */
 
-    public LvmVisitorImpl(int[] code) {
+    public ExecuteVM(int[] code) {
         this.code = code;
     }
 
     public void cpu() {
         while (true) {
+            //registers.get(INT_TO_STRING_REGISTER.get(sp))
             if (sp > MEMSIZE || sp <= 0) {
                 System.out.println("Error: Out of memory");
             }
@@ -47,6 +60,7 @@ public class LvmVisitorImpl {
                     break;
                 case LVMParser.ADD:
                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    //v1 = registers.get(INT_TO_STRING_REGISTER.get(code[ip++]));
                     v1 = GET_REGISTER_VALUE.get(INT_TO_STRING_REGISTER.get(code[ip++])).apply(this);
                     v2 = GET_REGISTER_VALUE.get(INT_TO_STRING_REGISTER.get(code[ip++])).apply(this);
                     int resAdd = v2 + v1;
