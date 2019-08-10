@@ -107,6 +107,9 @@ public class LvmVisitorImpl extends LVMBaseVisitor {
             case LVMParser.PRINT:
                 code[i++] = LVMParser.PRINT;
                 break;
+            case LVMParser.LABEL:
+                labelAdd.put(ctx.l.getText(), i);
+                break;
             case LVMParser.MOVE:
                 code[i++] = LVMParser.MOVE;
                 code[i++] = REGISTER_TO_INT.get(ctx.r1.getText());
