@@ -13,12 +13,4 @@ public class Strings {
     private static int labelCount = 0;
     private static int funLabelCount = 0;
 
-    public static String freshLabel() {
-        return "label" + (labelCount++);
-    }
-
-    public static String funFreshLabel() {
-        return "function label" + (funLabelCount++);
-    }
-
 }

@@ -112,7 +112,7 @@ public class LVMParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_program; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LVMListener) ((LVMListener)listener).enterProgram(this);
+			if ( listener instanceof LVMListener ) ((LVMListener)listener).enterProgram(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
@@ -160,15 +160,15 @@ public class LVMParser extends Parser {
 	}
 
 	public static class InstructionContext extends ParserRuleContext {
+		public Token r1;
+		public Token r2;
+		public Token r3;
+		public Token n;
+		public Token l;
 		public TerminalNode PUSH() { return getToken(LVMParser.PUSH, 0); }
-		public List<TerminalNode> REGISTER() { return getTokens(LVMParser.REGISTER); }
-		public TerminalNode REGISTER(int i) {
-			return getToken(LVMParser.REGISTER, i);
-		}
 		public TerminalNode POP() { return getToken(LVMParser.POP, 0); }
 		public TerminalNode ADD() { return getToken(LVMParser.ADD, 0); }
 		public TerminalNode ADDI() { return getToken(LVMParser.ADDI, 0); }
-		public TerminalNode NUMBER() { return getToken(LVMParser.NUMBER, 0); }
 		public TerminalNode SUB() { return getToken(LVMParser.SUB, 0); }
 		public TerminalNode SUBI() { return getToken(LVMParser.SUBI, 0); }
 		public TerminalNode MULT() { return getToken(LVMParser.MULT, 0); }
@@ -177,7 +177,6 @@ public class LVMParser extends Parser {
 		public TerminalNode STOREW() { return getToken(LVMParser.STOREW, 0); }
 		public TerminalNode LOADW() { return getToken(LVMParser.LOADW, 0); }
 		public TerminalNode LOADI() { return getToken(LVMParser.LOADI, 0); }
-		public TerminalNode LABEL() { return getToken(LVMParser.LABEL, 0); }
 		public TerminalNode BRANCH() { return getToken(LVMParser.BRANCH, 0); }
 		public TerminalNode BRANCHEQ() { return getToken(LVMParser.BRANCHEQ, 0); }
 		public TerminalNode BRANCHLESS() { return getToken(LVMParser.BRANCHLESS, 0); }
@@ -189,6 +188,12 @@ public class LVMParser extends Parser {
 		public TerminalNode PRINT() { return getToken(LVMParser.PRINT, 0); }
 		public TerminalNode TOP() { return getToken(LVMParser.TOP, 0); }
 		public TerminalNode HALT() { return getToken(LVMParser.HALT, 0); }
+		public List<TerminalNode> REGISTER() { return getTokens(LVMParser.REGISTER); }
+		public TerminalNode REGISTER(int i) {
+			return getToken(LVMParser.REGISTER, i);
+		}
+		public TerminalNode NUMBER() { return getToken(LVMParser.NUMBER, 0); }
+		public TerminalNode LABEL() { return getToken(LVMParser.LABEL, 0); }
 		public InstructionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -222,7 +227,7 @@ public class LVMParser extends Parser {
 				setState(10);
 				match(PUSH);
 				setState(11);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				}
 				break;
 			case POP:
@@ -236,11 +241,11 @@ public class LVMParser extends Parser {
 				setState(13);
 				match(ADD);
 				setState(14);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(15);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(16);
-				match(REGISTER);
+				((InstructionContext)_localctx).r3 = match(REGISTER);
 				}
 				break;
 			case ADDI:
@@ -248,11 +253,11 @@ public class LVMParser extends Parser {
 				setState(17);
 				match(ADDI);
 				setState(18);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(19);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(20);
-				match(NUMBER);
+				((InstructionContext)_localctx).n = match(NUMBER);
 				}
 				break;
 			case SUB:
@@ -260,11 +265,11 @@ public class LVMParser extends Parser {
 				setState(21);
 				match(SUB);
 				setState(22);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(23);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(24);
-				match(REGISTER);
+				((InstructionContext)_localctx).r3 = match(REGISTER);
 				}
 				break;
 			case SUBI:
@@ -272,11 +277,11 @@ public class LVMParser extends Parser {
 				setState(25);
 				match(SUBI);
 				setState(26);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(27);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(28);
-				match(NUMBER);
+				((InstructionContext)_localctx).n = match(NUMBER);
 				}
 				break;
 			case MULT:
@@ -284,11 +289,11 @@ public class LVMParser extends Parser {
 				setState(29);
 				match(MULT);
 				setState(30);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(31);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(32);
-				match(REGISTER);
+				((InstructionContext)_localctx).r3 = match(REGISTER);
 				}
 				break;
 			case DIV:
@@ -296,11 +301,11 @@ public class LVMParser extends Parser {
 				setState(33);
 				match(DIV);
 				setState(34);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(35);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(36);
-				match(REGISTER);
+				((InstructionContext)_localctx).r3 = match(REGISTER);
 				}
 				break;
 			case MOVE:
@@ -308,9 +313,9 @@ public class LVMParser extends Parser {
 				setState(37);
 				match(MOVE);
 				setState(38);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(39);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				}
 				break;
 			case STOREW:
@@ -318,13 +323,13 @@ public class LVMParser extends Parser {
 				setState(40);
 				match(STOREW);
 				setState(41);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(42);
-				match(NUMBER);
+				((InstructionContext)_localctx).n = match(NUMBER);
 				setState(43);
 				match(T__0);
 				setState(44);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(45);
 				match(T__1);
 				}
@@ -334,13 +339,13 @@ public class LVMParser extends Parser {
 				setState(46);
 				match(LOADW);
 				setState(47);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(48);
-				match(NUMBER);
+				((InstructionContext)_localctx).n = match(NUMBER);
 				setState(49);
 				match(T__0);
 				setState(50);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(51);
 				match(T__1);
 				}
@@ -350,15 +355,15 @@ public class LVMParser extends Parser {
 				setState(52);
 				match(LOADI);
 				setState(53);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(54);
-				match(NUMBER);
+				((InstructionContext)_localctx).n = match(NUMBER);
 				}
 				break;
 			case LABEL:
 				{
 				setState(55);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				setState(56);
 				match(T__2);
 				}
@@ -368,7 +373,7 @@ public class LVMParser extends Parser {
 				setState(57);
 				match(BRANCH);
 				setState(58);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				}
 				break;
 			case BRANCHEQ:
@@ -376,11 +381,11 @@ public class LVMParser extends Parser {
 				setState(59);
 				match(BRANCHEQ);
 				setState(60);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(61);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(62);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				}
 				break;
 			case BRANCHLESS:
@@ -388,11 +393,11 @@ public class LVMParser extends Parser {
 				setState(63);
 				match(BRANCHLESS);
 				setState(64);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(65);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(66);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				}
 				break;
 			case BRANCHLESSEQ:
@@ -400,11 +405,11 @@ public class LVMParser extends Parser {
 				setState(67);
 				match(BRANCHLESSEQ);
 				setState(68);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(69);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(70);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				}
 				break;
 			case BRANCHGREATER:
@@ -412,11 +417,11 @@ public class LVMParser extends Parser {
 				setState(71);
 				match(BRANCHGREATER);
 				setState(72);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(73);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(74);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				}
 				break;
 			case BRANCHGREATEREQ:
@@ -424,11 +429,11 @@ public class LVMParser extends Parser {
 				setState(75);
 				match(BRANCHGREATEREQ);
 				setState(76);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(77);
-				match(REGISTER);
+				((InstructionContext)_localctx).r2 = match(REGISTER);
 				setState(78);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				}
 				break;
 			case JAL:
@@ -436,7 +441,7 @@ public class LVMParser extends Parser {
 				setState(79);
 				match(JAL);
 				setState(80);
-				match(LABEL);
+				((InstructionContext)_localctx).l = match(LABEL);
 				}
 				break;
 			case JR:
@@ -444,7 +449,7 @@ public class LVMParser extends Parser {
 				setState(81);
 				match(JR);
 				setState(82);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				}
 				break;
 			case PRINT:
@@ -456,7 +461,7 @@ public class LVMParser extends Parser {
 			case REGISTER:
 				{
 				setState(84);
-				match(REGISTER);
+				((InstructionContext)_localctx).r1 = match(REGISTER);
 				setState(85);
 				match(T__3);
 				setState(86);
