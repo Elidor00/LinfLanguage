@@ -11,6 +11,9 @@ public class LvmVisitorImpl extends LVMBaseVisitor {
         return null;
     }
 
-    
+    //@Override
+    //public Void visitInstruction(LVMParser.InstructionContext ctx){
+
+    //}
 
 }

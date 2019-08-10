@@ -1,33 +1,34 @@
 grammar LVM;
 
-
 program: instruction* ;
 
 instruction:
-      PUSH REGISTER                                 #push
-	  | POP                                         #pop
-	  | ADD	REGISTER REGISTER REGISTER              #add
-	  | ADDI REGISTER REGISTER NUMBER               #addi
-	  | SUB	REGISTER REGISTER REGISTER              #sub
-	  | SUBI REGISTER REGISTER NUMBER               #subi
-	  | MULT REGISTER REGISTER REGISTER             #mult
-	  | DIV REGISTER REGISTER REGISTER              #div
-	  | MOVE REGISTER REGISTER                      #move
-	  | STOREW REGISTER NUMBER '(' REGISTER ')'     #sw
-	  | LOADW REGISTER NUMBER '(' REGISTER ')'      #lw
-	  | LOADI REGISTER NUMBER                       #li
-	  | LABEL ':'                                   #label
-	  | BRANCH LABEL                                #b
-	  | BRANCHEQ REGISTER REGISTER LABEL            #beq
-	  | BRANCHLESS REGISTER REGISTER LABEL          #blr
-	  | BRANCHLESSEQ REGISTER REGISTER LABEL        #blre
-	  | BRANCHGREATER REGISTER REGISTER LABEL       #bgr
-	  | BRANCHGREATEREQ REGISTER REGISTER LABEL     #bgre
-	  | JAL LABEL                                   #jal
-	  | JR REGISTER                                 #jr
-	  | PRINT                                       #print
-	  | REGISTER '<-' TOP                           #top
-	  | HALT                                        #halt;
+    (
+      PUSH REGISTER
+	  | POP
+	  | ADD	REGISTER REGISTER REGISTER
+	  | ADDI REGISTER REGISTER NUMBER
+	  | SUB	REGISTER REGISTER REGISTER
+	  | SUBI REGISTER REGISTER NUMBER
+	  | MULT REGISTER REGISTER REGISTER
+	  | DIV REGISTER REGISTER REGISTER
+	  | MOVE REGISTER REGISTER
+	  | STOREW REGISTER NUMBER '(' REGISTER ')'
+	  | LOADW REGISTER NUMBER '(' REGISTER ')'
+	  | LOADI REGISTER NUMBER
+	  | LABEL ':'
+	  | BRANCH LABEL
+	  | BRANCHEQ REGISTER REGISTER LABEL
+	  | BRANCHLESS REGISTER REGISTER LABEL
+	  | BRANCHLESSEQ REGISTER REGISTER LABEL
+	  | BRANCHGREATER REGISTER REGISTER LABEL
+	  | BRANCHGREATEREQ REGISTER REGISTER LABEL
+	  | JAL LABEL
+	  | JR REGISTER
+	  | PRINT
+	  | REGISTER '<-' TOP
+	  | HALT
+    );
 
 
 JR	                        : 'jr' ;
