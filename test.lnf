@@ -1,3 +1,5 @@
+{
+
 printfactorial(int x) {
       fact(var int out, int x) {
             if ( x > 1 ) then {
@@ -14,6 +16,8 @@ printfactorial(int x) {
   }
 
   printfactorial(10);
+
+}
 
 funz(int x) {
     print x;

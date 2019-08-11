@@ -72,7 +72,7 @@ public class App {
                 System.out.println(err);
             exit(-1);
             }
-            //no SEMANTICS errors
+            //if no SEMANTICS errors
             if (semanticsErrors.isEmpty()) {
                 try {
                     //typeCheck
@@ -83,7 +83,6 @@ public class App {
                     e.printStackTrace();
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
