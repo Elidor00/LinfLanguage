@@ -8,6 +8,8 @@ import linf.utils.Environment;
 
 import java.util.ArrayList;
 
+import lvm.utils.Strings;
+
 public class IfThenElse extends LinfStmt {
 
     private Exp exp;
@@ -46,6 +48,15 @@ public class IfThenElse extends LinfStmt {
 
     @Override
     public String codeGen() {
-        return null;
+        String thenBranchCg = Strings.freshLabel();
+        String endBranchCg = Strings.freshLabel();
+        return exp.codeGen() +
+                "li $t1 1 \n" +
+                "beq $a0 $t1 " + thenBranchCg + "\n" + //branch if equal
+                elseBranch.codeGen() +
+                "b " + endBranchCg + "\n" +  //jump to label endBranchCg
+                thenBranchCg + ":\n" +  //label thenBranch
+                thenBranch.codeGen() +
+                endBranchCg + ":\n";
     }
 }
