@@ -7,12 +7,14 @@ import linf.parser.ComplexStaticAnalysisLexer;
 import linf.parser.ComplexStaticAnalysisParser;
 import linf.statement.Block;
 import linf.utils.Environment;
+import lvm.ExecuteVM;
+import lvm.LvmVisitorImpl;
 import lvm.parser.LVMLexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Token;
+import lvm.parser.LVMParser;
+import org.antlr.v4.runtime.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -76,9 +78,27 @@ public class App {
             if (semanticsErrors.isEmpty()) {
                 try {
                     //typeCheck
+                    //parser.reset();
                     blk.checkType();
-                    // TODO: cgen
-                    // TODO: added interpeter
+                    System.out.println("Type checking done");
+                    //parser.reset();
+                    //Block blk2 = (Block) visitor.visit(parser.block());
+                    String cgen = blk.codeGen();
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("bytecode.txt"));
+                    writer.write(cgen);
+                    writer.close();
+                    System.out.println("File written Successfully");
+                    //interpreter
+                    CharStream stream = new ANTLRInputStream(cgen); //for LVMLexer
+                    LVMLexer interpreterLexerCgen = new LVMLexer(stream);
+                    CommonTokenStream interpreterTokens = new CommonTokenStream(interpreterLexerCgen);
+                    LVMParser interpreterParser = new LVMParser(interpreterTokens);
+                    interpreterParser.setBuildParseTree(true);
+                    LvmVisitorImpl interpreterVisitorCgen = new LvmVisitorImpl();
+                    interpreterVisitorCgen.visitProgram(interpreterParser.program());
+                    //exe vm
+                    ExecuteVM vm = new ExecuteVM(interpreterVisitorCgen.code);
+                    vm.cpu();
                 } catch (TypeError e) {
                     e.printStackTrace();
                 }
