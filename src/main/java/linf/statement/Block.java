@@ -133,7 +133,28 @@ public class Block extends LinfStmt {
 
     @Override
     public String codeGen() {
-        return null;
+        StringBuilder code = new StringBuilder(new String(""));
+        int counterVarDec = 0;
+        code.append("push $fp\n");
+        //check varDec inside block
+        for (LinfStmt statement: stmtList){
+            if (statement instanceof VarDec) {
+                counterVarDec++;
+            }
+        }
+        code.append("addi $sp $sp ").append(counterVarDec * 4).append("\n");
+        code.append("push $fp\n");
+        code.append("move $fp $sp\n");
+        //check FunDec inside block
+        for (LinfStmt statement: stmtList){
+            if (statement instanceof FunDec) {
+                code.append(statement.codeGen());
+            }
+        }
+        code.append("pop\n");
+        code.append("$fp <- top\n");
+        code.append("pop\n");
+        return code.toString();
     }
 }
 
