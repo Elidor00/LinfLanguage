@@ -63,6 +63,17 @@ public class Assignment extends LinfStmt {
 
     @Override
     public String codeGen() {
-        return null;
+        String cgenAssignment = new String();
+        String cgenExp = this.exp.codeGen();
+        //TODO: da rivedere
+        //Environment env = ?;
+        //Qua penso di aver bisogno dell'env per poter generare codice
+        /*STentry var = env.getStEntry(id);
+        cgen1Assignment += "move $al $fp \n";
+        int varNestingLevel = -1;
+        for (int i = )
+        for (int i = 0; i < var.getNestinglevel() -)
+        */
+        return cgenExp + cgenAssignment;
     }
 }

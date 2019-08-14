@@ -46,6 +46,6 @@ public class Deletion extends LinfStmt {
 
     @Override
     public String codeGen() {
-        return null;
+        return "";
     }
 }
