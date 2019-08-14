@@ -97,8 +97,8 @@ public class App {
                     LvmVisitorImpl interpreterVisitorCgen = new LvmVisitorImpl();
                     interpreterVisitorCgen.visitProgram(interpreterParser.program());
                     //exe vm
-                    ExecuteVM vm = new ExecuteVM(interpreterVisitorCgen.code);
-                    vm.cpu();
+                    ExecuteVM vm = new ExecuteVM();
+                    vm.cpu(interpreterVisitorCgen.code);
                 } catch (TypeError e) {
                     e.printStackTrace();
                 }

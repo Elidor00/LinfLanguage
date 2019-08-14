@@ -8,10 +8,9 @@ import static lvm.utils.Strings.IP;
 
 public class ExecuteVM {
 
-    public static final int CODESIZE = 10000;
-    public static final int MEMSIZE = 10000;
+    static final int CODESIZE = 10000;
+    private static final int MEMSIZE = 10000;
 
-    private final int[] code;
     private final int[] memory = new int[MEMSIZE];
 
     //registers
@@ -35,17 +34,14 @@ public class ExecuteVM {
     }};
     */
 
-    public ExecuteVM(int[] code) {
-        this.code = code;
-    }
 
-    public void cpu() {
-        while (true) {
+    public void cpu(int[] code) {
+        for (int bytecode : code) {
+            ip++;
             //registers.get(INT_TO_STRING_REGISTER.get(sp))
             if (sp > MEMSIZE || sp <= 0) {
                 System.out.println("Error: Out of memory");
             }
-            int bytecode = code[ip++]; //fetch
             int v1, v2, address, offset;
             String r1, r2;
             switch (bytecode){

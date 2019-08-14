@@ -8,6 +8,9 @@ import linf.parser.ComplexStaticAnalysisParser;
 import linf.statement.Block;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import lvm.LvmVisitorImpl;
+import lvm.parser.LVMLexer;
+import lvm.parser.LVMParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -39,5 +42,17 @@ public final class TestUtils {
         List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
         assertEquals(0, errors.size());
         return mainBlock.checkType();
+    }
+
+    public static int[] assemble(String code) {
+        LVMLexer interpreterLexerCgen = new LVMLexer(
+                CharStreams.fromString(code)
+        );
+        CommonTokenStream interpreterTokens = new CommonTokenStream(interpreterLexerCgen);
+        LVMParser interpreterParser = new LVMParser(interpreterTokens);
+        interpreterParser.setBuildParseTree(true);
+        LvmVisitorImpl interpreterVisitorCgen = new LvmVisitorImpl();
+        interpreterVisitorCgen.visitProgram(interpreterParser.program());
+        return interpreterVisitorCgen.code;
     }
 }
