@@ -311,13 +311,13 @@ public class LVMTest {
     @Test
     public void JumpRegister_Should_JustJump() {
         LVM vm = runBytecode(
-                "li $ra 13\n" +
-                        "jr\n" +
+                "li $ra 14\n" +
+                        "jr $ra\n" +
                         "li $ra 34\n" +
                         "li $ra 34\n" +
                         "li $ra 34\n"
         );
-        assertEquals(13, vm.getRa());
+        assertEquals(14, vm.getRa());
     }
 
     @Test

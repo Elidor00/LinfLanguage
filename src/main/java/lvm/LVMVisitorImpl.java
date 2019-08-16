@@ -134,6 +134,7 @@ public class LVMVisitorImpl extends LVMBaseVisitor {
                 break;
             case LVMParser.JR:
                 code[i++] = LVMParser.JR;
+                code[i++] = REGISTER_TO_INT.get(ctx.r1.getText());
                 break;
             case LVMParser.ADDI:
                 code[i++] = LVMParser.ADDI;

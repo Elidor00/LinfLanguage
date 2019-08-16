@@ -26,7 +26,7 @@ instruction:
 	  | BRANCHGREATER   r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHGREATEREQ r1 = REGISTER r2 = REGISTER l = LABEL
 	  | JAL l = LABEL
-	  | JR
+	  | JR r1 = REGISTER
 	  | PRINT
 	  | TOP r1 = REGISTER
 	  | HALT

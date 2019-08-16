@@ -76,7 +76,7 @@ class App {
                     blk.checkType();
                     String cgen = blk.codeGen();
                     System.out.println(cgen);
-                    int[] bytecode = LVM.assemble(cgen);
+                    int[] bytecode = LVM.assemble(cgen + "\nhalt");
                     //vm
                     LVM vm = new LVM();
                     vm.run(bytecode);

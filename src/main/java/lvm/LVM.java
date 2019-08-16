@@ -162,7 +162,8 @@ public class LVM {
                     SET_REGISTER_VALUE.get(IP).apply(this, code[ip]);
                     break;
                 case LVMParser.JR:
-                    SET_REGISTER_VALUE.get(IP).apply(this, ra);
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    SET_REGISTER_VALUE.get(IP).apply(this, GET_REGISTER_VALUE.get(r1).apply(this));
                     break;
                 case LVMParser.ADDI:
                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);

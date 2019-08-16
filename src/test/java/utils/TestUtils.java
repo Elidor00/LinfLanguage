@@ -44,7 +44,7 @@ public final class TestUtils {
     }
 
     public static LVM runBytecode(String code) {
-        int[] bytecode = LVM.assemble(code);
+        int[] bytecode = LVM.assemble(code + "\n halt");
         //exe vm
         LVM vm = new LVM();
         try {
