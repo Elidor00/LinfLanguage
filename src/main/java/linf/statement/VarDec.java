@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class VarDec extends StmtDec {
 
-    private Exp exp;
+    private final Exp exp;
 
     public VarDec(LinfType type, String id, Exp exp) {
         this.type = type;

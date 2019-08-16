@@ -1,37 +1,40 @@
 package lvm;
 
-import lvm.parser.*;
+import lvm.parser.LVMBaseVisitor;
+import lvm.parser.LVMParser;
 import org.antlr.v4.runtime.Token;
-import static lvm.utils.Registers.*;
+
 import java.util.HashMap;
 
-public class LvmVisitorImpl extends LVMBaseVisitor {
+import static lvm.utils.Registers.REGISTER_TO_INT;
 
-    public int[] code = new int[ExecuteVM.CODESIZE];
+public class LVMVisitorImpl extends LVMBaseVisitor {
+
+    public final int[] code = new int[LVM.CODESIZE];
+    private final HashMap<String, Integer> labelAdd = new HashMap<>();
+    private final HashMap<Integer, String> labelRef = new HashMap<>();
     private int i = 0;
-    private HashMap<String, Integer> labelAdd = new HashMap<>();
-    private HashMap<Integer, String> labelRef = new HashMap<>();
 
     @Override
-    public Void visitProgram(LVMParser.ProgramContext ctx){
+    public Void visitProgram(LVMParser.ProgramContext ctx) {
         visitChildren(ctx);
 
-        for (Integer refAdd: labelRef.keySet()) {
+        for (Integer refAdd : labelRef.keySet()) {
             code[refAdd] = labelAdd.get(labelRef.get(refAdd));
         }
         return null;
     }
 
     @Override
-    public Void visitInstruction(LVMParser.InstructionContext ctx){
-        switch(ctx.getStart().getType()) {
-            case LVMLexer.PUSH:
-                if(ctx.r1 != null) {
+    public Void visitInstruction(LVMParser.InstructionContext ctx) {
+        switch (ctx.getStart().getType()) {
+            case LVMParser.PUSH:
+                if (ctx.r1 != null) {
                     code[i++] = LVMParser.PUSH;
                     code[i++] = REGISTER_TO_INT.get(ctx.r1.getText());
                 }
                 break;
-            case LVMLexer.POP:
+            case LVMParser.POP:
                 code[i++] = LVMParser.POP;
                 break;
             case LVMParser.ADD:
@@ -122,7 +125,8 @@ public class LvmVisitorImpl extends LVMBaseVisitor {
                 break;
             case LVMParser.TOP:
                 code[i++] = LVMParser.TOP;
-                code[i++] = REGISTER_TO_INT.get(ctx.r1.getText());
+                int reg = REGISTER_TO_INT.get(ctx.r1.getText());
+                code[i++] = reg;
                 break;
             case LVMParser.JAL:
                 code[i++] = LVMParser.JAL;
@@ -130,7 +134,6 @@ public class LvmVisitorImpl extends LVMBaseVisitor {
                 break;
             case LVMParser.JR:
                 code[i++] = LVMParser.JR;
-                labelRef.put(i++, checkLabel(ctx.l));
                 break;
             case LVMParser.ADDI:
                 code[i++] = LVMParser.ADDI;
@@ -153,7 +156,7 @@ public class LvmVisitorImpl extends LVMBaseVisitor {
 
     private String checkLabel(Token label) {
         String res;
-        if (label != null )
+        if (label != null)
             res = label.getText();
         else
             res = null;

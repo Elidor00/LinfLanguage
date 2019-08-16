@@ -5,10 +5,10 @@ import linf.type.LinfType;
 
 
 public abstract class LinfValue implements Node {
-    protected String value;
+    String value;
     private LinfType type;
 
-    public void setValue(String value) {
+    void setValue(String value) {
         this.value = value;
     }
 

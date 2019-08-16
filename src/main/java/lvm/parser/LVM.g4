@@ -17,7 +17,7 @@ instruction:
 	  | MOVE   r1 = REGISTER r2 = REGISTER
 	  | STOREW r1 = REGISTER n = NUMBER '(' r2 = REGISTER ')'
 	  | LOADW  r1 = REGISTER n = NUMBER '(' r2 = REGISTER ')'
-	  | LOADI  r1 = REGISTER n =NUMBER
+	  | LOADI  r1 = REGISTER n = NUMBER
 	  | l = LABEL ':'
 	  | BRANCH          l = LABEL
 	  | BRANCHEQ        r1 = REGISTER r2 = REGISTER l = LABEL
@@ -26,9 +26,9 @@ instruction:
 	  | BRANCHGREATER   r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHGREATEREQ r1 = REGISTER r2 = REGISTER l = LABEL
 	  | JAL l = LABEL
-	  | JR  r1 = REGISTER
+	  | JR
 	  | PRINT
-	  | r1 = REGISTER '<-' TOP
+	  | TOP r1 = REGISTER
 	  | HALT
     );
 

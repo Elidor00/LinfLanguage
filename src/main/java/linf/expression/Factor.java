@@ -1,7 +1,5 @@
 package linf.expression;
 
-import lvm.utils.Strings;
-
 public class Factor extends BinaryOp<LinfValue, LinfValue> {
 
 

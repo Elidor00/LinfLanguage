@@ -7,20 +7,20 @@ import linf.parser.ComplexStaticAnalysisLexer;
 import linf.parser.ComplexStaticAnalysisParser;
 import linf.statement.Block;
 import linf.utils.Environment;
-import lvm.ExecuteVM;
-import lvm.LvmVisitorImpl;
-import lvm.parser.LVMLexer;
-import lvm.parser.LVMParser;
-import org.antlr.v4.runtime.*;
+import lvm.LVM;
+import lvm.error.LVMError;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.System.exit;
 
-public class App {
+class App {
 
     public static void main(String[] args) {
         String fileName = "test.lnf";
@@ -33,9 +33,8 @@ public class App {
 
             ArrayList<String> lexerErrors = new ArrayList<>(); //list of LEXICAL errors
             //check LEXICAL errors
-            for (Token t: lexer.getAllTokens()){ //get all token
-                //System.out.println("\nToken: " + "t");
-                if (t.getType() == lexer.ERR){ //check token type
+            for (Token t : lexer.getAllTokens()) { //get all token
+                if (t.getType() == ComplexStaticAnalysisLexer.ERR) { //check token type
                     System.out.println("Token Error: " + t +
                             " Line: " + t.getLine() +
                             " Char position: " + t.getCharPositionInLine());
@@ -44,7 +43,7 @@ public class App {
                             " Char position: " + t.getCharPositionInLine());
                 }
             }
-            if(!lexerErrors.isEmpty()){
+            if (!lexerErrors.isEmpty()) {
                 System.err.println("Found LEXICAL errors. Exiting process.");
                 exit(-1);
             }
@@ -61,46 +60,34 @@ public class App {
             //start visit the root and then recursively visit the whole tree
             Block blk = (Block) visitor.visit(parser.block());
             //check SYNTAX errors
-            if(parser.getNumberOfSyntaxErrors()!= 0){
+            if (parser.getNumberOfSyntaxErrors() != 0) {
                 System.err.println("Found SYNTAX errors. Exiting process.");
                 exit(-1);
             }
 
             Environment env = new Environment();
 
-            ArrayList<SemanticError> semanticsErrors = blk.checkSemantics(env); //list of SEMANTICS errors
-            //check semantics errors
-            for (SemanticError err : semanticsErrors) {
-                System.out.println(err);
-            exit(-1);
-            }
+            List<SemanticError> semanticsErrors = blk.checkSemantics(env); //list of SEMANTICS errors
+
             //if no SEMANTICS errors
             if (semanticsErrors.isEmpty()) {
                 try {
                     //typeCheck
-                    //parser.reset();
                     blk.checkType();
-                    System.out.println("Type checking done");
-                    //parser.reset();
-                    //Block blk2 = (Block) visitor.visit(parser.block());
                     String cgen = blk.codeGen();
-                    BufferedWriter writer = new BufferedWriter(new FileWriter("bytecode.txt"));
-                    writer.write(cgen);
-                    writer.close();
-                    System.out.println("File written Successfully");
-                    //interpreter
-                    CharStream stream = new ANTLRInputStream(cgen); //for LVMLexer
-                    LVMLexer interpreterLexerCgen = new LVMLexer(stream);
-                    CommonTokenStream interpreterTokens = new CommonTokenStream(interpreterLexerCgen);
-                    LVMParser interpreterParser = new LVMParser(interpreterTokens);
-                    interpreterParser.setBuildParseTree(true);
-                    LvmVisitorImpl interpreterVisitorCgen = new LvmVisitorImpl();
-                    interpreterVisitorCgen.visitProgram(interpreterParser.program());
-                    //exe vm
-                    ExecuteVM vm = new ExecuteVM();
-                    vm.cpu(interpreterVisitorCgen.code);
-                } catch (TypeError e) {
+                    System.out.println(cgen);
+                    int[] bytecode = LVM.assemble(cgen);
+                    //vm
+                    LVM vm = new LVM();
+                    vm.run(bytecode);
+                } catch (TypeError | LVMError e) {
                     e.printStackTrace();
+                }
+            } else {
+                //noinspection LoopStatementThatDoesntLoop
+                for (SemanticError err : semanticsErrors) {
+                    System.out.println(err);
+                    exit(-1);
                 }
             }
         } catch (IOException e) {
