@@ -9,6 +9,7 @@ import linf.expression.IDValue;
 import linf.type.FunType;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.STentry;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +21,8 @@ public class FunCall extends StmtDec {
     private final List<LinfType> formalParTypes = new ArrayList<>();
     private final HashSet<IDValue> rwIDs = new HashSet<>();
     private final HashSet<IDValue> deletedIDs = new HashSet<>();
-    private FunType type;
+    private STentry entry;
+    private int nestingLevel;
 
 
     public FunCall(String id) {
@@ -29,10 +31,6 @@ public class FunCall extends StmtDec {
 
     public void addPar(Exp exp) {
         actualParList.add(exp);
-    }
-
-    public FunType getType() {
-        return type;
     }
 
     HashSet<IDValue> getRwIDs() {
@@ -45,6 +43,7 @@ public class FunCall extends StmtDec {
 
     @Override
     public LinfType checkType() throws TypeError {
+        FunType type = (FunType) entry.getType();
         rwIDs.addAll(type.getRwIDs());
         deletedIDs.addAll(type.getDeletedIDs());
         // checking number of parameters
@@ -96,9 +95,10 @@ public class FunCall extends StmtDec {
         if (!env.containsName(id)) {
             res.add(new FunctionDeclarationOutOfScopeError(id));
         } else {
-            LinfType envType = env.getStEntry(id).getType();
-            if (envType instanceof FunType) {
-                type = (FunType) envType;
+            entry = env.getStEntry(id);
+            nestingLevel = env.nestingLevel;
+            if (entry.getType() instanceof FunType) {
+                FunType type = (FunType) entry.getType();
                 formalParTypes.addAll(type.getParTypes());
 
                 for (int i = 0; i < formalParTypes.size(); i++) {
@@ -109,16 +109,43 @@ public class FunCall extends StmtDec {
                     }
                 }
             } else {
-                res.add(new SymbolUsedAsFunctionError(id, envType));
+                res.add(new SymbolUsedAsFunctionError(id, entry.getType()));
             }
         }
 
         return res;
     }
 
+    /**
+     * f() { g(); }
+     * g() { print 0; }
+     * 1. the control link which points to AR of caller of g
+     * 2. actual parameters
+     * 3. the ACCESS/STATIC link
+     */
     @Override
     public String codeGen() {
-        return null;
+        // Control link
+        StringBuilder builder = new StringBuilder("push $fp\n");
+
+        // Actual parameters
+        for (Exp exp : actualParList) {
+            builder.append(exp.codeGen())
+                    .append(" push $a0\n");
+        }
+
+        // Access link
+        builder.append("lw $al 0($fp)\n");
+        for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++) {
+            builder.append("lw $al 0($al)");
+        }
+        builder.append("push $al");
+
+        return builder.append("jal ")
+                .append(((FunType) type).getFunLabel().replace(":", ""))
+                .append("\n pop \n")
+                .toString();
+
     }
 }
 

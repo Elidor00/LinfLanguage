@@ -9,6 +9,7 @@ import linf.type.FunType;
 import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
+import lvm.utils.Strings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class FunDec extends StmtDec {
         this.id = id;
         this.body = body;
         this.type = new FunType();
+        ((FunType) this.type).setFunLabel(Strings.freshFunLabel());
     }
 
     public void addPar(Parameter par) {
@@ -64,6 +66,12 @@ public class FunDec extends StmtDec {
 
     @Override
     public String codeGen() {
-        return null;
+        String funLabel = ((FunType) type).getFunLabel();
+        String endLabel = Strings.freshLabel();
+        String code = "jal " + endLabel.replace(":", "") + " " +
+                funLabel + " move $fp $sp push $ra\n ";
+        code += body.codeGen();
+        code += "top $ra addi $sp $sp " + parList.size() + " top $fp pop jr $ra";
+        return code + endLabel + "\n";
     }
 }
