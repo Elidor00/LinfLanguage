@@ -17,9 +17,9 @@ import java.util.HashSet;
 
 
 public class Block extends LinfStmt {
-    private ArrayList<LinfStmt> stmtList = new ArrayList<>();
-    private HashSet<IDValue> deletedIDs = new HashSet<>();
-    private HashSet<IDValue> rwIDs = new HashSet<>();
+    private final ArrayList<LinfStmt> stmtList = new ArrayList<>();
+    private final HashSet<IDValue> deletedIDs = new HashSet<>();
+    private final HashSet<IDValue> rwIDs = new HashSet<>();
     private HashMap<String, STentry> localEnv;
 
 
@@ -136,3 +136,4 @@ public class Block extends LinfStmt {
         return null;
     }
 }
+

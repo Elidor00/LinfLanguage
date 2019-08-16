@@ -1,34 +1,38 @@
 grammar LVM;
 
+//Parser Rules
 
 program: instruction* ;
 
 instruction:
-      PUSH REGISTER                                 #push
-	  | POP                                         #pop
-	  | ADD	REGISTER REGISTER REGISTER              #add
-	  | ADDI REGISTER REGISTER NUMBER               #addi
-	  | SUB	REGISTER REGISTER REGISTER              #sub
-	  | SUBI REGISTER REGISTER NUMBER               #subi
-	  | MULT REGISTER REGISTER REGISTER             #mult
-	  | DIV REGISTER REGISTER REGISTER              #div
-	  | MOVE REGISTER REGISTER                      #move
-	  | STOREW REGISTER NUMBER '(' REGISTER ')'     #sw
-	  | LOADW REGISTER NUMBER '(' REGISTER ')'      #lw
-	  | LOADI REGISTER NUMBER                       #li
-	  | LABEL ':'                                   #label
-	  | BRANCH LABEL                                #b
-	  | BRANCHEQ REGISTER REGISTER LABEL            #beq
-	  | BRANCHLESS REGISTER REGISTER LABEL          #blr
-	  | BRANCHLESSEQ REGISTER REGISTER LABEL        #blre
-	  | BRANCHGREATER REGISTER REGISTER LABEL       #bgr
-	  | BRANCHGREATEREQ REGISTER REGISTER LABEL     #bgre
-	  | JAL LABEL                                   #jal
-	  | JR REGISTER                                 #jr
-	  | PRINT                                       #print
-	  | REGISTER '<-' TOP                           #top
-	  | HALT                                        #halt;
+    (
+        PUSH   r1 = REGISTER
+	  | POP
+	  | ADD	   r1 = REGISTER r2 = REGISTER r3 = REGISTER
+	  | ADDI   r1 = REGISTER r2 = REGISTER  n = NUMBER
+	  | SUB	   r1 = REGISTER r2 = REGISTER r3 = REGISTER
+	  | SUBI   r1 = REGISTER r2 = REGISTER  n = NUMBER
+	  | MULT   r1 = REGISTER r2 = REGISTER r3 = REGISTER
+	  | DIV    r1 = REGISTER r2 = REGISTER r3 = REGISTER
+	  | MOVE   r1 = REGISTER r2 = REGISTER
+	  | STOREW r1 = REGISTER n = NUMBER '(' r2 = REGISTER ')'
+	  | LOADW  r1 = REGISTER n = NUMBER '(' r2 = REGISTER ')'
+	  | LOADI  r1 = REGISTER n = NUMBER
+	  | l = LABEL ':'
+	  | BRANCH          l = LABEL
+	  | BRANCHEQ        r1 = REGISTER r2 = REGISTER l = LABEL
+	  | BRANCHLESS      r1 = REGISTER r2 = REGISTER l = LABEL
+	  | BRANCHLESSEQ    r1 = REGISTER r2 = REGISTER l  = LABEL
+	  | BRANCHGREATER   r1 = REGISTER r2 = REGISTER l = LABEL
+	  | BRANCHGREATEREQ r1 = REGISTER r2 = REGISTER l = LABEL
+	  | JAL l = LABEL
+	  | JR
+	  | PRINT
+	  | TOP r1 = REGISTER
+	  | HALT
+    );
 
+//Lexer Rules
 
 JR	                        : 'jr' ;
 JAL	                        : 'jal' ;

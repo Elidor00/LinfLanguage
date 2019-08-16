@@ -6,8 +6,8 @@ import java.util.Objects;
 
 public class STentry {
 
-    private int nestingLevel;
-    private LinfType type;
+    private final int nestingLevel;
+    private final LinfType type;
 
     public STentry(int n, LinfType t) {
         nestingLevel = n;

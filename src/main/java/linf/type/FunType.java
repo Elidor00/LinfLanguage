@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public class FunType extends LinfType {
-    private List<LinfType> parTypes = new ArrayList<>();
-    private HashSet<IDValue> rwIDs = new HashSet<>();
-    private HashSet<IDValue> deletedIDs = new HashSet<>();
+    private final List<LinfType> parTypes = new ArrayList<>();
+    private final HashSet<IDValue> rwIDs = new HashSet<>();
+    private final HashSet<IDValue> deletedIDs = new HashSet<>();
 
     public List<LinfType> getParTypes() {
         return parTypes;

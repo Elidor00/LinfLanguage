@@ -9,7 +9,7 @@ import linf.utils.STentry;
 import java.util.ArrayList;
 
 public class Parameter implements Node {
-    private IDValue id;
+    private final IDValue id;
 
     Parameter(LinfType type, String name) {
         this.id = new IDValue(name);

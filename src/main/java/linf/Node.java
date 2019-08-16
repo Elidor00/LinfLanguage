@@ -9,10 +9,10 @@ import java.util.ArrayList;
 
 public interface Node {
 
-    String codeGen();
+    ArrayList<SemanticError> checkSemantics(Environment env);
 
     LinfType checkType() throws TypeError;
 
-    ArrayList<SemanticError> checkSemantics(Environment env);
+    String codeGen();
 }
 
