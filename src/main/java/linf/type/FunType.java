@@ -12,6 +12,15 @@ public class FunType extends LinfType {
     private List<LinfType> parTypes = new ArrayList<>();
     private HashSet<IDValue> rwIDs = new HashSet<>();
     private HashSet<IDValue> deletedIDs = new HashSet<>();
+    private String funLabel;
+
+    public void setFunLabel(String funLabel) {
+        this.funLabel = funLabel;
+    }
+
+    public String getFunLabel() {
+        return funLabel;
+    }
 
     public List<LinfType> getParTypes() {
         return parTypes;
