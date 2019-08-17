@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 public class Environment {
     public int nestingLevel = -1;
-    int offset = 0;
+    public int offset = 0;
     // List of hash tables
     private final LinkedList<HashMap<String, STentry>> symbolsTable = new LinkedList<>();
     public int nestingLevel = -1;
