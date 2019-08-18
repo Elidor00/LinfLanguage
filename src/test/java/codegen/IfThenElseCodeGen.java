@@ -27,6 +27,14 @@ public class IfThenElseCodeGen {
         labels.put(3, "true");
         labels.put(4, "condition_end");
 
+        /*
+        public String freshLabel() {
+            count_label ++;
+            return labels.get(count_label);
+        }
+        */
+
+        //TODO: IDValue cgen
         String result = cgen(" { int x = 2; if (x == 2) then { } else { } }");
         String test =
                 "push $fp \n" + //main block scope
