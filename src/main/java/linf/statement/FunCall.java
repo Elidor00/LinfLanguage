@@ -17,13 +17,13 @@ import java.util.List;
 
 
 public class FunCall extends StmtDec {
-    private final List<Exp> actualParList = new ArrayList<>();
-    private final List<LinfType> formalParTypes = new ArrayList<>();
-    private final HashSet<IDValue> rwIDs = new HashSet<>();
-    private final HashSet<IDValue> deletedIDs = new HashSet<>();
+    private List<Exp> actualParList = new ArrayList<>();
+    private List<LinfType> formalParTypes = new ArrayList<>();
     private STentry entry;
     private int nestingLevel;
 
+    private HashSet<IDValue> rwIDs = new HashSet<>();
+    private HashSet<IDValue> deletedIDs = new HashSet<>();
 
     public FunCall(String id) {
         this.id = id;
