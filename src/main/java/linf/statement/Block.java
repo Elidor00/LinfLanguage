@@ -143,16 +143,16 @@ public class Block extends LinfStmt {
             }
         }
         if (counterVarDec > 0)
-            code.append("addi $sp $sp ").append(counterVarDec).append("\n"); //cresce al contrario?
+            code.append("addi $sp $sp ").append(-counterVarDec).append(" \n");
         code.append("push $fp \n");
         code.append("move $fp $sp \n");
-        //check FunDec inside block
+        //check statement inside block
         for (LinfStmt statement: stmtList){
-            if (statement instanceof FunDec) {
-                code.append(statement.codeGen());
-            }
+            code.append(statement.codeGen());
         }
         code.append("pop \n");
+        if (counterVarDec > 0)
+            code.append("addi $sp $sp ").append(counterVarDec).append(" \n");
         code.append("top $fp \n");
         code.append("pop \n");
         return code.toString();

@@ -14,11 +14,11 @@ public class Strings {
     private static int funLabelCount = 0;
 
     public static String freshLabel() {
-        return "label" + (labelCount++) + ":\n";
+        return "label" + (labelCount++) + " \n";
     }
 
     public static String freshFunLabel() {
-        return "fLabel " + (funLabelCount++) + ":\n";
+        return "fLabel " + (funLabelCount++) + " \n";
     }
 
 }
