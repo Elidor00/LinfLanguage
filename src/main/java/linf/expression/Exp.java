@@ -78,7 +78,7 @@ public class Exp extends BinaryOp<Term, Exp> {
         if (this.getRight() != null) {
             cgenExp += "push $a0 \n";
             cgenExp += this.getRight().codeGen();
-            cgenExp += "$t1 <- top \n pop \n";
+            cgenExp += "top $t1 \n pop \n";
             if (this.getOp().equals("+")) {
                 cgenExp += "add $a0 $t1 $a0 \n";
             } else {
