@@ -12,9 +12,9 @@ import lvm.utils.Strings;
 
 public class IfThenElse extends LinfStmt {
 
-    private Exp exp;
-    private Block thenBranch;
-    private Block elseBranch;
+    private final Exp exp;
+    private final Block thenBranch;
+    private final Block elseBranch;
 
     public IfThenElse(Exp exp, Block thenBranch, Block elseBranch) {
         this.exp = exp;

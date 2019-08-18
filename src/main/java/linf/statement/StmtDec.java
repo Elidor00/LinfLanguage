@@ -9,8 +9,8 @@ import linf.utils.STentry;
 import java.util.ArrayList;
 
 public abstract class StmtDec extends LinfStmt {
-    protected String id;
-    protected LinfType type;
+    String id;
+    LinfType type;
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {

@@ -9,7 +9,7 @@ import linf.utils.Environment;
 import java.util.ArrayList;
 
 public class Print extends LinfStmt {
-    private Exp exp;
+    private final Exp exp;
 
     public Print(Exp exp) {
         this.exp = exp;

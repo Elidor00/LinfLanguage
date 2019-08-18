@@ -8,6 +8,8 @@ import linf.parser.ComplexStaticAnalysisParser;
 import linf.statement.Block;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import lvm.LVM;
+import lvm.error.LVMError;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -17,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public final class TestUtils {
-    public static Block makeAST(String code) {
+    private static Block makeAST(String code) {
         ComplexStaticAnalysisLexer lexer = new ComplexStaticAnalysisLexer(
                 CharStreams.fromString(code)
         );
@@ -39,5 +41,17 @@ public final class TestUtils {
         List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
         assertEquals(0, errors.size());
         return mainBlock.checkType();
+    }
+
+    public static LVM runBytecode(String code) {
+        int[] bytecode = LVM.assemble(code + "\n halt");
+        //exe vm
+        LVM vm = new LVM();
+        try {
+            vm.run(bytecode);
+        } catch (LVMError err) {
+            err.printStackTrace();
+        }
+        return vm;
     }
 }

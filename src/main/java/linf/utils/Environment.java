@@ -10,7 +10,8 @@ public class Environment {
     public int nestingLevel = -1;
     public int offset = 0;
     // List of hash tables
-    private LinkedList<HashMap<String, STentry>> symbolsTable = new LinkedList<>();
+    private final LinkedList<HashMap<String, STentry>> symbolsTable = new LinkedList<>();
+    public int nestingLevel = -1;
 
     /**
      * Adds variable with the given id to existence

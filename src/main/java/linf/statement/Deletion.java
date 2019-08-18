@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 
 public class Deletion extends LinfStmt {
-    private IDValue id;
+    private final IDValue id;
 
     public Deletion(String name) {
         this.id = new IDValue(name);

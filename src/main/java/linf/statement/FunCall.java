@@ -25,7 +25,6 @@ public class FunCall extends StmtDec {
     private HashSet<IDValue> rwIDs = new HashSet<>();
     private HashSet<IDValue> deletedIDs = new HashSet<>();
 
-
     public FunCall(String id) {
         this.id = id;
     }

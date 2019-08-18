@@ -3,8 +3,8 @@ package linf.error.type;
 public abstract class TypeError extends Exception {
     private final String msg;
 
-    public TypeError(String msg) {
-        this.msg = "[TypeError] " + msg;
+    TypeError(String msg) {
+        this.msg = TypeError.class.getSimpleName() + " " + msg;
     }
 
     @Override

@@ -17,6 +17,8 @@ printfactorial(int x) {
 
   printfactorial(10);
 
+}
+
 funz(int x) {
     print x;
 
@@ -173,4 +175,3 @@ x = 3;
 
 */
 
-}

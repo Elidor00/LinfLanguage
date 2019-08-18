@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Exp extends BinaryOp<Term, Exp> {
+    private final HashSet<IDValue> rwIDs = new HashSet<>();
     private boolean isNegative;
-    private HashSet<IDValue> rwIDs = new HashSet<>();
 
     public void setTerm(Term term) {
         setLeft(term);

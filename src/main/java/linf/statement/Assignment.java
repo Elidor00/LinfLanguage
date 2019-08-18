@@ -13,8 +13,8 @@ import linf.utils.STentry;
 import java.util.ArrayList;
 
 public class Assignment extends LinfStmt {
-    private IDValue id;
-    private Exp exp;
+    private final IDValue id;
+    private final Exp exp;
     private LinfType lhSideType;
 
     public Assignment(String name, Exp exp) {

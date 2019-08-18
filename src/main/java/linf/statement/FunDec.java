@@ -17,8 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class FunDec extends StmtDec {
-    private List<Parameter> parList = new ArrayList<>();
-    private Block body;
+    private final List<Parameter> parList = new ArrayList<>();
+    private final Block body;
 
     public FunDec(String id, Block body) {
         this.id = id;
