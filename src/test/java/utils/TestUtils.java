@@ -6,7 +6,6 @@ import linf.error.type.TypeError;
 import linf.parser.ComplexStaticAnalysisLexer;
 import linf.parser.ComplexStaticAnalysisParser;
 import linf.statement.Block;
-import linf.type.LinfType;
 import linf.utils.Environment;
 import lvm.LVM;
 import lvm.error.LVMError;
@@ -36,11 +35,21 @@ public final class TestUtils {
         return makeAST(code).checkSemantics(new Environment());
     }
 
-    public static LinfType checkType(String code) throws TypeError {
+    public static Block checkType(String code) throws TypeError {
         Block mainBlock = makeAST(code);
         List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
         assertEquals(0, errors.size());
-        return mainBlock.checkType();
+        mainBlock.checkType();
+        return mainBlock;
+    }
+
+    public static String cgen(String linfCode) {
+        try {
+            return checkType(linfCode).codeGen();
+        } catch (TypeError e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static LVM runBytecode(String code) {
