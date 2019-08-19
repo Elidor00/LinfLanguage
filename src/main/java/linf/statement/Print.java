@@ -32,6 +32,6 @@ public class Print extends LinfStmt {
 
     @Override
     public String codeGen() {
-        return exp.codeGen() + "print $a0\n";
+        return exp.codeGen() + "print\n";
     }
 }

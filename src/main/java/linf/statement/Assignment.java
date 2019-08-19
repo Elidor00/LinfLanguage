@@ -66,22 +66,16 @@ public class Assignment extends LinfStmt {
     @Override
     public String codeGen() {
         if (id.isParameter()) {
-            if (id.getEntry().getType().isReference()) {
-                return exp.codeGen() +
-                        "lw $t1 " + id.getEntry().getOffset() + "($fp)\n" +
-                        "sw $a0 0($t1)\n";
-            } else {
-                return exp.codeGen() +
-                        "sw $a0 " + id.getEntry().getOffset() + "($fp)\n";
-            }
-        } else {
-            StringBuilder followChain = new StringBuilder("lw $al 2($fp)\n");
-            for (int i = 0; i < nestingLevel - id.getEntry().getNestinglevel(); i++) {
-                followChain.append("lw $al 0($al)\n");
-            }
             return exp.codeGen() +
-                    followChain +
+                    "sw $a0 " + id.getEntry().getOffset() + "($fp)\n";
+        } else {
+
+            // Follow chain
+            return exp.codeGen() +
+                    "lw $al 2($fp)\n" +
+                    "lw $al 0($al)\n".repeat(nestingLevel - id.getEntry().getNestinglevel()) +
                     "sw $a0 " + id.getEntry().getOffset() + "($al)\n";
+
         }
 
     }

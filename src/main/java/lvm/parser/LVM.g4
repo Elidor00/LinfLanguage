@@ -58,7 +58,7 @@ BRANCHLESSEQ                : 'blre' ;
 BRANCHGREATER               : 'bgr' ;
 BRANCHGREATEREQ             : 'bgre' ;
 
-REGISTER : '$a0' | '$t1' | '$sp' | '$fp' | '$al' | '$ra' ;
+REGISTER : '$a0' | '$t1' | '$sp' | '$fp' | '$al' | '$ra' | '$ip';
 
 LABEL	 : ('a'..'z'|'A'..'Z')('a'..'z' | 'A'..'Z' | '0'..'9')* ;
 NUMBER	 : '0' | ('-')?(('1'..'9')('0'..'9')*) ;

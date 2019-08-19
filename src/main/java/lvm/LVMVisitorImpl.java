@@ -10,18 +10,23 @@ import static lvm.utils.Registers.REGISTER_TO_INT;
 
 public class LVMVisitorImpl extends LVMBaseVisitor {
 
-    public final int[] code = new int[LVM.CODESIZE];
+    private final int[] code = new int[LVM.CODESIZE];
     private final HashMap<String, Integer> labelAdd = new HashMap<>();
     private final HashMap<Integer, String> labelRef = new HashMap<>();
     private int i = 0;
 
+    public int[] getCode() {
+        for (Integer refAdd : labelRef.keySet()) {
+            String lab = labelRef.get(refAdd);
+            int val = labelAdd.get(lab);
+            code[refAdd] = val;
+        }
+        return code;
+    }
+
     @Override
     public Void visitProgram(LVMParser.ProgramContext ctx) {
         visitChildren(ctx);
-
-        for (Integer refAdd : labelRef.keySet()) {
-            code[refAdd] = labelAdd.get(labelRef.get(refAdd));
-        }
         return null;
     }
 
@@ -156,11 +161,10 @@ public class LVMVisitorImpl extends LVMBaseVisitor {
     }
 
     private String checkLabel(Token label) {
-        String res;
-        if (label != null)
-            res = label.getText();
-        else
-            res = null;
-        return res;
+        if (label != null) {
+            return label.getText();
+        } else {
+            throw new IllegalArgumentException("Label was null.");
+        }
     }
 }

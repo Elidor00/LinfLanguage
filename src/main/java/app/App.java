@@ -30,6 +30,13 @@ class App {
 
             //create lexer
             ComplexStaticAnalysisLexer lexer = new ComplexStaticAnalysisLexer(input);
+            //create parser
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            ComplexStaticAnalysisParser parser = new ComplexStaticAnalysisParser(tokens);
+            parser.setBuildParseTree(true);
+
+            //create custom visitor
+            LinfVisitorImpl visitor = new LinfVisitorImpl();
 
             ArrayList<String> lexerErrors = new ArrayList<>(); //list of LEXICAL errors
             //check LEXICAL errors
@@ -48,22 +55,8 @@ class App {
                 exit(-1);
             }
 
-            lexer.reset();
-
-            //create parser
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            ComplexStaticAnalysisParser parser = new ComplexStaticAnalysisParser(tokens);
-            parser.setBuildParseTree(true);
-
-            //create custom visitor
-            LinfVisitorImpl visitor = new LinfVisitorImpl();
             //start visit the root and then recursively visit the whole tree
             Block blk = (Block) visitor.visit(parser.block());
-            //check SYNTAX errors
-            if (parser.getNumberOfSyntaxErrors() != 0) {
-                System.err.println("Found SYNTAX errors. Exiting process.");
-                exit(-1);
-            }
 
             Environment env = new Environment();
 

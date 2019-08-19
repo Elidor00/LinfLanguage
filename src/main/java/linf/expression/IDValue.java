@@ -58,18 +58,13 @@ public class IDValue extends LinfValue {
         if (entry.getType() instanceof FunType) {
             return ((FunType) entry.getType()).getFunLabel();
         } else if (isParameter()) {
-            if (entry.getType().isReference()) {
-                return "lw $t1 " + entry.getOffset() + "($fp)\n" +
-                        "lw $a0 0($t1)\n";
-            } else {
-                return "lw $a0 " + entry.getOffset() + "($fp)\n";
-            }
+            // Local to AR
+            return "lw $a0 " + entry.getOffset() + "($fp)\n";
         } else {
-            StringBuilder followChain = new StringBuilder("lw $al 2($fp)\n");
-            for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++) {
-                followChain.append("lw $al 0($al)\n");
-            }
-            return followChain + "lw $a0 " + entry.getOffset() + "($al)\n";
+            // Follow chain
+            return "lw $al 2($fp)\n" +
+                    "lw $al 0($al)\n".repeat(nestingLevel - entry.getNestinglevel()) +
+                    "lw $a0 " + entry.getOffset() + "($al)\n";
         }
     }
 

@@ -54,6 +54,7 @@ public class Registers {
         INT_TO_STRING_REGISTER.put(3, FP);
         INT_TO_STRING_REGISTER.put(4, AL);
         INT_TO_STRING_REGISTER.put(5, RA);
+        INT_TO_STRING_REGISTER.put(6, IP);
 
         REGISTER_TO_INT.put(ACC, 0);
         REGISTER_TO_INT.put(TMP, 1);
@@ -61,6 +62,7 @@ public class Registers {
         REGISTER_TO_INT.put(FP, 3);
         REGISTER_TO_INT.put(AL, 4);
         REGISTER_TO_INT.put(RA, 5);
+        REGISTER_TO_INT.put(IP, 6);
 
     }
 }

@@ -12,14 +12,17 @@ import static utils.TestUtils.cgen;
 @RunWith(JUnit4.class)
 public class FunDecTest {
     @Before
-    public void resetLabels(){
+    public void resetLabels() {
         Strings.reset();
     }
 
     @Test
     public void Empty_FunDec() {
         String actual = cgen("{ f(){} }");
-        String expected = "move $fp $sp\n" +
+        String expected = "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
                 "jal label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
@@ -27,32 +30,39 @@ public class FunDecTest {
                 "move $fp $sp\n" +
                 // return control
                 "top $ra\n" +
+                "pop\n" +
                 "addi $sp $sp 0\n" +
                 "top $fp\n" +
                 "pop\n" +
                 "jr $ra\n" +
-                "label0:\n";
+                "label0:\n" +
+                "addi $sp $sp 2\n";
         assertEquals(expected, actual);
     }
 
     @Test
     public void Unary_FunDec() {
         String actual = cgen("{ f(int x){ print x; } }");
-        String expected = "move $fp $sp\n" +
+        String expected = "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
                 "jal label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // block
                 "move $fp $sp\n" +
                 "lw $a0 3($fp)\n" +
-                "print $a0\n" +
+                "print\n" +
                 // return control
                 "top $ra\n" +
+                "pop\n" +
                 "addi $sp $sp 1\n" +
                 "top $fp\n" +
                 "pop\n" +
                 "jr $ra\n" +
-                "label0:\n";
+                "label0:\n" +
+                "addi $sp $sp 2\n";
         assertEquals(expected, actual);
     }
 }

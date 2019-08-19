@@ -136,16 +136,14 @@ public class FunCall extends StmtDec {
             LinfType formalType = formalParTypes.get(i);
             if (formalType.isReference()) {
                 STentry referred = formalType.getRefTo();
-                builder.append("lw $al 2($fp)\n");
-                for (int j = 0; j < nestingLevel - referred.getNestinglevel(); j++) {
-                    builder.append("lw $al 0($al)\n");
-                }
-                int offset = entry.getOffset();
-                builder.append("lw $a0 ")
+                int offset = referred.getOffset();
+                builder.append("lw $al 2($fp)\n")
+                        .append("lw $al 0($al)\n".repeat(nestingLevel - referred.getNestinglevel()))
+                        .append("lw $a0 ")
                         .append(offset)
                         .append("($al)\n");
                 if (offset != 0) {
-                    builder.append("addi $a0 ")
+                    builder.append("addi $a0 $a0 ")
                             .append(offset)
                             .append("\n");
                 }
@@ -156,15 +154,12 @@ public class FunCall extends StmtDec {
         }
 
         // Static link
-        builder.append("lw $al 2($fp)\n");
-        for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++) {
-            builder.append("lw $al 0($al)\n");
-        }
-        builder.append("push $al\n");
-
-        // Return address
-        builder.append("addi $ra $ip 2\n");
-        return builder.append("jal ")
+        return builder.append("lw $al 2($fp)\n")
+                .append("lw $al 0($al)\n".repeat(nestingLevel - entry.getNestinglevel()))
+                .append("push $al\n")
+                // Return address
+                .append("addi $ra $ip 2\n")
+                .append("jal ")
                 .append(((FunType) entry.getType()).getFunLabel().replace(":", ""))
                 .append("pop\n")
                 .toString();

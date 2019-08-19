@@ -19,10 +19,11 @@ import static lvm.utils.Strings.IP;
 
 public class LVM {
 
-    public static final int MEMSIZE = 10000;
+    public static final int MEMSIZE = 10;
     static final int CODESIZE = 10000;
 
     private final int[] memory = new int[MEMSIZE];
+    private int[] code = new int[CODESIZE];
     private final List<String> stdOut = new ArrayList<>();
     //registers
     private int ip = 0;
@@ -32,7 +33,7 @@ public class LVM {
     private int al = MEMSIZE - 1;
     private int t1 = 0; //TMP
     private int ra;
-    private int[] code;
+
     /*
     private int ip = 0;
     private HashMap<String,Integer> registers = new HashMap<String,Integer>(){{
@@ -52,7 +53,7 @@ public class LVM {
         lvmParser.setBuildParseTree(true);
         LVMVisitorImpl lvmVisitor = new LVMVisitorImpl();
         lvmVisitor.visitProgram(lvmParser.program());
-        return lvmVisitor.code;
+        return lvmVisitor.getCode();
     }
 
     public void run(int[] program) throws LVMError {

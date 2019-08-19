@@ -12,24 +12,26 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 
 public class Block extends LinfStmt {
-    private final ArrayList<LinfStmt> stmtList = new ArrayList<>();
+    private final List<LinfStmt> stmtList;
     private final HashSet<IDValue> deletedIDs = new HashSet<>();
     private final HashSet<IDValue> rwIDs = new HashSet<>();
     private HashMap<String, STentry> localEnv;
+    private int nestingLevel;
+    private boolean isAR = false;
+
+    public Block(List<LinfStmt> list) {
+        this.stmtList = List.copyOf(list);
+    }
 
 
     void setLocalEnv(HashMap<String, STentry> localEnv) {
         this.localEnv = localEnv;
-    }
-
-    public void addStmt(LinfStmt stmt) {
-        stmtList.add(stmt);
     }
 
     private HashSet<IDValue> filterLocalIDs(HashSet<IDValue> idSet) {
@@ -53,6 +55,10 @@ public class Block extends LinfStmt {
 
     HashSet<IDValue> getRwIDs() {
         return filterLocalIDs(rwIDs);
+    }
+
+    void setAR(boolean AR) {
+        isAR = AR;
     }
 
     private void checkDeletions(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
@@ -104,6 +110,7 @@ public class Block extends LinfStmt {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope(localEnv);
+        nestingLevel = env.nestingLevel;
         env.offset = 0;
         for (LinfStmt stmt : stmtList) {
             ArrayList<SemanticError> errs = stmt.checkSemantics(env);
@@ -139,14 +146,25 @@ public class Block extends LinfStmt {
         long numVarDec = stmtList.stream()
                 .filter((stmt) -> stmt instanceof VarDec)
                 .count();
+
         code.append("move $fp $sp\n");
         //codegen statement inside block
-        for (LinfStmt statement: stmtList){
+        for (LinfStmt statement : stmtList) {
             code.append(statement.codeGen());
         }
 
         if (numVarDec > 0)
             code.append("addi $sp $sp ").append(numVarDec).append("\n");
+        if (nestingLevel == 0) {
+            code.insert(0, "push $t1\n")
+                    .insert(0, "push $t1\n")
+                    .insert(0, "subi $t1 $sp 2\n")
+                    .append("addi $sp $sp 2\n");
+        } else if (!isAR) {
+            code.insert(0, "push $fp\n")
+                    .insert(0, "push $fp\n")
+                    .append("addi $sp $sp 2\n");
+        }
         return code.toString();
     }
 }

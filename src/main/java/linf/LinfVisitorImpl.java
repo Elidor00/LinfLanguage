@@ -9,16 +9,17 @@ import linf.type.IntType;
 import linf.type.LinfType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LinfVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Node> {
 
     @Override
     public Block visitBlock(ComplexStaticAnalysisParser.BlockContext ctx) {
-        Block res = new Block();
+        List<LinfStmt> stmts = new ArrayList<>();
         for (ComplexStaticAnalysisParser.StatementContext sc : ctx.statement()) {
-            res.addStmt((LinfStmt) visit(sc));
+            stmts.add((LinfStmt) visit(sc));
         }
-        return res;
+        return new Block(stmts);
     }
 
     @Override

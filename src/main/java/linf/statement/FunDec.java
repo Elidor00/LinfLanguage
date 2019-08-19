@@ -69,13 +69,17 @@ public class FunDec extends StmtDec {
     public String codeGen() {
         String funLabel = ((FunType) type).getFunLabel();
         String endLabel = Strings.freshLabel();
-        String code = "jal " + endLabel.replace(":", "") +
-                funLabel + "push $ra\n";
-        code += body.codeGen();
-        code += "top $ra\n" +
+        body.setAR(true);
+        return "jal " + endLabel.replace(":", "") +
+                funLabel +
+                "push $ra\n" +
+                body.codeGen() +
+                "top $ra\n" +
+                "pop\n" +
                 "addi $sp $sp " + parList.size() + "\n" +
-                "top $fp\npop\njr $ra\n" +
+                "top $fp\n" +
+                "pop\n" +
+                "jr $ra\n" +
                 endLabel;
-        return code;
     }
 }
