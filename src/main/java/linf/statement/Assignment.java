@@ -16,6 +16,7 @@ public class Assignment extends LinfStmt {
     private final IDValue id;
     private final Exp exp;
     private LinfType lhSideType;
+    private int nestingLevel;
 
     public Assignment(String name, Exp exp) {
         this.exp = exp;
@@ -52,6 +53,7 @@ public class Assignment extends LinfStmt {
         } else {
             id.setEntry(entry);
             lhSideType = entry.getType();
+            nestingLevel = env.nestingLevel;
             if (!env.isLocalName(id)) {
                 lhSideType.setRwAccess();
             }
@@ -63,17 +65,24 @@ public class Assignment extends LinfStmt {
 
     @Override
     public String codeGen() {
-        String cgenAssignment = new String();
-        String cgenExp = this.exp.codeGen();
-        //TODO: da rivedere
-        //Environment env = ?;
-        //Qua penso di aver bisogno dell'env per poter generare codice
-        /*STentry var = env.getStEntry(id);
-        cgen1Assignment += "move $al $fp \n";
-        int varNestingLevel = -1;
-        for (int i = )
-        for (int i = 0; i < var.getNestinglevel() -)
-        */
-        return cgenExp + cgenAssignment;
+        if (id.isParameter()) {
+            if (id.getEntry().getType().isReference()) {
+                return exp.codeGen() +
+                        "lw $t1 " + id.getEntry().getOffset() + "($fp)\n" +
+                        "sw $a0 0($t1)\n";
+            } else {
+                return exp.codeGen() +
+                        "sw $a0 " + id.getEntry().getOffset() + "($fp)\n";
+            }
+        } else {
+            StringBuilder followChain = new StringBuilder("lw $al 2($fp)\n");
+            for (int i = 0; i < nestingLevel - id.getEntry().getNestinglevel(); i++) {
+                followChain.append("lw $al 0($al)\n");
+            }
+            return exp.codeGen() +
+                    followChain +
+                    "sw $a0 " + id.getEntry().getOffset() + "($al)\n";
+        }
+
     }
 }

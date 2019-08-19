@@ -27,11 +27,11 @@ public class Print extends LinfStmt {
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        return new ArrayList<>();
+        return exp.checkSemantics(env);
     }
 
     @Override
     public String codeGen() {
-        return this.exp.codeGen() + "print \n";
+        return exp.codeGen() + "print $a0\n";
     }
 }

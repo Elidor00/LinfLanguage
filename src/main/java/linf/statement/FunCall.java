@@ -12,6 +12,7 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class FunCall extends StmtDec {
                     if (exp.isID()) {
                         // checking deleted parameters
                         IDValue idValue = exp.toIDValue();
-                        formalType.setRefTo(idValue.toString());
+                        formalType.setRefTo(idValue.getEntry());
                         if (formalType.isDeleted()) {
                             if (deletedIDs.contains(idValue)) {
                                 throw new DoubleDeletionError(idValue);
@@ -125,25 +126,47 @@ public class FunCall extends StmtDec {
      */
     @Override
     public String codeGen() {
-        // Control link
+        // Dynamic link
         StringBuilder builder = new StringBuilder("push $fp\n");
 
         // Actual parameters
-        for (Exp exp : actualParList) {
-            builder.append(exp.codeGen())
-                    .append(" push $a0\n");
+        Collections.reverse(actualParList);
+        for (int i = 0; i < actualParList.size(); i++) {
+            Exp exp = actualParList.get(i);
+            LinfType formalType = formalParTypes.get(i);
+            if (formalType.isReference()) {
+                STentry referred = formalType.getRefTo();
+                builder.append("lw $al 2($fp)\n");
+                for (int j = 0; j < nestingLevel - referred.getNestinglevel(); j++) {
+                    builder.append("lw $al 0($al)\n");
+                }
+                int offset = entry.getOffset();
+                builder.append("lw $a0 ")
+                        .append(offset)
+                        .append("($al)\n");
+                if (offset != 0) {
+                    builder.append("addi $a0 ")
+                            .append(offset)
+                            .append("\n");
+                }
+            } else {
+                builder.append(exp.codeGen());
+            }
+            builder.append("push $a0\n");
         }
 
-        // Access link
-        builder.append("lw $al 0($fp)\n");
+        // Static link
+        builder.append("lw $al 2($fp)\n");
         for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++) {
-            builder.append("lw $al 0($al)");
+            builder.append("lw $al 0($al)\n");
         }
-        builder.append("push $al");
+        builder.append("push $al\n");
 
+        // Return address
+        builder.append("addi $ra $ip 2\n");
         return builder.append("jal ")
-                .append(((FunType) type).getFunLabel().replace(":", ""))
-                .append("\n pop \n")
+                .append(((FunType) entry.getType()).getFunLabel().replace(":", ""))
+                .append("pop\n")
                 .toString();
 
     }

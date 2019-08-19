@@ -8,7 +8,7 @@ import static utils.TestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
-public class BlockCodeGen {
+public class BlockTest {
 
     @Test
     public void block() {

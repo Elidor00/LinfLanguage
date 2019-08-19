@@ -12,6 +12,7 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -103,7 +104,7 @@ public class Block extends LinfStmt {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope(localEnv);
-
+        env.offset = 0;
         for (LinfStmt stmt : stmtList) {
             ArrayList<SemanticError> errs = stmt.checkSemantics(env);
             errors.addAll(errs);
@@ -133,28 +134,19 @@ public class Block extends LinfStmt {
 
     @Override
     public String codeGen() {
-        StringBuilder code = new StringBuilder(new String(""));
-        int counterVarDec = 0;
-        code.append("push $fp \n");
+        StringBuilder code = new StringBuilder();
         //check varDec inside block
-        for (LinfStmt statement: stmtList){
-            if (statement instanceof VarDec) {
-                counterVarDec++;
-            }
-        }
-        if (counterVarDec > 0)
-            code.append("addi $sp $sp ").append(-counterVarDec).append(" \n");
-        code.append("push $fp \n");
-        code.append("move $fp $sp \n");
-        //check statement inside block
+        long numVarDec = stmtList.stream()
+                .filter((stmt) -> stmt instanceof VarDec)
+                .count();
+        code.append("move $fp $sp\n");
+        //codegen statement inside block
         for (LinfStmt statement: stmtList){
             code.append(statement.codeGen());
         }
-        code.append("pop \n");
-        if (counterVarDec > 0)
-            code.append("addi $sp $sp ").append(counterVarDec).append(" \n");
-        code.append("top $fp \n");
-        code.append("pop \n");
+
+        if (numVarDec > 0)
+            code.append("addi $sp $sp ").append(numVarDec).append("\n");
         return code.toString();
     }
 }

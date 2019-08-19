@@ -2,18 +2,20 @@ package linf.type;
 
 
 import linf.Node;
+import linf.utils.STentry;
 
 public abstract class LinfType implements Node {
-    private String refTo = "";
+    private STentry refTo;
+    private boolean isParameter = false;
     private boolean isReference = false;
     private boolean isDeleted = false;
     private boolean rwAccess = false;
 
-    public String getRefTo() {
+    public STentry getRefTo() {
         return refTo;
     }
 
-    public void setRefTo(String refTo) {
+    public void setRefTo(STentry refTo) {
         this.refTo = refTo;
     }
 
@@ -39,5 +41,13 @@ public abstract class LinfType implements Node {
 
     public void setRwAccess() {
         this.rwAccess = true;
+    }
+
+    public boolean isParameter() {
+        return isParameter;
+    }
+
+    public void setParameter(boolean parameter) {
+        isParameter = parameter;
     }
 }

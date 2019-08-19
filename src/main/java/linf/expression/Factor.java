@@ -18,11 +18,11 @@ public class Factor extends BinaryOp<LinfValue, LinfValue> {
 
     @Override
     public String codeGen() {
-        String trueBranchLabel = Strings.freshLabel();
-        String endBranchLabel = Strings.freshLabel();
         String cgenFactor = this.getLeft().codeGen();
-        List<String> boolOP = Arrays.asList("&&", "||");
         if (this.getRight() != null) {
+            String trueBranchLabel = Strings.freshLabel();
+            String endBranchLabel = Strings.freshLabel();
+            List<String> boolOP = Arrays.asList("&&", "||");
             if (!boolOP.contains(getOp())) {
                 cgenFactor += "push $a0 \n";
                 cgenFactor += this.getRight().codeGen();

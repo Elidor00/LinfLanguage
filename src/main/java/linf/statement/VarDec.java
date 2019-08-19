@@ -51,7 +51,6 @@ public class VarDec extends StmtDec {
 
     @Override
     public String codeGen() {
-        String cgenExp = exp.codeGen();
-        return cgenExp + "push $a0 \n"; //+ "pop \n";
+        return exp.codeGen() + "push $a0\n";
     }
 }

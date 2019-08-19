@@ -13,12 +13,17 @@ public class Strings {
     private static int labelCount = 0;
     private static int funLabelCount = 0;
 
+    public static void reset(){
+        labelCount = 0;
+        funLabelCount = 0;
+    }
+
     public static String freshLabel() {
-        return "label " + (labelCount++);
+        return "label" + (labelCount++) + ":\n";
     }
 
     public static String freshFunLabel() {
-        return "fLabel " + (funLabelCount++);
+        return "fLabel" + (funLabelCount++) + ":\n";
     }
 
 }

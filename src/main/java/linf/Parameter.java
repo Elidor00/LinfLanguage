@@ -10,10 +10,16 @@ import java.util.ArrayList;
 
 public class Parameter implements Node {
     private final IDValue id;
+    private int offset;
 
     Parameter(LinfType type, String name) {
         this.id = new IDValue(name);
+        type.setParameter(true);
         id.setType(type);
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     public STentry getEntry() {
@@ -35,12 +41,12 @@ public class Parameter implements Node {
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        id.setEntry(new STentry(env.nestingLevel + 1, id.getType()));
+        id.setEntry(new STentry(env.nestingLevel + 1, offset + 2, id.getType()));
         return new ArrayList<>();
     }
 
     @Override
     public String codeGen() {
-        return null;
+        return "";
     }
 }

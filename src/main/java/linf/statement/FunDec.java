@@ -29,6 +29,7 @@ public class FunDec extends StmtDec {
 
     public void addPar(Parameter par) {
         parList.add(par);
+        par.setOffset(parList.size());
         ((FunType) type).addParType(par.getType());
     }
 
@@ -68,10 +69,13 @@ public class FunDec extends StmtDec {
     public String codeGen() {
         String funLabel = ((FunType) type).getFunLabel();
         String endLabel = Strings.freshLabel();
-        String code = "jal " + endLabel.replace(":", "") + " " +
-                funLabel + " move $fp $sp push $ra\n ";
+        String code = "jal " + endLabel.replace(":", "") +
+                funLabel + "push $ra\n";
         code += body.codeGen();
-        code += "top $ra addi $sp $sp " + parList.size() + " top $fp pop jr $ra";
-        return code + endLabel + "\n";
+        code += "top $ra\n" +
+                "addi $sp $sp " + parList.size() + "\n" +
+                "top $fp\npop\njr $ra\n" +
+                endLabel;
+        return code;
     }
 }
