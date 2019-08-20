@@ -22,7 +22,7 @@ public class PrintTest {
                 "li $a0 3\n" +
                 "push $a0\n" +
                 //print
-                "lw $a0 0($fp)\n" +
+                "lw $a0 0($al)\n" +
                 "print\n" +
                 "addi $sp $sp 1\n" +
                 "addi $sp $sp 2\n";
