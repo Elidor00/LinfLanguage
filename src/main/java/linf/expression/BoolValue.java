@@ -25,6 +25,6 @@ public class BoolValue extends LinfValue {
 
     @Override
     public String codeGen() {
-        return "li $a0 " + (this.value) + "\n";
+        return "li $a0 " + (this.value.equals("true") ? '1' : '0') + "\n";
     }
 }

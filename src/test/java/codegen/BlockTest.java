@@ -14,11 +14,11 @@ public class BlockTest {
     public void block() {
         String result = cgen( " { } ");
         String test =
-            "subi $t1 $sp 2\n" +
-            "push $t1\n" +
-            "push $t1\n" +
-            "move $fp $sp\n" +
-            "addi $sp $sp 2\n";
+                "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
