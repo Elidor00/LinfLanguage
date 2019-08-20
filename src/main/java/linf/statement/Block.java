@@ -153,17 +153,18 @@ public class Block extends LinfStmt {
             code.append(statement.codeGen());
         }
 
+        // code.append("lw $fp 2($fp)\n");
+
         if (numVarDec > 0)
             code.append("addi $sp $sp ").append(numVarDec).append("\n");
-        if (nestingLevel == 0) {
-            code.insert(0, "push $t1\n")
-                    .insert(0, "push $t1\n")
-                    .insert(0, "subi $t1 $sp 2\n")
-                    .append("addi $sp $sp 2\n");
-        } else if (!isAR) {
-            code.insert(0, "push $fp\n")
-                    .insert(0, "push $fp\n")
-                    .append("addi $sp $sp 2\n");
+        if (!isAR) {
+            if (nestingLevel == 0) {
+                code.insert(0, "push $t1\n".repeat(2))
+                        .insert(0, "subi $t1 $sp 2\n");
+            } else {
+                code.insert(0, "push $fp\n".repeat(2));
+            }
+            code.append("addi $sp $sp 2\n");
         }
         return code.toString();
     }

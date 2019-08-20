@@ -17,7 +17,7 @@ public class FunDecTest {
     }
 
     @Test
-    public void Empty_FunDec() {
+    public void Empty_FunDec_Should_JustWork() {
         String actual = cgen("{ f(){} }");
         String expected = "subi $t1 $sp 2\n" +
                 "push $t1\n" +
@@ -41,7 +41,7 @@ public class FunDecTest {
     }
 
     @Test
-    public void Unary_FunDec() {
+    public void Unary_FunDec_Should_JustWork() {
         String actual = cgen("{ f(int x){ print x; } }");
         String expected = "subi $t1 $sp 2\n" +
                 "push $t1\n" +
@@ -64,5 +64,10 @@ public class FunDecTest {
                 "label0:\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void NestedDec_Should_JustWork(){
+        assertEquals(true,false);
     }
 }

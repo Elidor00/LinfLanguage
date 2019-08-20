@@ -44,9 +44,7 @@ public class Assignment extends LinfStmt {
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         //create result list
         ArrayList<SemanticError> res = new ArrayList<>();
-
         STentry entry = env.getStEntry(id);
-
 
         if (entry == null) {
             res.add(new UnboundSymbolError(id));
@@ -58,7 +56,6 @@ public class Assignment extends LinfStmt {
                 lhSideType.setRwAccess();
             }
         }
-
         res.addAll(exp.checkSemantics(env));
         return res;
     }
@@ -66,17 +63,24 @@ public class Assignment extends LinfStmt {
     @Override
     public String codeGen() {
         if (id.isParameter()) {
-            return exp.codeGen() +
-                    "sw $a0 " + id.getEntry().getOffset() + "($fp)\n";
+            if (id.getEntry().getType().isReference()) {
+                return exp.codeGen() +
+                        "lw $al " + id.getEntry().getOffset() + "($fp)\n" +
+                        "sw $a0 0($al)\n";
+            } else {
+                return exp.codeGen() +
+                        "sw $a0 " + id.getEntry().getOffset() + "($fp)\n";
+            }
         } else {
-
-            // Follow chain
+            int distance = nestingLevel - id.getEntry().getNestinglevel();
+            String followChain = "lw $al 2($fp)\n";
+            if (distance > 0) {
+                followChain += "lw $al 2($al)\n".repeat(distance - 1);
+            }
             return exp.codeGen() +
-                    "lw $al 2($fp)\n" +
-                    "lw $al 0($al)\n".repeat(nestingLevel - id.getEntry().getNestinglevel()) +
+                    followChain +
                     "sw $a0 " + id.getEntry().getOffset() + "($al)\n";
 
         }
-
     }
 }

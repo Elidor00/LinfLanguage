@@ -61,6 +61,7 @@ public class FunDec extends StmtDec {
             scope.put(parID, par.getEntry());
         }
         body.setLocalEnv(scope);
+        body.setAR(true);
         res.addAll(body.checkSemantics(env));
         return res;
     }
@@ -69,7 +70,6 @@ public class FunDec extends StmtDec {
     public String codeGen() {
         String funLabel = ((FunType) type).getFunLabel();
         String endLabel = Strings.freshLabel();
-        body.setAR(true);
         return "jal " + endLabel.replace(":", "") +
                 funLabel +
                 "push $ra\n" +

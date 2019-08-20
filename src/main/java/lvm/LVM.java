@@ -19,7 +19,7 @@ import static lvm.utils.Strings.IP;
 
 public class LVM {
 
-    public static final int MEMSIZE = 10;
+    public static final int MEMSIZE = 15;
     static final int CODESIZE = 10000;
 
     private final int[] memory = new int[MEMSIZE];
@@ -133,7 +133,7 @@ public class LVM {
                     memory[v1 + offset] = GET_REGISTER_VALUE.get(r1).apply(this);
                     break;
                 case LVMParser.LOADW:
-                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     offset = code[ip++];
                     r2 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     v1 = GET_REGISTER_VALUE.get(r2).apply(this);
