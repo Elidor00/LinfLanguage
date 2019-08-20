@@ -12,14 +12,13 @@ public class BlockTest {
 
     @Test
     public void block() {
-        String result = cgen(" { }");
+        String result = cgen( " { } ");
         String test =
-                "push $fp \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
-                "pop \n" +
-                "top $fp \n" +
-                "pop \n";
+            "subi $t1 $sp 2\n" +
+            "push $t1\n" +
+            "push $t1\n" +
+            "move $fp $sp\n" +
+            "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
@@ -27,18 +26,16 @@ public class BlockTest {
     public void blockVarDec() {
         String result = cgen(" { int x = 2; }");
         String test =
-                "push $fp \n" +
-                "addi $sp $sp -1 \n" + //cresce al contrario?
-                "push $fp \n" +
-                "move $fp $sp \n" +
+                "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                //x = 2
+                "li $a0 2\n" +
+                "push $a0\n" +
 
-                "li $a0 2 \n" +  //x
-                "push $a0 \n" +
-
-                "pop \n" +
-                "addi $sp $sp 1 \n" +
-                "top $fp \n" +
-                "pop \n";
+                "addi $sp $sp 1\n" +
+                "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
@@ -46,21 +43,19 @@ public class BlockTest {
     public void blockVarDecS() {
         String result = cgen(" { int x = 2; int y = 1;}");
         String test =
-                "push $fp \n" +
-                "addi $sp $sp -2 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
+                "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                //x
+                "li $a0 2\n" +
+                "push $a0\n" +
+                //y
+                "li $a0 1\n" +
+                "push $a0\n" +
 
-                "li $a0 2 \n" +      //x
-                "push $a0 \n" +
-
-                "li $a0 1 \n" +      //y
-                "push $a0 \n" +
-
-                "pop \n" +
-                "addi $sp $sp 2 \n" +
-                "top $fp \n" +
-                "pop \n";
+                "addi $sp $sp 2\n" +
+                "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
@@ -68,29 +63,26 @@ public class BlockTest {
     public void nestedBlockVarDecS() {
         String result = cgen(" {{ int x = 2; int y = 1; }}");
         String test =
-                "push $fp \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
-
-                "push $fp \n" +
-                "addi $sp $sp -2 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
-
-                "li $a0 2 \n" +      //x
-                "push $a0 \n" +
-
-                "li $a0 1 \n" +      //y
-                "push $a0 \n" +
-
-                "pop \n" +
-                "addi $sp $sp 2 \n" +
-                "top $fp \n" +
-                "pop \n" +
-
-                "pop \n" +
-                "top $fp \n" +
-                "pop \n";
+                //main block
+                "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                //nested block
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                //x
+                "li $a0 2\n" +
+                "push $a0\n" +
+                //y
+                "li $a0 1\n" +
+                "push $a0\n" +
+                //close nested block
+                "addi $sp $sp 2\n" +
+                "addi $sp $sp 2\n" +
+                //close main block
+                "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 }

@@ -14,13 +14,13 @@ public class Term extends BinaryOp<Factor, Term> {
     public String codeGen() {
         String cgenTerm = this.getLeft().codeGen();
         if (this.getRight() != null) {
-            cgenTerm += "push $a0 \n";
+            cgenTerm += "push $a0\n";
             cgenTerm += this.getRight().codeGen();
-            cgenTerm += "top $t1 \n pop \n";
+            cgenTerm += "top $t1\npop\n";
             if (this.getOp().equals("*")) {
-                cgenTerm += "mult $a0 $t1 $a0 \n";
+                cgenTerm += "mult $a0 $t1 $a0\n";
             } else {
-                cgenTerm += "div $a0 $t1 $a0 \n";
+                cgenTerm += "div $a0 $t1 $a0\n";
             }
         }
         return cgenTerm;

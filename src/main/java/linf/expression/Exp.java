@@ -74,15 +74,15 @@ public class Exp extends BinaryOp<Term, Exp> {
     @Override
     public String codeGen() {
         String cgenExp = this.getLeft().codeGen();
-        cgenExp += this.isNegative ? "li $t1 0 \n sub $a0 $t1 $a0 \n" : "";
+        cgenExp += this.isNegative ? "li $t1 0\n sub $a0 $t1 $a0\n" : "";
         if (this.getRight() != null) {
-            cgenExp += "push $a0 \n";
+            cgenExp += "push $a0\n";
             cgenExp += this.getRight().codeGen();
-            cgenExp += "top $t1 \n pop \n";
+            cgenExp += "top $t1\npop\n";
             if (this.getOp().equals("+")) {
-                cgenExp += "add $a0 $t1 $a0 \n";
+                cgenExp += "add $a0 $t1 $a0\n";
             } else {
-                cgenExp += "sub $a0 $t1 $a0 \n";
+                cgenExp += "sub $a0 $t1 $a0\n";
             }
         }
         return cgenExp;

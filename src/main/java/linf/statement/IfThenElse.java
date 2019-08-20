@@ -48,15 +48,15 @@ public class IfThenElse extends LinfStmt {
 
     @Override
     public String codeGen() {
-        String thenBranchCg = Strings.freshLabel();
-        String endBranchCg = Strings.freshLabel();
+        String end = Strings.freshLabel();
+        String elseBranchCg = Strings.freshLabel();
         return exp.codeGen() +
-                "li $t1 1 \n" +
-                "beq $a0 $t1 " + thenBranchCg + " \n" + //branch if equal
-                elseBranch.codeGen() +
-                "b " + endBranchCg + " \n" +  //jump to label endBranchCg
-                thenBranchCg + ": \n" +  //label thenBranch
+                "li $t1 0\n" +
+                "beq $a0 $t1 " + elseBranchCg.replace(":", "") + //branch if equal
                 thenBranch.codeGen() +
-                endBranchCg + ": \n";
+                "b " + end.replace(":", "") +   //jump to label endBranchCg
+                elseBranchCg +   //label thenBranch
+                elseBranch.codeGen() +
+                end ;
     }
 }

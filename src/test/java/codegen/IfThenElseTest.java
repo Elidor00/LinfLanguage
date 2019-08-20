@@ -4,343 +4,318 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
+import lvm.utils.Strings;
 import java.util.HashMap;
-
 import static utils.TestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
 public class IfThenElseTest {
 
-    private static int count_label = 0;
-
     @Before
-    public void setCount_label() { count_label = 0; }
+    public void resetLabels() {
+        Strings.reset();
+    }
+
+    private static HashMap<String,String> labels = new HashMap<>();
+    static {
+        labels.put("ifThenElse_end", "label0");
+        labels.put("elseBranch", "label1");
+        labels.put("true", "label2");
+        labels.put("condition_end", "label3");
+    }
 
     @Test
-    public void ifThenElseEqual() {
-
-        HashMap<Integer,String> labels = new HashMap<>();
-        labels.put(1, "ifThenElse_end");
-        labels.put(2, "elseBranch");
-        labels.put(3, "true");
-        labels.put(4, "condition_end");
-
-        /*
-        public String freshLabel() {
-            count_label ++;
-            return labels.get(count_label);
-        }
-        */
-
-        //TODO: IDValue cgen
+    public void ifThenElseEqualThenBranch() {
         String result = cgen(" { int x = 2; if (x == 2) then { } else { } }");
         String test =
-                "push $fp \n" + //main block scope
-                "addi $sp $sp -1 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
+                //main block
+                "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                    //x = 2
+                    "li $a0 2\n" +
+                    "push $a0\n" +
 
-                    "li $a0 2 \n" + //x
-                    "push $a0 \n" +
+                    "lw $a0 0($al)\n" +
+                    "push $a0\n" +
+                    "li $a0 2\n" +
 
-                    "li $a0 2 \n" + //2
+                    "top $t1\n" +
+                    "pop\n" +
+                    "beq $t1 $a0 " + labels.get("true") + "\n" +
+                    "li $a0 0\n" +
+                    "b " + labels.get("condition_end") + "\n" +
+                    labels.get("true") + ":\n" +
+                    "li $a0 1\n" +
+                    labels.get("condition_end") + ":\n" +
+                    "li $t1 0\n" +
+                    "beq $a0 $t1 " + labels.get("elseBranch") + "\n" +
+                    //thenBranch block scope
+                    "push $fp\n" +
+                    "push $fp\n" +
+                    "move $fp $sp\n" +
+                    "addi $sp $sp 2\n" +
 
-                    "top $t1 \n" +
-                    "pop \n" +
-                    "beq $a0 $t1 true \n" +
-                    "li $a0 0 \n" +
-                    "b condition_end \n" +
-                    "true: \n" +
-                    "li $a0 1 \n" +
-                    "condition_end: \n" +
-                    "li $t1 0 \n" +
-                    "beq $a0 $t1 elseBranch \n" +
+                    "b " + labels.get("ifThenElse_end") + "\n" +
+                    labels.get("elseBranch") + ":\n" +
 
-                    "push $fp \n" + //thenBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
+                    //elseBranch block scope
+                    "push $fp\n" +
+                    "push $fp\n" +
+                    "move $fp $sp\n" +
+                    "addi $sp $sp 2\n" +
 
-                    "b ifThenElse_end \n" +
-                    "elseBranch: \n" +
+                    labels.get("ifThenElse_end") + ":\n" +
 
-                    "push $fp \n" + //elseBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
-
-                    "ifThenElse_end: \n" +
-
-                "pop \n" +
-                "addi $sp $sp 1 \n" +
-                "top $fp \n" +
-                "pop \n";
+                "addi $sp $sp 1\n" +
+                "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
     @Test
-    public void ifThenElseNotEqual() {
-
+    public void ifThenElseNotEqualElseBranch() {
         String result = cgen(" { int x = 2; if (x != 2) then { } else { } }");
         String test =
-                "push $fp \n" + //main block scope
-                "addi $sp $sp -1 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
+            //main block
+            "subi $t1 $sp 2\n" +
+            "push $t1\n" +
+            "push $t1\n" +
+            "move $fp $sp\n" +
+                //x = 2
+                "li $a0 2\n" +
+                "push $a0\n" +
 
-                    "li $a0 2 \n" + //x
-                    "push $a0 \n" +
+                "lw $a0 0($al)\n" +
+                "push $a0\n" +
+                "li $a0 2\n" +
 
-                    "li $a0 2 \n" + //2
+                "top $t1\n" +
+                "pop\n" +
+                "bne $t1 $a0 " + labels.get("true") + "\n" +
+                "li $a0 0\n" +
+                "b " + labels.get("condition_end") + "\n" +
+                labels.get("true") + ":\n" +
+                "li $a0 1\n" +
+                labels.get("condition_end") + ":\n" +
+                "li $t1 0\n" +
+                "beq $a0 $t1 " + labels.get("elseBranch") + "\n" +
+                //thenBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "top $t1 \n" +
-                    "pop \n" +
-                    "beq $a0 $t1 true \n" +
-                    "li $a0 0 \n" +
-                    "b condition_end \n" +
-                    "true: \n" +
-                    "li $a0 0 \n" +
-                    "condition_end: \n" +
-                    "li $t1 0 \n" +
-                    "beq $a0 $t1 elseBranch \n" +
+                "b " + labels.get("ifThenElse_end") + "\n" +
+                labels.get("elseBranch") + ":\n" +
 
-                    "push $fp \n" + //thenBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
+                //elseBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "b ifThenElse_end \n" +
-                    "elseBranch: \n" +
+                labels.get("ifThenElse_end") + ":\n" +
 
-                    "push $fp \n" + //elseBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
-
-                    "ifThenElse_end: \n" +
-
-                "pop \n" +
-                "addi $sp $sp 1 \n" +
-                "top $fp \n" +
-                "pop \n";
+            "addi $sp $sp 1\n" +
+            "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
     @Test
-    public void ifThenElseGreater() {
-
+    public void ifThenElseGreaterElseBranch() {
         String result = cgen(" { int x = 2; if (x > 2) then { } else { } }");
         String test =
-                "push $fp \n" + //main block scope
-                "addi $sp $sp -1 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
+            //main block
+            "subi $t1 $sp 2\n" +
+            "push $t1\n" +
+            "push $t1\n" +
+            "move $fp $sp\n" +
+                //x = 2
+                "li $a0 2\n" +
+                "push $a0\n" +
 
-                    "li $a0 2 \n" + //x
-                    "push $a0 \n" +
+                "lw $a0 0($al)\n" +
+                "push $a0\n" +
+                "li $a0 2\n" +
 
-                    "li $a0 2 \n" + //2
+                "top $t1\n" +
+                "pop\n" +
+                "bg $t1 $a0 " + labels.get("true") + "\n" +
+                "li $a0 0\n" +
+                "b " + labels.get("condition_end") + "\n" +
+                labels.get("true") + ":\n" +
+                "li $a0 1\n" +
+                labels.get("condition_end") + ":\n" +
+                "li $t1 0\n" +
+                "beq $a0 $t1 " + labels.get("elseBranch") + "\n" +
+                //thenBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "top $t1 \n" +
-                    "pop \n" +
-                    "bgr $a0 $t1 true \n" +
-                    "li $a0 0 \n" +
-                    "b condition_end \n" +
-                    "true: \n" +
-                    "li $a0 1 \n" +
-                    "condition_end: \n" +
-                    "li $t1 0 \n" +
-                    "beq $a0 $t1 elseBranch \n" +
+                "b " + labels.get("ifThenElse_end") + "\n" +
+                labels.get("elseBranch") + ":\n" +
 
-                    "push $fp \n" + //thenBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
+                //elseBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "b ifThenElse_end \n" +
-                    "elseBranch: \n" +
+                labels.get("ifThenElse_end") + ":\n" +
 
-                    "push $fp \n" + //elseBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
-
-                    "ifThenElse_end: \n" +
-
-                "pop \n" +
-                "addi $sp $sp 1 \n" +
-                "top $fp \n" +
-                "pop \n";
+            "addi $sp $sp 1\n" +
+            "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
     @Test
-    public void ifThenElseGreaterEqual() {
-
+    public void ifThenElseGreaterEqualThenBranch() {
         String result = cgen(" { int x = 2; if (x >= 2) then { } else { } }");
         String test =
-                "push $fp \n" + //main block scope
-                "addi $sp $sp -1 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
+            //main block
+            "subi $t1 $sp 2\n" +
+            "push $t1\n" +
+            "push $t1\n" +
+            "move $fp $sp\n" +
+                //x = 2
+                "li $a0 2\n" +
+                "push $a0\n" +
 
-                    "li $a0 2 \n" + //x
-                    "push $a0 \n" +
+                "lw $a0 0($al)\n" +
+                "push $a0\n" +
+                "li $a0 2\n" +
 
-                    "li $a0 2 \n" + //2
+                "top $t1\n" +
+                "pop\n" +
+                "bge $t1 $a0 " + labels.get("true") + "\n" +
+                "li $a0 0\n" +
+                "b " + labels.get("condition_end") + "\n" +
+                labels.get("true") + ":\n" +
+                "li $a0 1\n" +
+                labels.get("condition_end") + ":\n" +
+                "li $t1 0\n" +
+                "beq $a0 $t1 " + labels.get("elseBranch") + "\n" +
+                //thenBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "top $t1 \n" +
-                    "pop \n" +
-                    "bgre $a0 $t1 true \n" +
-                    "li $a0 0 \n" +
-                    "b condition_end \n" +
-                    "true: \n" +
-                    "li $a0 1 \n" +
-                    "condition_end: \n" +
-                    "li $t1 0 \n" +
-                    "beq $a0 $t1 elseBranch \n" +
+                "b " + labels.get("ifThenElse_end") + "\n" +
+                labels.get("elseBranch") + ":\n" +
 
-                    "push $fp \n" + //thenBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
+                //elseBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "b ifThenElse_end \n" +
-                    "elseBranch: \n" +
+                labels.get("ifThenElse_end") + ":\n" +
 
-                    "push $fp \n" + //elseBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
-
-                    "ifThenElse_end: \n" +
-
-                "pop \n" +
-                "addi $sp $sp 1 \n" +
-                "top $fp \n" +
-                "pop \n";
+            "addi $sp $sp 1\n" +
+            "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
     @Test
-    public void ifThenElseLess() {
-
+    public void ifThenElseLessElseBranch() {
         String result = cgen(" { int x = 2; if (x < 2) then { } else { } }");
         String test =
-                "push $fp \n" + //main block scope
-                "addi $sp $sp -1 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
+            //main block
+            "subi $t1 $sp 2\n" +
+            "push $t1\n" +
+            "push $t1\n" +
+            "move $fp $sp\n" +
+                //x = 2
+                "li $a0 2\n" +
+                "push $a0\n" +
 
-                    "li $a0 2 \n" + //x
-                    "push $a0 \n" +
+                "lw $a0 0($al)\n" +
+                "push $a0\n" +
+                "li $a0 2\n" +
 
-                    "li $a0 2 \n" + //2
+                "top $t1\n" +
+                "pop\n" +
+                "bl $t1 $a0 " + labels.get("true") + "\n" +
+                "li $a0 0\n" +
+                "b " + labels.get("condition_end") + "\n" +
+                labels.get("true") + ":\n" +
+                "li $a0 1\n" +
+                labels.get("condition_end") + ":\n" +
+                "li $t1 0\n" +
+                "beq $a0 $t1 " + labels.get("elseBranch") + "\n" +
+                //thenBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "top $t1 \n" +
-                    "pop \n" +
-                    "blr $a0 $t1 true \n" +
-                    "li $a0 0 \n" +
-                    "b condition_end \n" +
-                    "true: \n" +
-                    "li $a0 1 \n" +
-                    "condition_end: \n" +
-                    "li $t1 0 \n" +
-                    "beq $a0 $t1 elseBranch \n" +
+                "b " + labels.get("ifThenElse_end") + "\n" +
+                labels.get("elseBranch") + ":\n" +
 
-                    "push $fp \n" + //thenBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
+                //elseBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "b ifThenElse_end \n" +
-                    "elseBranch: \n" +
+                labels.get("ifThenElse_end") + ":\n" +
 
-                    "push $fp \n" + //elseBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
-
-                    "ifThenElse_end: \n" +
-
-                "pop \n" +
-                "addi $sp $sp 1 \n" +
-                "top $fp \n" +
-                "pop \n";
+            "addi $sp $sp 1\n" +
+            "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 
     @Test
-    public void ifThenElseLessEqual() {
-
+    public void ifThenElseLessEqualThenBranch() {
         String result = cgen(" { int x = 2; if (x <= 2) then { } else { } }");
         String test =
-                "push $fp \n" + //main block scope
-                "addi $sp $sp -1 \n" +
-                "push $fp \n" +
-                "move $fp $sp \n" +
+            //main block
+            "subi $t1 $sp 2\n" +
+            "push $t1\n" +
+            "push $t1\n" +
+            "move $fp $sp\n" +
+                //x = 2
+                "li $a0 2\n" +
+                "push $a0\n" +
 
-                    "li $a0 2 \n" + //x
-                    "push $a0 \n" +
+                "lw $a0 0($al)\n" +
+                "push $a0\n" +
+                "li $a0 2\n" +
 
-                    "li $a0 2 \n" + //2
+                "top $t1\n" +
+                "pop\n" +
+                "ble $t1 $a0 " + labels.get("true") + "\n" +
+                "li $a0 0\n" +
+                "b " + labels.get("condition_end") + "\n" +
+                labels.get("true") + ":\n" +
+                "li $a0 1\n" +
+                labels.get("condition_end") + ":\n" +
+                "li $t1 0\n" +
+                "beq $a0 $t1 " + labels.get("elseBranch") + "\n" +
+                //thenBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "top $t1 \n" +
-                    "pop \n" +
-                    "blre $a0 $t1 true \n" +
-                    "li $a0 0 \n" +
-                    "b condition_end \n" +
-                    "true: \n" +
-                    "li $a0 1 \n" +
-                    "condition_end: \n" +
-                    "li $t1 0 \n" +
-                    "beq $a0 $t1 elseBranch \n" +
+                "b " + labels.get("ifThenElse_end") + "\n" +
+                labels.get("elseBranch") + ":\n" +
 
-                    "push $fp \n" + //thenBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
+                //elseBranch block scope
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "addi $sp $sp 2\n" +
 
-                    "b ifThenElse_end \n" +
-                    "elseBranch: \n" +
+                labels.get("ifThenElse_end") + ":\n" +
 
-                    "push $fp \n" + //elseBranch block scope
-                    "push $fp \n" +
-                    "move $fp $sp \n" +
-                    "pop \n" +
-                    "top $fp \n" +
-                    "pop \n" +
-
-                    "ifThenElse_end: \n" +
-
-                "pop \n" +
-                "addi $sp $sp 1 \n" +
-                "top $fp \n" +
-                "pop \n";
+            "addi $sp $sp 1\n" +
+            "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
 }
