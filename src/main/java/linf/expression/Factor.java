@@ -30,22 +30,22 @@ public class Factor extends BinaryOp<LinfValue, LinfValue> {
 
                 switch (this.getOp()) { //ROP: '==' | '>' | '<' | '<=' | '>=' | '!='
                     case "==":
-                        cgenFactor += "beq $t1 $a0 " + trueBranchLabel;
+                        cgenFactor += "beq $a0 $t1 " + trueBranchLabel;
                         break;
                     case ">":
-                        cgenFactor += "bg $t1 $a0 " + trueBranchLabel;
+                        cgenFactor += "bg $a0 $t1 " + trueBranchLabel;
                         break;
                     case "<":
-                        cgenFactor += "bl $t1 $a0 " + trueBranchLabel;
+                        cgenFactor += "bl $a0 $t1 " + trueBranchLabel;
                         break;
                     case "<=":
-                        cgenFactor += "ble $t1 $a0 " + trueBranchLabel;
+                        cgenFactor += "ble $a0 $t1 " + trueBranchLabel;
                         break;
                     case ">=":
-                        cgenFactor += "bge $t1 $a0 " + trueBranchLabel;
+                        cgenFactor += "bge $a0 $t1 " + trueBranchLabel;
                         break;
                     case "!=":
-                        cgenFactor += "bne $t1 $a0 " + trueBranchLabel;
+                        cgenFactor += "bne $a0 $t1 " + trueBranchLabel;
                         break;
                 }
 
@@ -54,7 +54,7 @@ public class Factor extends BinaryOp<LinfValue, LinfValue> {
                 cgenFactor += endBranchLabel.replace("\n", "") + ":\n";
 
             } else {
-                switch (this.getOp()) { //op=('&&' | '||')
+                switch (this.getOp()) { //op: '&&' | '||'
                     case "&&":
                         cgenFactor += "li $t1 0\n";
                         cgenFactor += "beq $a0 $t1 " + endBranchLabel;

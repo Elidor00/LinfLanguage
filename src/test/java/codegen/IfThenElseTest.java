@@ -44,7 +44,7 @@ public class IfThenElseTest {
 
                     "top $t1\n" +
                     "pop\n" +
-                    "beq $t1 $a0 " + labels.get("true") + "\n" +
+                    "beq $a0 $t1 " + labels.get("true") + "\n" +
                     "li $a0 0\n" +
                     "b " + labels.get("condition_end") + "\n" +
                     labels.get("true") + ":\n" +
@@ -93,7 +93,7 @@ public class IfThenElseTest {
 
                     "top $t1\n" +
                     "pop\n" +
-                    "bne $t1 $a0 " + labels.get("true") + "\n" +
+                    "bne $a0 $t1 " + labels.get("true") + "\n" +
                     "li $a0 0\n" +
                     "b " + labels.get("condition_end") + "\n" +
                     labels.get("true") + ":\n" +
@@ -142,7 +142,7 @@ public class IfThenElseTest {
 
                     "top $t1\n" +
                     "pop\n" +
-                    "bg $t1 $a0 " + labels.get("true") + "\n" +
+                    "bg $a0 $t1 " + labels.get("true") + "\n" +
                     "li $a0 0\n" +
                     "b " + labels.get("condition_end") + "\n" +
                     labels.get("true") + ":\n" +
@@ -191,7 +191,7 @@ public class IfThenElseTest {
 
                     "top $t1\n" +
                     "pop\n" +
-                    "bge $t1 $a0 " + labels.get("true") + "\n" +
+                    "bge $a0 $t1 " + labels.get("true") + "\n" +
                     "li $a0 0\n" +
                     "b " + labels.get("condition_end") + "\n" +
                     labels.get("true") + ":\n" +
@@ -240,7 +240,7 @@ public class IfThenElseTest {
 
                     "top $t1\n" +
                     "pop\n" +
-                    "bl $t1 $a0 " + labels.get("true") + "\n" +
+                    "bl $a0 $t1 " + labels.get("true") + "\n" +
                     "li $a0 0\n" +
                     "b " + labels.get("condition_end") + "\n" +
                     labels.get("true") + ":\n" +
@@ -289,7 +289,7 @@ public class IfThenElseTest {
 
                     "top $t1\n" +
                     "pop\n" +
-                    "ble $t1 $a0 " + labels.get("true") + "\n" +
+                    "ble $a0 $t1 " + labels.get("true") + "\n" +
                     "li $a0 0\n" +
                     "b " + labels.get("condition_end") + "\n" +
                     labels.get("true") + ":\n" +
