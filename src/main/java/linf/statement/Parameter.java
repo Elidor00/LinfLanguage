@@ -1,4 +1,4 @@
-package linf;
+package linf.statement;
 
 import linf.error.semantic.SemanticError;
 import linf.expression.IDValue;
@@ -8,21 +8,21 @@ import linf.utils.STentry;
 
 import java.util.ArrayList;
 
-public class Parameter implements Node {
+public class Parameter extends LinfStmt {
     private final IDValue id;
     private int offset;
 
-    Parameter(LinfType type, String name) {
+    public Parameter(LinfType type, String name) {
         this.id = new IDValue(name);
         type.setParameter(true);
         id.setType(type);
     }
 
-    public void setOffset(int offset) {
+    void setOffset(int offset) {
         this.offset = offset;
     }
 
-    public STentry getEntry() {
+    STentry getEntry() {
         return id.getEntry();
     }
 

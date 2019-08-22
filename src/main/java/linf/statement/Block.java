@@ -152,8 +152,6 @@ public class Block extends LinfStmt {
             code.append(statement.codeGen());
         }
 
-        // code.append("lw $fp 2($fp)\n");
-
         if (numVarDec > 0)
             code.append("addi $sp $sp ").append(numVarDec).append("\n");
         if (!isAR) {

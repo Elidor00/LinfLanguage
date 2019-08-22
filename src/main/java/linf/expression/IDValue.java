@@ -2,9 +2,9 @@ package linf.expression;
 
 import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;
-import linf.type.FunType;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.LinfLib;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
@@ -53,23 +53,35 @@ public class IDValue extends LinfValue {
         return res;
     }
 
-    @Override
-    public String codeGen() {
-        if (entry.getType() instanceof FunType) {
-            return ((FunType) entry.getType()).getFunLabel();
-        } else if (isParameter()) {
+    private String codeGen(String op) {
+        if (isParameter()) {
             // Local to AR
-            return "lw $a0 " + entry.getOffset() + "($fp)\n";
+            if (entry.getType().isReference()) {
+                STentry referred = entry.getType().getRefTo();
+                return "lw $al " + entry.getOffset() + "($fp)\n" +
+                        String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
+            } else {
+                return String.format("%s $a0 " + entry.getOffset() + "($fp)\n", op);
+            }
         } else {
             int distance = nestingLevel - entry.getNestinglevel();
             if (distance > 0) {
-                return  "lw $al 2($fp)\n" +
-                        "lw $al 2($al)\n".repeat(distance - 1)+
-                        "lw $a0 " + entry.getOffset() + "($al)\n";
+                // free variable
+                return LinfLib.followChain(distance) +
+                        String.format("%s $a0 " + entry.getOffset() + "($al)\n", op);
             } else {
-                return "lw $a0 " + entry.getOffset() + "($fp)\n";
+                return String.format("%s $a0 " + entry.getOffset() + "($fp)\n", op);
             }
         }
+    }
+
+    public String LSideCodeGen() {
+        return codeGen("sw");
+    }
+
+    @Override
+    public String codeGen() {
+        return codeGen("lw");
     }
 
     @Override

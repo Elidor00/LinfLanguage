@@ -1,6 +1,5 @@
 package linf.statement;
 
-import linf.Parameter;
 import linf.error.semantic.FunctionNameShadowingError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
@@ -8,8 +7,8 @@ import linf.expression.IDValue;
 import linf.type.FunType;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.LinfLib;
 import linf.utils.STentry;
-import lvm.utils.Strings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class FunDec extends StmtDec {
         this.id = id;
         this.body = body;
         this.type = new FunType();
-        ((FunType) this.type).setFunLabel(Strings.freshFunLabel());
+        ((FunType) this.type).setFunLabel(LinfLib.freshFunLabel());
     }
 
     public void addPar(Parameter par) {
@@ -69,19 +68,15 @@ public class FunDec extends StmtDec {
     @Override
     public String codeGen() {
         String funLabel = ((FunType) type).getFunLabel();
-        String endLabel = Strings.freshLabel();
+        String endLabel = LinfLib.freshLabel();
         return "jal " + endLabel.replace(":", "") +
                 funLabel +
                 "push $ra\n" +
                 body.codeGen() +
-                // return control
+                // pop return address
                 "top $ra\n" +
                 "pop\n" +
-                // pop access link and parameters
-                "addi $sp $sp " + (parList.size() + 1) + "\n" +
-                // pop control link
-                "top $fp\n" +
-                "pop\n" +
+                // return control to caller
                 "jr $ra\n" +
                 endLabel;
     }

@@ -9,6 +9,7 @@ import linf.expression.IDValue;
 import linf.type.FunType;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.LinfLib;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
@@ -17,7 +18,8 @@ import java.util.HashSet;
 import java.util.List;
 
 
-public class FunCall extends StmtDec {
+public class FunCall extends LinfStmt {
+    private String id;
     private List<Exp> actualParList = new ArrayList<>();
     private List<LinfType> formalParTypes = new ArrayList<>();
     private STentry entry;
@@ -123,10 +125,11 @@ public class FunCall extends StmtDec {
      * 1. the control link which points to AR of caller of g
      * 2. actual parameters
      * 3. the ACCESS/STATIC link
+     * 4. the return address
      */
     @Override
     public String codeGen() {
-        // Dynamic link
+        // Dynamic/control link
         StringBuilder builder = new StringBuilder("push $fp\n");
 
         // Actual parameters
@@ -134,14 +137,14 @@ public class FunCall extends StmtDec {
         for (int i = 0; i < actualParList.size(); i++) {
             Exp exp = actualParList.get(i);
             LinfType formalType = formalParTypes.get(i);
+
             if (formalType.isReference()) {
                 STentry referred = formalType.getRefTo();
                 int offset = referred.getOffset();
-                builder.append("lw $al 2($fp)\n")
-                        .append("lw $al 0($al)\n".repeat(nestingLevel - referred.getNestinglevel()))
-                        .append("lw $a0 ")
-                        .append(offset)
-                        .append("($al)\n");
+
+                builder.append(LinfLib.followChain(nestingLevel - entry.getNestinglevel()))
+                        .append("move $a0 $al\n");
+
                 if (offset != 0) {
                     builder.append("addi $a0 $a0 ")
                             .append(offset)
@@ -153,14 +156,18 @@ public class FunCall extends StmtDec {
             builder.append("push $a0\n");
         }
 
-        // Static link
-        return builder.append("lw $al 2($fp)\n")
-                .append("lw $al 0($al)\n".repeat(nestingLevel - entry.getNestinglevel()))
+        // Static/access link
+        return builder.append(LinfLib.followChain(nestingLevel - entry.getNestinglevel()))
                 .append("push $al\n")
-                // Return address
+                // Setup return address
                 .append("addi $ra $ip 2\n")
+                // Give control to called
                 .append("jal ")
                 .append(((FunType) entry.getType()).getFunLabel().replace(":", ""))
+                // pop access link and parameters
+                .append("addi $sp $sp ").append(actualParList.size() + 1).append("\n")
+                // pop control link
+                .append("top $fp\n")
                 .append("pop\n")
                 .toString();
 

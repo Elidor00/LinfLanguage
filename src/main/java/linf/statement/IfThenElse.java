@@ -5,10 +5,9 @@ import linf.error.type.TypeError;
 import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.LinfLib;
 
 import java.util.ArrayList;
-
-import lvm.utils.Strings;
 
 public class IfThenElse extends LinfStmt {
 
@@ -48,8 +47,8 @@ public class IfThenElse extends LinfStmt {
 
     @Override
     public String codeGen() {
-        String end = Strings.freshLabel();
-        String elseBranchCg = Strings.freshLabel();
+        String end = LinfLib.freshLabel();
+        String elseBranchCg = LinfLib.freshLabel();
         return exp.codeGen() +
                 "li $t1 0\n" +
                 "beq $a0 $t1 " + elseBranchCg.replace(":", "") + //branch if equal
@@ -57,6 +56,6 @@ public class IfThenElse extends LinfStmt {
                 "b " + end.replace(":", "") +   //jump to label endBranchCg
                 elseBranchCg +   //label thenBranch
                 elseBranch.codeGen() +
-                end ;
+                end;
     }
 }

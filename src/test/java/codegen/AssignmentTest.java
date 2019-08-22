@@ -1,7 +1,7 @@
 package codegen;
 
+import linf.utils.LinfLib;
 import lvm.LVM;
-import lvm.utils.Strings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,7 @@ import static utils.TestUtils.runBytecode;
 public class AssignmentTest {
     @Before
     public void resetLabels() {
-        Strings.reset();
+        LinfLib.reset();
     }
 
     @Test
@@ -29,8 +29,7 @@ public class AssignmentTest {
                 "li $a0 5\n" +
                 "push $a0\n" +
                 "li $a0 7\n" +
-                "lw $al 2($fp)\n" +
-                "sw $a0 0($al)\n" +
+                "sw $a0 0($fp)\n" +
                 "addi $sp $sp 1\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
@@ -97,9 +96,6 @@ public class AssignmentTest {
                 "sw $a0 0($al)\n" +
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 0\n" +
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 "push $fp\n" +
@@ -107,6 +103,8 @@ public class AssignmentTest {
                 "push $al\n" +
                 "addi $ra $ip 2\n" +
                 "jal fLabel0\n" +
+                "addi $sp $sp 1\n" +
+                "top $fp\n" +
                 "pop\n" +
                 "addi $sp $sp 1\n" +
                 "addi $sp $sp 2\n";

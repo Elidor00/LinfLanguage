@@ -14,12 +14,12 @@ public class FunType extends LinfType {
     private HashSet<IDValue> deletedIDs = new HashSet<>();
     private String funLabel;
 
-    public void setFunLabel(String funLabel) {
-        this.funLabel = funLabel;
-    }
-
     public String getFunLabel() {
         return funLabel;
+    }
+
+    public void setFunLabel(String funLabel) {
+        this.funLabel = funLabel;
     }
 
     public List<LinfType> getParTypes() {

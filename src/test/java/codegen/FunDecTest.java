@@ -1,19 +1,22 @@
 package codegen;
 
-import lvm.utils.Strings;
+import linf.utils.LinfLib;
+import lvm.LVM;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static lvm.LVM.MEMSIZE;
 import static org.junit.Assert.assertEquals;
 import static utils.TestUtils.cgen;
+import static utils.TestUtils.runBytecode;
 
 @RunWith(JUnit4.class)
 public class FunDecTest {
     @Before
     public void resetLabels() {
-        Strings.reset();
+        LinfLib.reset();
     }
 
     @Test
@@ -31,13 +34,12 @@ public class FunDecTest {
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 0\n" +
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
+        LVM vm = runBytecode(actual);
+        assertEquals(MEMSIZE - 1, vm.getSp());
     }
 
     @Test
@@ -57,17 +59,16 @@ public class FunDecTest {
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 1\n" +
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
+        LVM vm = runBytecode(actual);
+        assertEquals(MEMSIZE - 1, vm.getSp());
     }
 
     @Test
-    public void NestedDec_Should_JustWork(){
-        assertEquals(true,false);
+    public void NestedDec_Should_JustWork() {
+        assertEquals(true, false);
     }
 }

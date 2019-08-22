@@ -1,8 +1,8 @@
 package codegen;
 
 
+import linf.utils.LinfLib;
 import lvm.LVM;
-import lvm.utils.Strings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import static utils.TestUtils.runBytecode;
 public class FunCallTest {
     @Before
     public void resetLabels() {
-        Strings.reset();
+        LinfLib.reset();
     }
 
     @Test
@@ -39,9 +39,6 @@ public class FunCallTest {
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 1\n" +
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 // Prepare stack for call
@@ -50,6 +47,8 @@ public class FunCallTest {
                 "push $al\n" +
                 "addi $ra $ip 2\n" +
                 "jal fLabel0\n" +
+                "addi $sp $sp 1\n" +
+                "top $fp\n" +
                 "pop\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
@@ -77,9 +76,6 @@ public class FunCallTest {
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 0\n" +
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 // Inner block
@@ -89,10 +85,11 @@ public class FunCallTest {
                 // Prepare stack for call
                 "push $fp\n" +
                 "lw $al 2($fp)\n" +
-                "lw $al 0($al)\n" +
                 "push $al\n" +
                 "addi $ra $ip 2\n" +
                 "jal fLabel0\n" +
+                "addi $sp $sp 1\n" +
+                "top $fp\n" +
                 "pop\n" +
                 "addi $sp $sp 2\n" +
                 "li $a0 5\n" +
@@ -124,9 +121,6 @@ public class FunCallTest {
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 1\n" +
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 // Prepare stack for call
@@ -137,6 +131,8 @@ public class FunCallTest {
                 "push $al\n" +
                 "addi $ra $ip 2\n" +
                 "jal fLabel0\n" +
+                "addi $sp $sp 2\n" +
+                "top $fp\n" +
                 "pop\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
@@ -187,21 +183,18 @@ public class FunCallTest {
                 // print y
                 "lw $a0 4($fp)\n" + // <----------------------
                 "print\n" +
-                // pop t declaration
+                // pop t
                 "addi $sp $sp 1\n" +
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                // pop x and y
-                "addi $sp $sp 2\n" +
-                // pop frame pointer
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
-                // Prepare stack for call
+                // Fun call
+                // Push control link
                 "push $fp\n" +
-                // push r
+                // Push arguments
+                // Push r
                 "lw $a0 -1($fp)\n" + // <----------------------
                 "push $a0\n" +
                 // push k
@@ -213,7 +206,9 @@ public class FunCallTest {
                 // setup return address
                 "addi $ra $ip 2\n" +
                 "jal fLabel0\n" +
-                // pop access link
+                // pop access link and parameters
+                "addi $sp $sp 3\n" +
+                "top $fp\n" +
                 "pop\n" +
                 // print k
                 "lw $a0 0($fp)\n" + // <----------------------
@@ -251,7 +246,8 @@ public class FunCallTest {
                 // AR
                 "move $fp $sp\n" +
                 // print
-                "lw $a0 3($fp)\n" +
+                "lw $al 3($fp)\n" +
+                "lw $a0 0($al)\n" +
                 "print\n" +
                 // x assignment
                 "li $a0 60\n" +
@@ -260,20 +256,22 @@ public class FunCallTest {
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 1\n" +
-                "top $fp\n" +
-                "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 // Prepare stack for call
                 "push $fp\n" +
+                // Args
                 "lw $al 2($fp)\n" +
-                "lw $a0 0($al)\n" +
+                "move $a0 $al\n" +
                 "push $a0\n" +
+                // Access link
                 "lw $al 2($fp)\n" +
                 "push $al\n" +
+                // setup $ra
                 "addi $ra $ip 2\n" +
                 "jal fLabel0\n" +
+                "addi $sp $sp 2\n" +
+                "top $fp\n" +
                 "pop\n" +
                 "addi $sp $sp 1\n" +
                 "addi $sp $sp 2\n";

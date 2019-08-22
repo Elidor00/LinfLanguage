@@ -55,6 +55,7 @@ public class Assignment extends LinfStmt {
             if (!env.isLocalName(id)) {
                 lhSideType.setRwAccess();
             }
+            res.addAll(id.checkSemantics(env));
         }
         res.addAll(exp.checkSemantics(env));
         return res;
@@ -62,25 +63,7 @@ public class Assignment extends LinfStmt {
 
     @Override
     public String codeGen() {
-        if (id.isParameter()) {
-            if (id.getEntry().getType().isReference()) {
-                return exp.codeGen() +
-                        "lw $al " + id.getEntry().getOffset() + "($fp)\n" +
-                        "sw $a0 0($al)\n";
-            } else {
-                return exp.codeGen() +
-                        "sw $a0 " + id.getEntry().getOffset() + "($fp)\n";
-            }
-        } else {
-            int distance = nestingLevel - id.getEntry().getNestinglevel();
-            String followChain = "lw $al 2($fp)\n";
-            if (distance > 0) {
-                followChain += "lw $al 2($al)\n".repeat(distance - 1);
-            }
-            return exp.codeGen() +
-                    followChain +
-                    "sw $a0 " + id.getEntry().getOffset() + "($al)\n";
-
-        }
+        return exp.codeGen() +
+                id.LSideCodeGen();
     }
 }

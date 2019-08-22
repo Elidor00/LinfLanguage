@@ -1,6 +1,6 @@
 package linf.expression;
 
-import lvm.utils.Strings;
+import linf.utils.LinfLib;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +20,8 @@ public class Factor extends BinaryOp<LinfValue, LinfValue> {
     public String codeGen() {
         String cgenFactor = this.getLeft().codeGen();
         if (this.getRight() != null) {
-            String trueBranchLabel = Strings.freshLabel().replace(":", "");
-            String endBranchLabel = Strings.freshLabel().replace(":", "");
+            String trueBranchLabel = LinfLib.freshLabel().replace(":", "");
+            String endBranchLabel = LinfLib.freshLabel().replace(":", "");
             List<String> boolOP = Arrays.asList("&&", "||");
             if (!boolOP.contains(getOp())) {
                 cgenFactor += "push $a0\n";

@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 import static lvm.utils.Registers.*;
-import static lvm.utils.Strings.IP;
-
-//import java.util.HashMap;
 
 
 public class LVM {
@@ -23,8 +20,8 @@ public class LVM {
     static final int CODESIZE = 10000;
 
     private final int[] memory = new int[MEMSIZE];
-    private int[] code = new int[CODESIZE];
     private final List<String> stdOut = new ArrayList<>();
+    private int[] code = new int[CODESIZE];
     //registers
     private int ip = 0;
     private int sp = MEMSIZE - 1;
@@ -133,7 +130,7 @@ public class LVM {
                     memory[v1 + offset] = GET_REGISTER_VALUE.get(r1).apply(this);
                     break;
                 case LVMParser.LOADW:
-                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     offset = code[ip++];
                     r2 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     v1 = GET_REGISTER_VALUE.get(r2).apply(this);
@@ -160,11 +157,11 @@ public class LVM {
                     break;
                 case LVMParser.JAL:
                     ra = ip + 1;
-                    SET_REGISTER_VALUE.get(IP).apply(this, code[ip]);
+                    ip = code[ip];
                     break;
                 case LVMParser.JR:
-                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
-                    SET_REGISTER_VALUE.get(IP).apply(this, GET_REGISTER_VALUE.get(r1).apply(this));
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip]);
+                    ip = GET_REGISTER_VALUE.get(r1).apply(this);
                     break;
                 case LVMParser.ADDI:
                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
