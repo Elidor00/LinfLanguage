@@ -10,6 +10,7 @@ import org.junit.runners.JUnit4;
 
 import java.util.List;
 
+import static lvm.LVM.MEMSIZE;
 import static org.junit.Assert.assertEquals;
 import static utils.TestUtils.cgen;
 import static utils.TestUtils.runBytecode;
@@ -38,7 +39,7 @@ public class FunCallTest {
                 // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp 0\n" +
+                "addi $sp $sp 1\n" +
                 "top $fp\n" +
                 "pop\n" +
                 "jr $ra\n" +
@@ -56,6 +57,7 @@ public class FunCallTest {
         List<String> out = vm.getStdOut();
         assertEquals(1, out.size());
         assertEquals("0", out.get(0));
+        assertEquals(MEMSIZE - 1, vm.getSp());
     }
 
     @Test
@@ -102,6 +104,7 @@ public class FunCallTest {
         assertEquals(2, out.size());
         assertEquals("0", out.get(0));
         assertEquals("5", out.get(1));
+        assertEquals(MEMSIZE - 1, vm.getSp());
     }
 
     @Test
@@ -137,11 +140,105 @@ public class FunCallTest {
                 "pop\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
+        LVM vm = runBytecode(actual);
+        List<String> out = vm.getStdOut();
+        assertEquals(1, out.size());
+        assertEquals("5", out.get(0));
+        assertEquals(MEMSIZE - 1, vm.getSp());
+    }
+
+    @Test
+    public void Binary_FunCall_Should_JustWork() {
+        String actual = cgen("{ int k = 0; int r = 1;\n" +
+                "f(int x, int y){\n" +
+                "int t = x; x = y; y = t;\n" +
+                "print x; print y; }\n" +
+                "f(k,r);\n" +
+                "print k; print r; }");
+
+        String expected = "subi $t1 $sp 2\n" + // Root block
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                // k declaration
+                "li $a0 0\n" +
+                "push $a0\n" +
+                // r declaration
+                "li $a0 1\n" +
+                "push $a0\n" +
+                // f declaration
+                "jal label0\n" +
+                "fLabel0:\n" +
+                "push $ra\n" +
+                // block
+                "move $fp $sp\n" +
+                //t declaration
+                "lw $a0 3($fp)\n" + // <----------------------
+                "push $a0\n" +
+                // x assignment
+                "lw $a0 4($fp)\n" + // <----------------------
+                "sw $a0 3($fp)\n" +
+                // y assignment
+                "lw $a0 0($fp)\n" + // <----------------------
+                "sw $a0 4($fp)\n" +
+                // print x
+                "lw $a0 3($fp)\n" + // <----------------------
+                "print\n" +
+                // print y
+                "lw $a0 4($fp)\n" + // <----------------------
+                "print\n" +
+                // pop t declaration
+                "addi $sp $sp 1\n" +
+                // return control
+                "top $ra\n" +
+                "pop\n" +
+                // pop x and y
+                "addi $sp $sp 2\n" +
+                // pop frame pointer
+                "top $fp\n" +
+                "pop\n" +
+                "jr $ra\n" +
+                "label0:\n" +
+                // Prepare stack for call
+                "push $fp\n" +
+                // push r
+                "lw $a0 -1($fp)\n" + // <----------------------
+                "push $a0\n" +
+                // push k
+                "lw $a0 0($fp)\n" + // <----------------------
+                "push $a0\n" +
+                // push access link
+                "lw $al 2($fp)\n" + // <----------------------
+                "push $al\n" +
+                // setup return address
+                "addi $ra $ip 2\n" +
+                "jal fLabel0\n" +
+                // pop access link
+                "pop\n" +
+                // print k
+                "lw $a0 0($fp)\n" + // <----------------------
+                "print\n" +
+                // print r
+                "lw $a0 -1($fp)\n" + // <----------------------
+                "print\n" +
+                "addi $sp $sp 2\n" +
+                "addi $sp $sp 2\n";
+        assertEquals(expected, actual);
+        LVM vm = runBytecode(actual);
+        List<String> out = vm.getStdOut();
+        assertEquals(4, out.size());
+        assertEquals("1", out.get(0));
+        assertEquals("0", out.get(1));
+        assertEquals("0", out.get(2));
+        assertEquals("1", out.get(3));
+        assertEquals(0, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(1, vm.peekMemory(MEMSIZE - 4));
+        assertEquals(MEMSIZE - 1, vm.getSp());
     }
 
     @Test
     public void Unary_Var_FunCall_Should_JustWork() {
-        String actual = cgen("{ int k = 50; f(var int x){ print x; } f(k); }");
+        String actual = cgen("{ int k = 50; f(var int x){ print x; x = 60; } f(k); }");
         String expected = "subi $t1 $sp 2\n" +
                 "push $t1\n" +
                 "push $t1\n" +
@@ -151,10 +248,15 @@ public class FunCallTest {
                 "jal label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
-                // block
+                // AR
                 "move $fp $sp\n" +
+                // print
                 "lw $a0 3($fp)\n" +
                 "print\n" +
+                // x assignment
+                "li $a0 60\n" +
+                "lw $al 3($fp)\n" +
+                "sw $a0 0($al)\n" +
                 // return control
                 "top $ra\n" +
                 "pop\n" +
@@ -176,7 +278,12 @@ public class FunCallTest {
                 "addi $sp $sp 1\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
-        assertEquals("50", runBytecode(actual).getStdOut().get(0));
+        LVM vm = runBytecode(actual);
+        List<String> out = vm.getStdOut();
+        assertEquals(1, out.size());
+        assertEquals("50", out.get(0));
+        assertEquals(60, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(MEMSIZE - 1, vm.getSp());
     }
 
     @Test

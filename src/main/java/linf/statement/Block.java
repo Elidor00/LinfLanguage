@@ -57,8 +57,8 @@ public class Block extends LinfStmt {
         return filterLocalIDs(rwIDs);
     }
 
-    void setAR(boolean AR) {
-        isAR = AR;
+    void setAR() {
+        isAR = true;
     }
 
     private void checkDeletions(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
@@ -111,7 +111,6 @@ public class Block extends LinfStmt {
 
         env.openScope(localEnv);
         nestingLevel = env.nestingLevel;
-        env.offset = 0;
         for (LinfStmt stmt : stmtList) {
             ArrayList<SemanticError> errs = stmt.checkSemantics(env);
             errors.addAll(errs);

@@ -1,6 +1,7 @@
 package linf.utils;
 
 import linf.expression.IDValue;
+import linf.type.FunType;
 import linf.type.LinfType;
 
 import java.util.HashMap;
@@ -8,17 +9,25 @@ import java.util.LinkedList;
 
 public class Environment {
     public int nestingLevel = -1;
-    public int offset = 0;
+    private int offset = 0;
     // List of hash tables
     private final LinkedList<HashMap<String, STentry>> symbolsTable = new LinkedList<>();
+
+    public void resetOffset() {
+        offset = 0;
+    }
 
     /**
      * Adds variable with the given id to existence
      *
      * @param id
      */
-    public void addName(String id, STentry val) {
-        symbolsTable.peek().put(id, val);
+    public void addName(String id, LinfType type) {
+        STentry entry = new STentry(nestingLevel, offset, type);
+        symbolsTable.peek().put(id, entry);
+        if (!(type instanceof FunType)) {
+            offset--;
+        }
     }
 
     public HashMap<String, STentry> local() {
@@ -43,6 +52,7 @@ public class Environment {
     private void openScope() {
         symbolsTable.push(new HashMap<>());
         nestingLevel++;
+        resetOffset();
     }
 
     public void openScope(HashMap<String, STentry> scope) {
@@ -51,6 +61,7 @@ public class Environment {
         } else {
             symbolsTable.push(scope);
             nestingLevel++;
+            resetOffset();
         }
     }
 

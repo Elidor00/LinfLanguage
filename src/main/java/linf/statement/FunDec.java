@@ -61,7 +61,7 @@ public class FunDec extends StmtDec {
             scope.put(parID, par.getEntry());
         }
         body.setLocalEnv(scope);
-        body.setAR(true);
+        body.setAR();
         res.addAll(body.checkSemantics(env));
         return res;
     }
@@ -74,9 +74,12 @@ public class FunDec extends StmtDec {
                 funLabel +
                 "push $ra\n" +
                 body.codeGen() +
+                // return control
                 "top $ra\n" +
                 "pop\n" +
-                "addi $sp $sp " + parList.size() + "\n" +
+                // pop access link and parameters
+                "addi $sp $sp " + (parList.size() + 1) + "\n" +
+                // pop control link
                 "top $fp\n" +
                 "pop\n" +
                 "jr $ra\n" +

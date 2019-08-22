@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public abstract class StmtDec extends LinfStmt {
     String id;
     LinfType type;
-    private int offset = -1;
+    private int offset;
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
@@ -20,11 +20,7 @@ public abstract class StmtDec extends LinfStmt {
         if (env.isLocalName(id)) {
             res.add(new DoubleDeclarationError(id));
         } else {
-            if (this instanceof VarDec) {
-                offset = env.offset++;
-            }
-            STentry entry = new STentry(env.nestingLevel, offset, type);
-            env.addName(id, entry);
+            env.addName(id, type);
         }
 
         return res;

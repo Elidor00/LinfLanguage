@@ -62,13 +62,13 @@ public class IDValue extends LinfValue {
             return "lw $a0 " + entry.getOffset() + "($fp)\n";
         } else {
             int distance = nestingLevel - entry.getNestinglevel();
-            String followChain = "";
             if (distance > 0) {
-                followChain = "lw $al 2($fp)\n" +
-                        "lw $al 2($al)\n".repeat(distance - 1);
+                return  "lw $al 2($fp)\n" +
+                        "lw $al 2($al)\n".repeat(distance - 1)+
+                        "lw $a0 " + entry.getOffset() + "($al)\n";
+            } else {
+                return "lw $a0 " + entry.getOffset() + "($fp)\n";
             }
-            return followChain +
-                    "lw $a0 " + entry.getOffset() + "($al)\n";
         }
     }
 
