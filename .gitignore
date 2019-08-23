@@ -4,3 +4,4 @@ target/
 bytecode.txt
 gen/
 *.iml
+lib/
