@@ -1,7 +1,7 @@
 package linf.statement;
 
-import linf.error.semantic.FunctionNameShadowingError;
 import linf.error.semantic.SemanticError;
+import linf.error.type.MismatchedPrototype;
 import linf.error.type.TypeError;
 import linf.expression.IDValue;
 import linf.type.FunType;
@@ -10,35 +10,30 @@ import linf.utils.Environment;
 import linf.utils.LinfLib;
 import linf.utils.STentry;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class FunDec extends StmtDec {
-    private final List<Parameter> parList = new ArrayList<>();
+public class FunDec extends FunPrototype {
     private final Block body;
+    private STentry envEntry;
 
-    public FunDec(String id, Block body) {
-        this.id = id;
+    public FunDec(String id, List<Parameter> parameters, Block body) {
+        super(id, parameters);
+        ((FunType) this.type).setPrototype(false);
         this.body = body;
-        this.type = new FunType();
-        ((FunType) this.type).setFunLabel(LinfLib.freshFunLabel());
-    }
-
-    public void addPar(Parameter par) {
-        parList.add(par);
-        par.setOffset(parList.size());
-        ((FunType) type).addParType(par.getType());
     }
 
     @Override
     public LinfType checkType() throws TypeError {
+        if (envEntry != null && !type.equals(envEntry.getType())) {
+            throw new MismatchedPrototype(id, (FunType) envEntry.getType(), (FunType) type);
+        }
         body.checkType();
         HashSet<IDValue> delIDs = body.getDeletedIDs();
         HashSet<IDValue> rwIDs = body.getRwIDs();
-        for (Parameter par : parList) {
-            IDValue parID = par.getId();
+        for (Parameter par : getParList()) {
+            String parID = par.getId();
             delIDs.remove(parID);
             rwIDs.remove(parID);
         }
@@ -48,16 +43,12 @@ public class FunDec extends StmtDec {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> res = super.checkSemantics(env);
+    public List<SemanticError> checkSemantics(Environment env) {
+        envEntry = env.getStEntry(id);
+        List<SemanticError> res = super.checkSemantics(env);
         HashMap<String, STentry> scope = new HashMap<>();
-        for (Parameter par : parList) {
-            String parID = par.getId().toString();
-            if (parID.equals(id)) {
-                res.add(new FunctionNameShadowingError(id));
-            }
-            res.addAll(par.checkSemantics(env));
-            scope.put(parID, par.getEntry());
+        for (Parameter par : getParList()) {
+            scope.put(par.getId(), par.getEntry());
         }
         body.setLocalEnv(scope);
         body.setAR();

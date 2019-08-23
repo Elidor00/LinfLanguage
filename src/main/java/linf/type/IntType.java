@@ -4,10 +4,11 @@ import linf.error.semantic.SemanticError;
 import linf.utils.Environment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IntType extends LinfType {
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         return new ArrayList<>();
     }
 

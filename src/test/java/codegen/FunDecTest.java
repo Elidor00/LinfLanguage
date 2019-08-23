@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static lvm.LVM.MEMSIZE;
 import static org.junit.Assert.assertEquals;
 import static utils.TestUtils.cgen;
 import static utils.TestUtils.runBytecode;
@@ -36,10 +35,10 @@ public class FunDecTest {
                 "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
-        LVM vm = runBytecode(actual);
-        assertEquals(MEMSIZE - 1, vm.getSp());
+        runBytecode(actual);
     }
 
     @Test
@@ -61,14 +60,48 @@ public class FunDecTest {
                 "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
-        LVM vm = runBytecode(actual);
-        assertEquals(MEMSIZE - 1, vm.getSp());
+        runBytecode(actual);
     }
 
     @Test
     public void NestedDec_Should_JustWork() {
-        assertEquals(true, false);
+        String actual = cgen("{ f(int x){ g() { print x; } g(); } }");
+        String expected = "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                "b label0\n" +
+                "fLabel1:\n" +
+                "push $ra\n" +
+                "move $fp $sp\n" +
+                "b label1\n" +
+                "fLabel0:\n" +
+                "push $ra\n" +
+                // block
+                "move $fp $sp\n" +
+                "lw $a0 3($fp)\n" +
+                "print\n" +
+                // return control
+                "top $ra\n" +
+                "pop\n" +
+                "jr $ra\n" +
+                "label1:\n" +
+                "push $fp\n" +
+                "push $fp\n" +
+                "b fLabel0\n" +
+                "addi $sp $sp 1\n" +
+                "top $fp\n" +
+                "pop\n" +
+                "top $ra\n" +
+                "pop\n" +
+                "jr $ra\n" +
+                "label0:\n" +
+                "lw $fp 2($sp)\n" +
+                "addi $sp $sp 2\n";
+        assertEquals(expected, actual);
+        runBytecode(actual);
     }
 }

@@ -1,20 +1,22 @@
 package linf.statement;
 
 import linf.error.semantic.SemanticError;
-import linf.expression.IDValue;
 import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Parameter extends LinfStmt {
-    private final IDValue id;
+    private final String id;
+    private LinfType type;
+    private STentry entry;
     private int offset;
 
     public Parameter(LinfType type, String name) {
-        this.id = new IDValue(name);
-        id.setType(type);
+        this.id = name;
+        this.type = type;
     }
 
     void setOffset(int offset) {
@@ -22,14 +24,14 @@ public class Parameter extends LinfStmt {
     }
 
     STentry getEntry() {
-        return id.getEntry();
+        return entry;
     }
 
     public LinfType getType() {
-        return id.getType();
+        return type;
     }
 
-    public IDValue getId() {
+    public String getId() {
         return id;
     }
 
@@ -39,8 +41,8 @@ public class Parameter extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        id.setEntry(new STentry(env.nestingLevel + 1, offset + 2, id.getType()));
+    public List<SemanticError> checkSemantics(Environment env) {
+        entry = new STentry(env.nestingLevel + 1, offset + 2, type);
         return new ArrayList<>();
     }
 

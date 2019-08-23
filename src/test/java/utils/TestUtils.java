@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.util.List;
 
+import static lvm.LVM.MEMSIZE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -58,6 +59,7 @@ public final class TestUtils {
         LVM vm = new LVM();
         try {
             vm.run(bytecode);
+            assertEquals(MEMSIZE - 1, vm.getSp());
             return vm;
         } catch (LVMError err) {
             err.printStackTrace();

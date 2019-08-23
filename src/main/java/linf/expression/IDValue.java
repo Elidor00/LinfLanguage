@@ -8,6 +8,7 @@ import linf.utils.LinfLib;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class IDValue extends LinfValue {
@@ -25,6 +26,7 @@ public class IDValue extends LinfValue {
     public void setEntry(STentry entry) {
         this.entry = entry;
         this.setType(entry.getType());
+        this.nestingLevel = entry.getNestinglevel();
     }
 
     public boolean isParameter() {
@@ -41,14 +43,13 @@ public class IDValue extends LinfValue {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
         entry = env.getStEntry(value);
-        nestingLevel = env.nestingLevel;
         if (entry == null) {
             res.add(new UnboundSymbolError(value));
         } else {
-            setType(entry.getType());
+            setEntry(entry);
         }
         return res;
     }
@@ -74,35 +75,13 @@ public class IDValue extends LinfValue {
         }
     }
 
-    /*private String codeGen(String op) {
-        if (isParameter()) {
-            // Local to AR
-            if (entry.getType().isReference()) {
-                STentry referred = entry.getType().getRefTo();
-                return "lw $al " + entry.getOffset() + "($fp)\n" +
-                        String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
-            } else {
-                return String.format("%s $a0 " + entry.getOffset() + "($fp)\n", op);
-            }
-        } else {
-            int distance = nestingLevel - entry.getNestinglevel();
-            if (distance > 0) {
-                // free variable
-                return LinfLib.followChain(distance) +
-                        String.format("%s $a0 " + entry.getOffset() + "($al)\n", op);
-            } else {
-                return String.format("%s $a0 " + entry.getOffset() + "($fp)\n", op);
-            }
-        }
-    }*/
-
     public String LSideCodeGen() {
-        return codeGen("sw");
+        return this.codeGen("sw");
     }
 
     @Override
     public String codeGen() {
-        return codeGen("lw");
+        return this.codeGen("lw");
     }
 
     @Override

@@ -38,6 +38,7 @@ class App {
             //create custom visitor
             LinfVisitorImpl visitor = new LinfVisitorImpl();
 
+            /*
             ArrayList<String> lexerErrors = new ArrayList<>(); //list of LEXICAL errors
             //check LEXICAL errors
             for (Token t : lexer.getAllTokens()) { //get all token
@@ -55,6 +56,7 @@ class App {
                 exit(-1);
             }
 
+             */
             //start visit the root and then recursively visit the whole tree
             Block blk = (Block) visitor.visit(parser.block());
 

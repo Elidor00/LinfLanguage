@@ -6,6 +6,7 @@ import linf.type.LinfType;
 import linf.utils.Environment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IntValue extends LinfValue {
     public IntValue(String value) {
@@ -14,7 +15,7 @@ public class IntValue extends LinfValue {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         return new ArrayList<>();
     }
 

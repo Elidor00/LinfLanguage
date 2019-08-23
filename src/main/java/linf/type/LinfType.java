@@ -50,4 +50,25 @@ public abstract class LinfType implements Node {
     public void setParameter(boolean parameter) {
         isParameter = parameter;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LinfType linfType = (LinfType) o;
+
+        if (isParameter != linfType.isParameter) return false;
+        return isReference == linfType.isReference;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = refTo != null ? refTo.hashCode() : 0;
+        result = 31 * result + (isParameter ? 1 : 0);
+        result = 31 * result + (isReference ? 1 : 0);
+        result = 31 * result + (isDeleted ? 1 : 0);
+        result = 31 * result + (rwAccess ? 1 : 0);
+        return result;
+    }
 }

@@ -24,6 +24,15 @@ public abstract class LinfLib {
         } else {
             return "lw $al 2($fp)\n";
         }
+    }
 
+    public static String pushAl(int distance) {
+        if (distance > 0) {
+            return "lw $al 2($fp)\n" +
+                    "lw $al 2($al)\n".repeat(distance - 1) +
+                    "push $al\n";
+        } else {
+            return "push $fp\n";
+        }
     }
 }

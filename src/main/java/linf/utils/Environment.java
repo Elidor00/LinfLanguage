@@ -39,7 +39,16 @@ public class Environment {
     }
 
     public boolean isLocalName(String id) {
-        return symbolsTable.peek().containsKey(id);
+        if (symbolsTable.peek().containsKey(id)) {
+            STentry entry = symbolsTable.peek().get(id);
+            boolean isPrototype = false;
+            if (entry.getType() instanceof FunType) {
+                isPrototype = ((FunType) entry.getType()).isPrototype();
+            }
+            return (entry.getOffset() == offset && !isPrototype);
+        } else {
+            return false;
+        }
     }
 
     public boolean isLocalName(IDValue id) {

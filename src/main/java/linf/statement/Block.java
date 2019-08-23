@@ -11,10 +11,8 @@ import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Block extends LinfStmt {
@@ -106,15 +104,28 @@ public class Block extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope(localEnv);
         nestingLevel = env.nestingLevel;
-        for (LinfStmt stmt : stmtList) {
-            ArrayList<SemanticError> errs = stmt.checkSemantics(env);
-            errors.addAll(errs);
 
+        Map<Boolean, List<LinfStmt>> mutatesEnv = stmtList.stream()
+                .collect(Collectors.partitioningBy(
+                        stmt -> (stmt instanceof StmtDec ||
+                                stmt instanceof Deletion)));
+
+        // Declarations
+        for (LinfStmt stmt : mutatesEnv.get(true)) {
+            errors.addAll(stmt.checkSemantics(env));
+        }
+
+        // Rest
+        for (LinfStmt stmt : mutatesEnv.get(false)) {
+            errors.addAll(stmt.checkSemantics(env));
+        }
+
+        for (LinfStmt stmt : stmtList) {
             if (stmt instanceof Deletion) {
                 IDValue id = ((Deletion) stmt).getId();
                 if (deletedIDs.contains(id)) {

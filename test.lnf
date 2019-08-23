@@ -1,5 +1,17 @@
 {
 
+f(int x);
+g(int k);
+
+f(int x) {
+    print x;
+}
+
+f(500);
+
+
+/*
+
 printfactorial(int x) {
       fact(var int out, int x) {
             if ( x > 1 ) then {
@@ -34,7 +46,7 @@ funz(int x) {
 
 {
     int u = 1;
-    
+
     f(var int x, int n) {
         if(n==0) then {
             print(x);
@@ -76,7 +88,7 @@ foo(x);
 
 }
 
-/*
+
 
 { // NON CORRETTO
 
@@ -175,3 +187,4 @@ x = 3;
 
 */
 
+}

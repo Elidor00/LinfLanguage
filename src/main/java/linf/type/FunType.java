@@ -3,6 +3,7 @@ package linf.type;
 import linf.error.semantic.SemanticError;
 import linf.expression.IDValue;
 import linf.utils.Environment;
+import linf.utils.LinfLib;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,14 +13,11 @@ public class FunType extends LinfType {
     private List<LinfType> parTypes = new ArrayList<>();
     private HashSet<IDValue> rwIDs = new HashSet<>();
     private HashSet<IDValue> deletedIDs = new HashSet<>();
-    private String funLabel;
+    private boolean isPrototype = true;
+    private String funLabel = LinfLib.freshFunLabel();
 
     public String getFunLabel() {
         return funLabel;
-    }
-
-    public void setFunLabel(String funLabel) {
-        this.funLabel = funLabel;
     }
 
     public List<LinfType> getParTypes() {
@@ -46,8 +44,16 @@ public class FunType extends LinfType {
         this.deletedIDs.addAll(deletedIDs);
     }
 
+    public boolean isPrototype() {
+        return isPrototype;
+    }
+
+    public void setPrototype(boolean prototype) {
+        isPrototype = prototype;
+    }
+
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         return new ArrayList<>();
     }
 
@@ -70,5 +76,24 @@ public class FunType extends LinfType {
         }
         str.append(") -> void");
         return str.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FunType funType = (FunType) o;
+        return parTypes.equals(funType.parTypes);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = parTypes.hashCode();
+        result = 31 * result + rwIDs.hashCode();
+        result = 31 * result + deletedIDs.hashCode();
+        result = 31 * result + (isPrototype ? 1 : 0);
+        result = 31 * result + funLabel.hashCode();
+        return result;
     }
 }

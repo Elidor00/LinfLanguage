@@ -7,15 +7,14 @@ import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class VarDec extends StmtDec {
 
     private final Exp exp;
 
     public VarDec(LinfType type, String id, Exp exp) {
-        this.type = type;
-        this.id = id;
+        super(id,type);
         this.exp = exp;
     }
 
@@ -41,11 +40,9 @@ public class VarDec extends StmtDec {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> res = super.checkSemantics(env);
-
+    public List<SemanticError> checkSemantics(Environment env) {
+        List<SemanticError> res = super.checkSemantics(env);
         res.addAll(exp.checkSemantics(env));
-
         return res;
     }
 

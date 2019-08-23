@@ -91,7 +91,7 @@ public class FunCall extends LinfStmt {
 
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
 
         ArrayList<SemanticError> res = new ArrayList<>();
 
@@ -129,7 +129,7 @@ public class FunCall extends LinfStmt {
      */
     @Override
     public String codeGen() {
-        // Dynamic/control link
+        // Dynamic/control link, i.e. pointer to the env in which f is called
         StringBuilder builder = new StringBuilder("push $fp\n");
 
         // Actual parameters
@@ -156,9 +156,8 @@ public class FunCall extends LinfStmt {
             builder.append("push $a0\n");
         }
 
-        // Static/access link
-        return builder.append(LinfLib.followChain(nestingLevel - entry.getNestinglevel()))
-                .append("push $al\n")
+        // Static/access link, i.e. pointer to the env in which f is declared
+        return builder.append(LinfLib.pushAl(nestingLevel - entry.getNestinglevel()))
                 // Give control to called
                 .append("b ")
                 .append(((FunType) entry.getType()).getFunLabel().replace(":", ""))
@@ -168,7 +167,6 @@ public class FunCall extends LinfStmt {
                 .append("top $fp\n")
                 .append("pop\n")
                 .toString();
-
     }
 }
 

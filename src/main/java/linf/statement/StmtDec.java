@@ -6,14 +6,19 @@ import linf.type.LinfType;
 import linf.utils.Environment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class StmtDec extends LinfStmt {
     String id;
     LinfType type;
-    private int offset;
+
+    StmtDec(String id, LinfType type){
+        this.id = id;
+        this.type = type;
+    }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
 
         if (env.isLocalName(id)) {

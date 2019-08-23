@@ -11,6 +11,7 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Assignment extends LinfStmt {
     private final IDValue id;
@@ -41,7 +42,7 @@ public class Assignment extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         //create result list
         ArrayList<SemanticError> res = new ArrayList<>();
         STentry entry = env.getStEntry(id);

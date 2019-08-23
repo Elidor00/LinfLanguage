@@ -16,7 +16,7 @@ import static lvm.utils.Registers.*;
 
 public class LVM {
 
-    public static final int MEMSIZE = 15;
+    public static final int MEMSIZE = 10000;
     static final int CODESIZE = 10000;
 
     private final int[] memory = new int[MEMSIZE];

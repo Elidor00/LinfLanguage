@@ -40,7 +40,7 @@ public class AssignmentTest {
         assertEquals(7, vm.getA0());
         assertEquals(MEMSIZE - 3, vm.getFp());
         assertEquals(7, vm.peekMemory(MEMSIZE - 3));
-        assertEquals(MEMSIZE - 1, vm.getSp());
+
     }
 
     @Test
@@ -85,7 +85,7 @@ public class AssignmentTest {
         LVM vm = runBytecode(actual);
         assertEquals(7, vm.getA0());
         assertEquals(7, vm.peekMemory(MEMSIZE - 3));
-        assertEquals(MEMSIZE - 1, vm.getSp());
+
 
         String actual2 = cgen("{ int k = 5; f(){ k = 7; } f(); }");
         String expected2 = "subi $t1 $sp 2\n" +
@@ -119,7 +119,7 @@ public class AssignmentTest {
         vm = runBytecode(actual);
         assertEquals(7, vm.getA0());
         assertEquals(7, vm.peekMemory(MEMSIZE - 3));
-        assertEquals(MEMSIZE - 1, vm.getSp());
+
     }
 
     @Test
@@ -175,7 +175,7 @@ public class AssignmentTest {
         assertEquals(7, vm.getA0());
         assertEquals(5, vm.peekMemory(MEMSIZE - 3));
         assertEquals(7, vm.peekMemory(MEMSIZE - 5));
-        assertEquals(MEMSIZE - 1, vm.getSp());
+
     }
 
     @Test
@@ -237,6 +237,6 @@ public class AssignmentTest {
         assertEquals("7", out.get(1));
         assertEquals(7, vm.getA0());
         assertEquals(7, vm.peekMemory(MEMSIZE - 3));
-        assertEquals(MEMSIZE - 1, vm.getSp());
+
     }
 }

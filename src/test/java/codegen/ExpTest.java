@@ -40,6 +40,7 @@ public class ExpTest {
                         "add $a0 $t1 $a0\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -65,6 +66,7 @@ public class ExpTest {
                         "mult $a0 $t1 $a0\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -90,6 +92,7 @@ public class ExpTest {
                         "sub $a0 $t1 $a0\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -115,6 +118,7 @@ public class ExpTest {
                         "div $a0 $t1 $a0\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -150,6 +154,7 @@ public class ExpTest {
                         "lw $a0 0($fp)\n" +
                         "print\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -199,6 +204,7 @@ public class ExpTest {
                         "add $a0 $t1 $a0\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -222,6 +228,7 @@ public class ExpTest {
                         "label0:\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -245,6 +252,7 @@ public class ExpTest {
                         "label0:\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         assertEquals(test, result);
@@ -269,6 +277,7 @@ public class ExpTest {
                         "label0:\n" +
                         "push $a0\n" +
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(result);
@@ -305,6 +314,7 @@ public class ExpTest {
                 "pop\n" +
                 "sub $a0 $t1 $a0\n" +
                 "addi $sp $sp 1\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         //assertEquals(test, result);
         LVM vm = runBytecode(test);

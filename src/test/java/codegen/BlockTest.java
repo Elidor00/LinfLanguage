@@ -18,6 +18,7 @@ public class BlockTest {
                         "push $t1\n" +
                         "push $t1\n" +
                         "move $fp $sp\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
@@ -35,6 +36,7 @@ public class BlockTest {
                         "push $a0\n" +
 
                         "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
@@ -55,6 +57,7 @@ public class BlockTest {
                         "push $a0\n" +
 
                         "addi $sp $sp 2\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
     }
@@ -80,8 +83,10 @@ public class BlockTest {
                         "push $a0\n" +
                         //close nested block
                         "addi $sp $sp 2\n" +
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n" +
                         //close main block
+                        "lw $fp 2($sp)\n" +
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
     }

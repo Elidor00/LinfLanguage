@@ -4,8 +4,8 @@ import linf.error.semantic.SemanticError;
 import linf.utils.Environment;
 import linf.utils.STentry;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Exp extends BinaryOp<Term, Exp> {
     private final HashSet<IDValue> rwIDs = new HashSet<>();
@@ -38,8 +38,8 @@ public class Exp extends BinaryOp<Term, Exp> {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> res = super.checkSemantics(env);
+    public List<SemanticError> checkSemantics(Environment env) {
+        List<SemanticError> res = super.checkSemantics(env);
         // populates rwIDs with all identifiers which are not local to this scope
         if (isID() && !(env.isLocalName(this.toString()))) {
             rwIDs.add((IDValue) getLeft().getFactor().getValue());

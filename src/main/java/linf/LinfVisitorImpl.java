@@ -10,6 +10,7 @@ import linf.type.LinfType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LinfVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Node> {
 
@@ -87,19 +88,19 @@ public class LinfVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Node> {
         if (ctx.type() != null && ctx.exp() != null) {
             LinfType type = (LinfType) visit(ctx.type());
             Exp exp = (Exp) visit(ctx.exp());
-
             return new VarDec(type, ctx.ID().getText(), exp);
-
-
         } else {
-            Block blk = (Block) visit(ctx.block());
-            FunDec res = new FunDec(ctx.ID().getText(), blk);
-
-            for (ComplexStaticAnalysisParser.ParameterContext pc : ctx.parameter()) {
-                res.addPar((Parameter) visit(pc));
+            List<Parameter> parameters = ctx.parameter()
+                    .stream()
+                    .map((child) -> (Parameter) visit(child))
+                    .collect(Collectors.toList());
+            String id = ctx.ID().getText();
+            if (ctx.block() != null) {
+                Block blk = (Block) visit(ctx.block());
+                return new FunDec(id, parameters, blk);
+            } else {
+                return new FunPrototype(id, parameters);
             }
-
-            return res;
         }
     }
 

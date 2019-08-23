@@ -9,6 +9,7 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Deletion extends LinfStmt {
@@ -28,7 +29,7 @@ public class Deletion extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
         STentry entry = env.getStEntry(id);
         if (entry == null) {
