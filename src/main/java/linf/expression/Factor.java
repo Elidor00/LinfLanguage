@@ -22,13 +22,12 @@ public class Factor extends BinaryOp<LinfValue, LinfValue> {
         if (this.getRight() != null) {
             String trueBranchLabel = LinfLib.freshLabel().replace(":", "");
             String endBranchLabel = LinfLib.freshLabel().replace(":", "");
-            List<String> boolOP = Arrays.asList("&&", "||");
-            if (!boolOP.contains(getOp())) {
+            if (!List.of("&&", "||").contains(getOp())) {
                 cgenFactor += "push $a0\n";
-                cgenFactor += this.getRight().codeGen();
+                cgenFactor += getRight().codeGen();
                 cgenFactor += "top $t1\npop\n";
 
-                switch (this.getOp()) { //ROP: '==' | '>' | '<' | '<=' | '>=' | '!='
+                switch (getOp()) { //ROP: '==' | '>' | '<' | '<=' | '>=' | '!='
                     case "==":
                         cgenFactor += "beq $a0 $t1 " + trueBranchLabel;
                         break;
