@@ -54,6 +54,27 @@ public class IDValue extends LinfValue {
     }
 
     private String codeGen(String op) {
+        int distance = nestingLevel - entry.getNestinglevel();
+        if (entry.getType().isReference()) {
+            STentry referred = entry.getType().getRefTo();
+            if (distance > 0) {
+                return LinfLib.followChain(distance) +
+                        "lw $al " + entry.getOffset() + "($al)\n" +
+                        String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
+            } else {
+                return "lw $al " + entry.getOffset() + "($fp)\n" +
+                        String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
+            }
+        } else if (distance > 0) {
+            // free variable
+            return LinfLib.followChain(distance) +
+                    String.format("%s $a0 " + entry.getOffset() + "($al)\n", op);
+        } else {
+            return String.format("%s $a0 " + entry.getOffset() + "($fp)\n", op);
+        }
+    }
+
+    /*private String codeGen(String op) {
         if (isParameter()) {
             // Local to AR
             if (entry.getType().isReference()) {
@@ -73,7 +94,7 @@ public class IDValue extends LinfValue {
                 return String.format("%s $a0 " + entry.getOffset() + "($fp)\n", op);
             }
         }
-    }
+    }*/
 
     public String LSideCodeGen() {
         return codeGen("sw");

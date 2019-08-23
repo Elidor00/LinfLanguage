@@ -62,7 +62,7 @@ public class LVM {
             if (sp < 0) {
                 throw new StackUnderflowError();
             }
-            int v1, v2, address, offset;
+            int v1, v2, offset;
             String r1, r2;
             int bytecode = code[ip++];
             switch (bytecode) {

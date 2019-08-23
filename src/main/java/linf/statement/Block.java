@@ -161,6 +161,9 @@ public class Block extends LinfStmt {
             } else {
                 code.insert(0, "push $fp\n".repeat(2));
             }
+            // restore $fp
+            code.append("lw $fp 2($sp)\n");
+            // pop return address and access link
             code.append("addi $sp $sp 2\n");
         }
         return code.toString();

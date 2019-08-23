@@ -14,7 +14,6 @@ public class Parameter extends LinfStmt {
 
     public Parameter(LinfType type, String name) {
         this.id = new IDValue(name);
-        type.setParameter(true);
         id.setType(type);
     }
 

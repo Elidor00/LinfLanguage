@@ -48,7 +48,7 @@ public final class TestUtils {
             return checkType(linfCode).codeGen();
         } catch (TypeError e) {
             e.printStackTrace();
-            return "";
+            return null;
         }
     }
 
@@ -58,9 +58,10 @@ public final class TestUtils {
         LVM vm = new LVM();
         try {
             vm.run(bytecode);
+            return vm;
         } catch (LVMError err) {
             err.printStackTrace();
+            return null;
         }
-        return vm;
     }
 }
