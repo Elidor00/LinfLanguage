@@ -36,6 +36,7 @@ public class FunDecTest {
                 "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);
@@ -61,6 +62,7 @@ public class FunDecTest {
                 "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);

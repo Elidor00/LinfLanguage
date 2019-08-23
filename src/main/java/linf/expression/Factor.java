@@ -2,7 +2,6 @@ package linf.expression;
 
 import linf.utils.LinfLib;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Factor extends BinaryOp<LinfValue, LinfValue> {
@@ -20,9 +19,9 @@ public class Factor extends BinaryOp<LinfValue, LinfValue> {
     public String codeGen() {
         String cgenFactor = this.getLeft().codeGen();
         if (this.getRight() != null) {
-            String trueBranchLabel = LinfLib.freshLabel().replace(":", "");
             String endBranchLabel = LinfLib.freshLabel().replace(":", "");
             if (!List.of("&&", "||").contains(getOp())) {
+                String trueBranchLabel = LinfLib.freshLabel().replace(":", "");
                 cgenFactor += "push $a0\n";
                 cgenFactor += getRight().codeGen();
                 cgenFactor += "top $t1\npop\n";

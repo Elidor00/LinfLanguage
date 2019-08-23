@@ -49,6 +49,7 @@ public class FunCallTest {
                 "addi $sp $sp 1\n" +
                 "top $fp\n" +
                 "pop\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);
@@ -89,9 +90,11 @@ public class FunCallTest {
                 "addi $sp $sp 1\n" +
                 "top $fp\n" +
                 "pop\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n" +
                 "li $a0 5\n" +
                 "print\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);
@@ -131,6 +134,7 @@ public class FunCallTest {
                 "addi $sp $sp 2\n" +
                 "top $fp\n" +
                 "pop\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);
@@ -212,6 +216,7 @@ public class FunCallTest {
                 "lw $a0 -1($fp)\n" + // <----------------------
                 "print\n" +
                 "addi $sp $sp 2\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);
@@ -267,6 +272,7 @@ public class FunCallTest {
                 "top $fp\n" +
                 "pop\n" +
                 "addi $sp $sp 1\n" +
+                "lw $fp 2($sp)\n" +
                 "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);
