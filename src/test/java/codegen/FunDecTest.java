@@ -26,7 +26,7 @@ public class FunDecTest {
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // emtpy block
@@ -49,7 +49,7 @@ public class FunDecTest {
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // block

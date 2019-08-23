@@ -157,7 +157,7 @@ public class IfThenElseTest {
                         "addi $sp $sp 2\n" +
 
                         "b label0\n" +
-                        "label3:\n" +
+                        "label1:\n" +
 
                         //elseBranch block scope
                         "push $fp\n" +

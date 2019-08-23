@@ -29,7 +29,7 @@ public class FunCallTest {
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // block
@@ -45,8 +45,7 @@ public class FunCallTest {
                 "push $fp\n" +
                 "lw $al 2($fp)\n" +
                 "push $al\n" +
-                "addi $ra $ip 2\n" +
-                "jal fLabel0\n" +
+                "b fLabel0\n" +
                 "addi $sp $sp 1\n" +
                 "top $fp\n" +
                 "pop\n" +
@@ -66,7 +65,7 @@ public class FunCallTest {
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // block
@@ -86,8 +85,7 @@ public class FunCallTest {
                 "push $fp\n" +
                 "lw $al 2($fp)\n" +
                 "push $al\n" +
-                "addi $ra $ip 2\n" +
-                "jal fLabel0\n" +
+                "b fLabel0\n" +
                 "addi $sp $sp 1\n" +
                 "top $fp\n" +
                 "pop\n" +
@@ -111,7 +109,7 @@ public class FunCallTest {
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // block
@@ -129,8 +127,7 @@ public class FunCallTest {
                 "push $a0\n" +
                 "lw $al 2($fp)\n" +
                 "push $al\n" +
-                "addi $ra $ip 2\n" +
-                "jal fLabel0\n" +
+                "b fLabel0\n" +
                 "addi $sp $sp 2\n" +
                 "top $fp\n" +
                 "pop\n" +
@@ -163,7 +160,7 @@ public class FunCallTest {
                 "li $a0 1\n" +
                 "push $a0\n" +
                 // f declaration
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // block
@@ -203,9 +200,7 @@ public class FunCallTest {
                 // push access link
                 "lw $al 2($fp)\n" + // <----------------------
                 "push $al\n" +
-                // setup return address
-                "addi $ra $ip 2\n" +
-                "jal fLabel0\n" +
+                "b fLabel0\n" +
                 // pop access link and parameters
                 "addi $sp $sp 3\n" +
                 "top $fp\n" +
@@ -240,7 +235,7 @@ public class FunCallTest {
                 "move $fp $sp\n" +
                 "li $a0 50\n" +
                 "push $a0\n" +
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 // AR
@@ -267,9 +262,7 @@ public class FunCallTest {
                 // Access link
                 "lw $al 2($fp)\n" +
                 "push $al\n" +
-                // setup $ra
-                "addi $ra $ip 2\n" +
-                "jal fLabel0\n" +
+                "b fLabel0\n" +
                 "addi $sp $sp 2\n" +
                 "top $fp\n" +
                 "pop\n" +

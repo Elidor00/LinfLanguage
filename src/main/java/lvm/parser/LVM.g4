@@ -25,7 +25,6 @@ instruction:
 	  | BRANCHLESSEQ    r1 = REGISTER r2 = REGISTER l  = LABEL
 	  | BRANCHGREATER   r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHGREATEREQ r1 = REGISTER r2 = REGISTER l = LABEL
-	  | JAL l = LABEL
 	  | JR r1 = REGISTER
 	  | PRINT
 	  | TOP r1 = REGISTER
@@ -35,7 +34,6 @@ instruction:
 //Lexer Rules
 
 JR	                        : 'jr' ;
-JAL	                        : 'jal' ;
 TOP                         : 'top' ;
 PRINT	                    : 'print' ;
 HALT	                    : 'halt' ;

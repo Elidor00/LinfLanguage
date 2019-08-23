@@ -133,10 +133,6 @@ public class LVMVisitorImpl extends LVMBaseVisitor {
                 int reg = REGISTER_TO_INT.get(ctx.r1.getText());
                 code[i++] = reg;
                 break;
-            case LVMParser.JAL:
-                code[i++] = LVMParser.JAL;
-                labelRef.put(i++, checkLabel(ctx.l));
-                break;
             case LVMParser.JR:
                 code[i++] = LVMParser.JR;
                 code[i++] = REGISTER_TO_INT.get(ctx.r1.getText());

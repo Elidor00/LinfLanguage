@@ -114,6 +114,7 @@ public class LVMTest {
                 "li $a0 50 \n b label \n li $a0 200 \n halt \n label: \n li $a0 42"
         );
         assertEquals(42, vm.getA0());
+        assertEquals(5, vm.getRa());
     }
 
     @Test
@@ -318,18 +319,6 @@ public class LVMTest {
                         "li $ra 34\n"
         );
         assertEquals(14, vm.getRa());
-    }
-
-    @Test
-    public void JumpLabel_Should_JustJump() {
-        LVM vm = runBytecode(
-                "li $a0 576\n" +
-                        "jal label\n" +
-                        "li $a0 665\n" +
-                        "label:\n" +
-                        "li $a0 666"
-        );
-        assertEquals(666, vm.getA0());
     }
 
     @Test

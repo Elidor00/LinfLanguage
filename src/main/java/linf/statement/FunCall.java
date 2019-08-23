@@ -159,10 +159,8 @@ public class FunCall extends LinfStmt {
         // Static/access link
         return builder.append(LinfLib.followChain(nestingLevel - entry.getNestinglevel()))
                 .append("push $al\n")
-                // Setup return address
-                .append("addi $ra $ip 2\n")
                 // Give control to called
-                .append("jal ")
+                .append("b ")
                 .append(((FunType) entry.getType()).getFunLabel().replace(":", ""))
                 // pop access link and parameters
                 .append("addi $sp $sp ").append(actualParList.size() + 1).append("\n")

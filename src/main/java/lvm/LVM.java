@@ -104,8 +104,8 @@ public class LVM {
                     SET_REGISTER_VALUE.get(r1).apply(this, resDiv);
                     break;
                 case LVMParser.BRANCH:
-                    address = code[ip];
-                    ip = address;
+                    ra = ip + 1;
+                    ip = code[ip];
                     break;
                 case LVMParser.BRANCHEQ:
                     branchCond((Integer first, Integer second) -> first.intValue() == second.intValue());
@@ -154,10 +154,6 @@ public class LVM {
                 case LVMParser.TOP:
                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     SET_REGISTER_VALUE.get(r1).apply(this, memory[sp + 1]);
-                    break;
-                case LVMParser.JAL:
-                    ra = ip + 1;
-                    ip = code[ip];
                     break;
                 case LVMParser.JR:
                     r1 = INT_TO_STRING_REGISTER.get(code[ip]);

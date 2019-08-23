@@ -87,7 +87,7 @@ public class AssignmentTest {
                 "move $fp $sp\n" +
                 "li $a0 5\n" +
                 "push $a0\n" +
-                "jal label0\n" +
+                "b label0\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
                 "move $fp $sp\n" +
@@ -101,8 +101,7 @@ public class AssignmentTest {
                 "push $fp\n" +
                 "lw $al 2($fp)\n" +
                 "push $al\n" +
-                "addi $ra $ip 2\n" +
-                "jal fLabel0\n" +
+                "b fLabel0\n" +
                 "addi $sp $sp 1\n" +
                 "top $fp\n" +
                 "pop\n" +

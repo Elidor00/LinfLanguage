@@ -69,7 +69,7 @@ public class FunDec extends StmtDec {
     public String codeGen() {
         String funLabel = ((FunType) type).getFunLabel();
         String endLabel = LinfLib.freshLabel();
-        return "jal " + endLabel.replace(":", "") +
+        return "b " + endLabel.replace(":", "") +
                 funLabel +
                 "push $ra\n" +
                 body.codeGen() +
