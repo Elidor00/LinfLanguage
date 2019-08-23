@@ -29,22 +29,22 @@ public class Factor extends BinaryOp<LinfValue, LinfValue> {
 
                 switch (getOp()) { //ROP: '==' | '>' | '<' | '<=' | '>=' | '!='
                     case "==":
-                        cgenFactor += "beq $a0 $t1 " + trueBranchLabel;
+                        cgenFactor += "beq $t1 $a0 " + trueBranchLabel;
                         break;
                     case ">":
-                        cgenFactor += "bg $a0 $t1 " + trueBranchLabel;
+                        cgenFactor += "bgr $t1 $a0 " + trueBranchLabel;
                         break;
                     case "<":
-                        cgenFactor += "bl $a0 $t1 " + trueBranchLabel;
+                        cgenFactor += "blr $t1 $a0 " + trueBranchLabel;
                         break;
                     case "<=":
-                        cgenFactor += "ble $a0 $t1 " + trueBranchLabel;
+                        cgenFactor += "blre $t1 $a0 " + trueBranchLabel;
                         break;
                     case ">=":
-                        cgenFactor += "bge $a0 $t1 " + trueBranchLabel;
+                        cgenFactor += "bgre $t1 $a0 " + trueBranchLabel;
                         break;
                     case "!=":
-                        cgenFactor += "bne $a0 $t1 " + trueBranchLabel;
+                        cgenFactor += "bne $t1 $a0 " + trueBranchLabel;
                         break;
                 }
 

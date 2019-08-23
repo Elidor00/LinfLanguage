@@ -21,6 +21,7 @@ instruction:
 	  | l = LABEL ':'
 	  | BRANCH          l = LABEL
 	  | BRANCHEQ        r1 = REGISTER r2 = REGISTER l = LABEL
+	  | BRANCHNOTEQ     r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHLESS      r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHLESSEQ    r1 = REGISTER r2 = REGISTER l  = LABEL
 	  | BRANCHGREATER   r1 = REGISTER r2 = REGISTER l = LABEL
@@ -51,6 +52,7 @@ STOREW	                    : 'sw' ;
 LOADW	                    : 'lw' ;
 BRANCH	                    : 'b' ;
 BRANCHEQ                    : 'beq' ;
+BRANCHNOTEQ                 : 'bne' ;
 BRANCHLESS                  : 'blr' ;
 BRANCHLESSEQ                : 'blre' ;
 BRANCHGREATER               : 'bgr' ;
