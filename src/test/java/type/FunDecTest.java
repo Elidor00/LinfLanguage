@@ -1,35 +1,29 @@
 package type;
 
 import linf.error.type.*;
+import linf.error.type.TypeError;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
 import static utils.TestUtils.checkType;
 
 @RunWith(JUnit4.class)
-public class AssignmentTest {
+public class FunDecTest {
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void CheckType_ShouldPass_SimpleIntAssignment() throws TypeError {
+    public void CheckType_ShouldPass_SimpleFunDec() throws TypeError {
         checkType(
                 "{" +
-                        "int x = 2;" +
-                        "int y = 42;" +
-                        "}"
-        );
-    }
-
-    @Test
-    public void CheckType_ShouldPass_SimpleBoolAssignment() throws TypeError {
-        checkType(
-                "{" +
-                        "bool x = true;" +
-                        "bool y = false;" +
+                        "f(int x, bool y){" +
+                        "x = 7;" +
+                        "y = true;" +
+                        "}" +
                         "}"
         );
     }
@@ -38,7 +32,12 @@ public class AssignmentTest {
     public void CheckType_ShouldFail_WithIncompatibleTypesBoolInt() throws TypeError {
         exception.expect(IncompatibleTypesError.class);
         checkType(
-                "{bool x = 2;}"
+                "{" +
+                        "f(var int x, bool y){" +
+                        "x = 7;" +
+                        "y = x * 3;" +
+                        "}" +
+                        "}"
         );
     }
 
@@ -46,7 +45,12 @@ public class AssignmentTest {
     public void CheckType_ShouldFail_WithIncompatibleTypesIntBool() throws TypeError {
         exception.expect(IncompatibleTypesError.class);
         checkType(
-                "{int x = true;}"
+                "{" +
+                        "f(int x, bool y){" +
+                        "x = 7 + false;" +
+                        "y = true;" +
+                        "}" +
+                        "}"
         );
     }
 
