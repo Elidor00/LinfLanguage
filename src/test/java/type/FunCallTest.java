@@ -28,6 +28,7 @@ public class FunCallTest {
     }
 
     @Test
+
     public void CheckType_ShouldFail_WrongParameterNumberErrorGreater() throws TypeError {
         exception.expect(WrongParameterNumberError.class);
         checkType(
@@ -113,3 +114,4 @@ public class FunCallTest {
     }
 
 }
+
