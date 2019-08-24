@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import static org.junit.Assert.*;
 import static utils.TestUtils.checkType;
 
 @RunWith(JUnit4.class)
@@ -49,6 +47,17 @@ public class AssignmentTest {
         exception.expect(IncompatibleTypesError.class);
         checkType(
                 "{int x = true;}"
+        );
+    }
+
+    @Test
+    public void CheckType_ShouldFail_WithIncompatibleTypesAssignment() throws TypeError {
+        exception.expect(IncompatibleTypesError.class);
+        checkType(
+                "{" +
+                        "bool b = true;" +
+                        "int a = (b + 3);" +
+                        "}"
         );
     }
 
