@@ -110,20 +110,5 @@ public class FunCallTest {
         );
     }
 
-    @Test
-    public void CheckType_ShouldFail() throws TypeError {
-        exception.expect(IncompatibleBehaviourError.class);
-        checkType(
-                "{" +
-                        "int y = 1;" +
-                        "f() {" +
-                        "y = y + 4;" +
-                        "delete y;" +
-                        "}" +
-                        "f();" +
-                        "}"
-        );
-    }
-
 }
 
