@@ -73,19 +73,4 @@ public class IfThenElseTest {
         );
     }
 
-    @Test
-    public void CheckType_ShouldFail_UnbalanceDeletionBehaviourError1() throws TypeError {
-        exception.expect(UnbalancedDeletionBehaviourError.class);
-        checkType(
-                "{" +
-                        "int x = 1;" +
-                        "bool y = true;" +
-                        "if (x == 1) then {" +
-                        "delete x;" +
-                        "} else { " +
-                        "}" +
-                        "}"
-        );
-    }
-
 }
