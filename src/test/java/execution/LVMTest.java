@@ -2,8 +2,8 @@ package execution;
 
 import lvm.LVM;
 import lvm.error.DivisionByZeroError;
-import lvm.error.StackOverflowError;
 import lvm.error.StackUnderflowError;
+import lvm.error.StackOverflowError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -40,7 +40,7 @@ public class LVMTest {
         LVM vm = new LVM();
         vm.setT1(2000);
         vm.setSp(0);
-        assertThrows(StackUnderflowError.class, () -> vm.run(bytecode));
+        assertThrows(StackOverflowError.class, () -> vm.run(bytecode));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class LVMTest {
     public void Pop_ShouldFail_WithEmptyStack() {
         int[] bytecode = LVM.assemble("pop");
         LVM vm = new LVM();
-        assertThrows(StackOverflowError.class, () -> vm.run(bytecode));
+        assertThrows(StackUnderflowError.class, () -> vm.run(bytecode));
     }
 
     @Test

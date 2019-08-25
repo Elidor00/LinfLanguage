@@ -55,7 +55,7 @@ public class Block extends LinfStmt {
         return filterLocalIDs(rwIDs);
     }
 
-    void setAR() {
+    public void setAR() {
         isAR = true;
     }
 
@@ -110,7 +110,7 @@ public class Block extends LinfStmt {
         env.openScope(localEnv);
         nestingLevel = env.nestingLevel;
 
-        Map<Boolean, List<LinfStmt>> mutatesEnv = stmtList.stream()
+       /* Map<Boolean, List<LinfStmt>> mutatesEnv = stmtList.stream()
                 .collect(Collectors.partitioningBy(
                         stmt -> (stmt instanceof StmtDec ||
                                 stmt instanceof Deletion)));
@@ -118,14 +118,12 @@ public class Block extends LinfStmt {
         // Declarations
         for (LinfStmt stmt : mutatesEnv.get(true)) {
             errors.addAll(stmt.checkSemantics(env));
-        }
+        }*/
 
         // Rest
-        for (LinfStmt stmt : mutatesEnv.get(false)) {
-            errors.addAll(stmt.checkSemantics(env));
-        }
-
         for (LinfStmt stmt : stmtList) {
+            errors.addAll(stmt.checkSemantics(env));
+
             if (stmt instanceof Deletion) {
                 IDValue id = ((Deletion) stmt).getId();
                 if (deletedIDs.contains(id)) {
@@ -143,9 +141,7 @@ public class Block extends LinfStmt {
         }
 
         localEnv = env.local();
-
         env.closeScope();
-
         return errors;
     }
 

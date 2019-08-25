@@ -67,7 +67,6 @@ public class FunCall extends LinfStmt {
                     if (exp.isID()) {
                         // checking deleted parameters
                         IDValue idValue = exp.toIDValue();
-                        formalType.setRefTo(idValue.getEntry());
                         if (formalType.isDeleted()) {
                             if (deletedIDs.contains(idValue)) {
                                 throw new DoubleDeletionError(idValue);
@@ -92,7 +91,6 @@ public class FunCall extends LinfStmt {
 
     @Override
     public List<SemanticError> checkSemantics(Environment env) {
-
         ArrayList<SemanticError> res = new ArrayList<>();
 
         if (!env.containsName(id)) {
@@ -106,9 +104,16 @@ public class FunCall extends LinfStmt {
 
                 for (int i = 0; i < formalParTypes.size(); i++) {
                     Exp exp = actualParList.get(i);
+                    LinfType formalType = formalParTypes.get(i);
                     res.addAll(exp.checkSemantics(env));
-                    if (formalParTypes.get(i).isDeleted() && exp.isID()) {
-                        env.deleteName(exp.toString());
+
+                    if (exp.isID()) {
+                        if (formalType.isReference()) {
+                            env.setReference(id, i, exp.toIDValue().getEntry());
+                        }
+                        if (formalType.isDeleted()) {
+                            env.deleteName(exp.toString());
+                        }
                     }
                 }
             } else {
@@ -134,6 +139,7 @@ public class FunCall extends LinfStmt {
 
         // Actual parameters
         Collections.reverse(actualParList);
+        Collections.reverse(formalParTypes);
         for (int i = 0; i < actualParList.size(); i++) {
             Exp exp = actualParList.get(i);
             LinfType formalType = formalParTypes.get(i);

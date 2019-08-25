@@ -6,7 +6,6 @@ import linf.utils.STentry;
 
 public abstract class LinfType implements Node {
     private STentry refTo;
-    private boolean isParameter = false;
     private boolean isReference = false;
     private boolean isDeleted = false;
     private boolean rwAccess = false;
@@ -16,15 +15,8 @@ public abstract class LinfType implements Node {
     }
 
     public void setRefTo(STentry refTo) {
+        assert !(refTo.getType() instanceof FunType);
         this.refTo = refTo;
-    }
-
-    public boolean isReference() {
-        return isReference;
-    }
-
-    public void setReference() {
-        isReference = true;
     }
 
     public boolean isDeleted() {
@@ -43,12 +35,12 @@ public abstract class LinfType implements Node {
         this.rwAccess = true;
     }
 
-    public boolean isParameter() {
-        return isParameter;
+    public boolean isReference() {
+        return isReference;
     }
 
-    public void setParameter(boolean parameter) {
-        isParameter = parameter;
+    public void setReference() {
+        isReference = true;
     }
 
     @Override
@@ -57,18 +49,11 @@ public abstract class LinfType implements Node {
         if (o == null || getClass() != o.getClass()) return false;
 
         LinfType linfType = (LinfType) o;
-
-        if (isParameter != linfType.isParameter) return false;
         return isReference == linfType.isReference;
     }
 
     @Override
     public int hashCode() {
-        int result = refTo != null ? refTo.hashCode() : 0;
-        result = 31 * result + (isParameter ? 1 : 0);
-        result = 31 * result + (isReference ? 1 : 0);
-        result = 31 * result + (isDeleted ? 1 : 0);
-        result = 31 * result + (rwAccess ? 1 : 0);
-        return result;
+        return (isReference ? 1 : 0);
     }
 }

@@ -26,8 +26,15 @@ public class FunDec extends FunPrototype {
 
     @Override
     public LinfType checkType() throws TypeError {
-        if (envEntry != null && !type.equals(envEntry.getType())) {
-            throw new MismatchedPrototype(id, (FunType) envEntry.getType(), (FunType) type);
+        if (envEntry != null) {
+            if (!type.equals(envEntry.getType())) {
+                throw new MismatchedPrototype(id, (FunType) envEntry.getType(), (FunType) type);
+            } else {
+                String label = ((FunType) envEntry.getType()).getFunLabel();
+                if (label != null) {
+                    ((FunType) type).setFunLabel(label);
+                }
+            }
         }
         body.checkType();
         HashSet<IDValue> delIDs = body.getDeletedIDs();
@@ -39,6 +46,7 @@ public class FunDec extends FunPrototype {
         }
         ((FunType) type).setDeletedIDs(delIDs);
         ((FunType) type).setRwIDs(rwIDs);
+
         return null;
     }
 
@@ -51,8 +59,13 @@ public class FunDec extends FunPrototype {
             scope.put(par.getId(), par.getEntry());
         }
         body.setLocalEnv(scope);
-        body.setAR();
         res.addAll(body.checkSemantics(env));
+        for (int i = 0; i < getParList().size(); i++) {
+            Parameter par = getParList().get(i);
+            if (envEntry != null) {
+                env.setReference(id, i, par.getEntry());
+            }
+        }
         return res;
     }
 

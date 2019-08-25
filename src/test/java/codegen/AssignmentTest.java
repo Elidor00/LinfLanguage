@@ -106,8 +106,7 @@ public class AssignmentTest {
                 "jr $ra\n" +
                 "label0:\n" +
                 "push $fp\n" +
-                "lw $al 2($fp)\n" +
-                "push $al\n" +
+                "push $fp\n" +
                 "b fLabel0\n" +
                 "addi $sp $sp 1\n" +
                 "top $fp\n" +
@@ -156,8 +155,7 @@ public class AssignmentTest {
                 "push $fp\n" +
                 "lw $a0 0($fp)\n" +
                 "push $a0\n" +
-                "lw $al 2($fp)\n" +
-                "push $al\n" +
+                "push $fp\n" +
                 "b fLabel0\n" +
                 "addi $sp $sp 2\n" +
                 "top $fp\n" +
@@ -218,8 +216,7 @@ public class AssignmentTest {
                 "lw $al 2($fp)\n" +
                 "move $a0 $al\n" +
                 "push $a0\n" +
-                "lw $al 2($fp)\n" +
-                "push $al\n" +
+                "push $fp\n" +
                 "b fLabel0\n" +
                 "addi $sp $sp 2\n" +
                 "top $fp\n" +

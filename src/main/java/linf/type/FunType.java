@@ -20,12 +20,20 @@ public class FunType extends LinfType {
         return funLabel;
     }
 
+    public void setFunLabel(String funLabel) {
+        this.funLabel = funLabel;
+    }
+
     public List<LinfType> getParTypes() {
         return parTypes;
     }
 
     public void addParType(LinfType type) {
         this.parTypes.add(type);
+    }
+
+    public void setParType(int index, LinfType type) {
+        parTypes.set(index, type);
     }
 
     public HashSet<IDValue> getRwIDs() {

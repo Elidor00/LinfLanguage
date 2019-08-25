@@ -15,10 +15,6 @@ public class Exp extends BinaryOp<Term, Exp> {
         setLeft(term);
     }
 
-    public boolean isNegative() {
-        return isNegative;
-    }
-
     public void setNegative(boolean negative) {
         isNegative = negative;
     }

@@ -1,6 +1,7 @@
 package lvm;
 
 import lvm.error.StackOverflowError;
+import lvm.error.StackUnderflowError;
 import lvm.error.*;
 import lvm.parser.LVMLexer;
 import lvm.parser.LVMParser;
@@ -57,10 +58,10 @@ public class LVM {
         code = program;
         while (true) {
             if (sp >= MEMSIZE) {
-                throw new StackOverflowError();
+                throw new StackUnderflowError();
             }
             if (sp < 0) {
-                throw new StackUnderflowError();
+                throw new StackOverflowError();
             }
             int v1, v2, offset;
             String r1, r2;
@@ -182,21 +183,21 @@ public class LVM {
         }
     }
 
-    private void pop() throws StackOverflowError {
+    private void pop() throws StackUnderflowError {
         if (sp + 1 < MEMSIZE) {
             sp = sp + 1;
         } else {
-            throw new StackOverflowError();
+            throw new StackUnderflowError();
         }
     }
 
-    private void push(int register) throws StackUnderflowError {
+    private void push(int register) throws StackOverflowError {
         if (sp - 1 >= 0) {
             String name = INT_TO_STRING_REGISTER.get(register);
             memory[sp] = GET_REGISTER_VALUE.get(name).apply(this);
             sp = sp - 1;
         } else {
-            throw new StackUnderflowError();
+            throw new StackOverflowError();
         }
     }
 

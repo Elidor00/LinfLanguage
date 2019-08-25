@@ -200,8 +200,7 @@ public class FunCallTest {
                 "lw $a0 0($fp)\n" + // <----------------------
                 "push $a0\n" +
                 // push access link
-                "lw $al 2($fp)\n" + // <----------------------
-                "push $al\n" +
+                "push $fp\n" +
                 "b fLabel0\n" +
                 // pop access link and parameters
                 "addi $sp $sp 3\n" +
@@ -263,8 +262,7 @@ public class FunCallTest {
                 "move $a0 $al\n" +
                 "push $a0\n" +
                 // Access link
-                "lw $al 2($fp)\n" +
-                "push $al\n" +
+                "push $fp\n" +
                 "b fLabel0\n" +
                 "addi $sp $sp 2\n" +
                 "top $fp\n" +
@@ -554,8 +552,8 @@ public class FunCallTest {
     @Test
     public void MutuallyRecursiveCall_Should_JustWork() {
         String actual = cgen("{ bool out = false;\n" +
-                "isEven(int n, var bool out);\n"+
-                "isOdd(int n, var bool out);\n"+
+                "isEven(int n, var bool out);\n" +
+                "isOdd(int n, var bool out);\n" +
                 "isEven(int n, var bool out) {\n" +
                 "    if (n == 0) then {\n" +
                 "        out = true;\n" +
@@ -570,7 +568,145 @@ public class FunCallTest {
                 "isEven(4, out);\n" +
                 "print out;\n" +
                 "}");
-        String expected = "";
+        String expected = "subi $t1 $sp 2\n" +
+                "push $t1\n" +
+                "push $t1\n" +
+                "move $fp $sp\n" +
+                "li $a0 0\n" +
+                "push $a0\n" +
+                "b label0\n" +
+                "fLabel0:\n" +
+                "push $ra\n" +
+                "move $fp $sp\n" +
+                "lw $a0 3($fp)\n" +
+                "push $a0\n" +
+                "li $a0 0\n" +
+                "top $t1\n" +
+                "pop\n" +
+                "beq $t1 $a0 label4\n" +
+                "li $a0 0\n" +
+                "b label3\n" +
+                "label4:\n" +
+                "li $a0 1\n" +
+                "label3:\n" +
+                "li $t1 0\n" +
+                "beq $a0 $t1 label2\n" +
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "li $a0 1\n" +
+                "lw $al 2($fp)\n" +
+                "lw $al 4($al)\n" +
+                "sw $a0 0($al)\n" +
+                "lw $fp 2($sp)\n" +
+                "addi $sp $sp 2\n" +
+                "b label1\n" +
+                "label2:\n" +
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "push $fp\n" +
+                "lw $al 2($fp)\n" +
+                "lw $al 2($al)\n" +
+                "move $a0 $al\n" +
+                "addi $a0 $a0 4\n" +
+                "push $a0\n" +
+                "lw $al 2($fp)\n" +
+                "lw $a0 3($al)\n" +
+                "push $a0\n" +
+                "li $a0 1\n" +
+                "top $t1\n" +
+                "pop\n" +
+                "sub $a0 $t1 $a0\n" +
+                "push $a0\n" +
+                "lw $al 2($fp)\n" +
+                "lw $al 2($al)\n" +
+                "push $al\n" +
+                "b fLabel1\n" +
+                "addi $sp $sp 3\n" +
+                "top $fp\n" +
+                "pop\n" +
+                "lw $fp 2($sp)\n" +
+                "addi $sp $sp 2\n" +
+                "label1:\n" +
+                "top $ra\n" +
+                "pop\n" +
+                "jr $ra\n" +
+                "label0:\n" +
+                "b label5\n" +
+                "fLabel1:\n" +
+                "push $ra\n" +
+                "move $fp $sp\n" +
+                "lw $a0 3($fp)\n" +
+                "push $a0\n" +
+                "li $a0 0\n" +
+                "top $t1\n" +
+                "pop\n" +
+                "beq $t1 $a0 label9\n" +
+                "li $a0 0\n" +
+                "b label8\n" +
+                "label9:\n" +
+                "li $a0 1\n" +
+                "label8:\n" +
+                "li $t1 0\n" +
+                "beq $a0 $t1 label7\n" +
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "li $a0 0\n" +
+                "lw $al 2($fp)\n" +
+                "lw $al 4($al)\n" +
+                "sw $a0 4($al)\n" +
+                "lw $fp 2($sp)\n" +
+                "addi $sp $sp 2\n" +
+                "b label6\n" +
+                "label7:\n" +
+                "push $fp\n" +
+                "push $fp\n" +
+                "move $fp $sp\n" +
+                "push $fp\n" +
+                "lw $al 2($fp)\n" +
+                "lw $al 2($al)\n" +
+                "move $a0 $al\n" +
+                "push $a0\n" +
+                "lw $al 2($fp)\n" +
+                "lw $a0 3($al)\n" +
+                "push $a0\n" +
+                "li $a0 1\n" +
+                "top $t1\n" +
+                "pop\n" +
+                "sub $a0 $t1 $a0\n" +
+                "push $a0\n" +
+                "lw $al 2($fp)\n" +
+                "lw $al 2($al)\n" +
+                "push $al\n" +
+                "b fLabel0\n" +
+                "addi $sp $sp 3\n" +
+                "top $fp\n" +
+                "pop\n" +
+                "lw $fp 2($sp)\n" +
+                "addi $sp $sp 2\n" +
+                "label6:\n" +
+                "top $ra\n" +
+                "pop\n" +
+                "jr $ra\n" +
+                "label5:\n" +
+                "push $fp\n" +
+                "lw $al 2($fp)\n" +
+                "move $a0 $al\n" +
+                "push $a0\n" +
+                "li $a0 4\n" +
+                "push $a0\n" +
+                "push $fp\n" +
+                "b fLabel0\n" +
+                "addi $sp $sp 3\n" +
+                "top $fp\n" +
+                "pop\n" +
+                "lw $a0 0($fp)\n" +
+                "print\n" +
+                "addi $sp $sp 1\n" +
+                "lw $fp 2($sp)\n" +
+                "addi $sp $sp 2\n";
         assertEquals(expected, actual);
         LVM vm = runBytecode(actual);
         List<String> out = vm.getStdOut();
@@ -578,6 +714,5 @@ public class FunCallTest {
         assertEquals("1", out.get(0));
         assertEquals(1, vm.peekMemory(MEMSIZE - 3));
         assertEquals(1, vm.getA0());
-
     }
 }

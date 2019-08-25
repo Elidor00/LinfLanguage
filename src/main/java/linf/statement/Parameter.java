@@ -15,6 +15,8 @@ public class Parameter extends LinfStmt {
     private int offset;
 
     public Parameter(LinfType type, String name) {
+        assert type != null;
+        assert name != null;
         this.id = name;
         this.type = type;
     }

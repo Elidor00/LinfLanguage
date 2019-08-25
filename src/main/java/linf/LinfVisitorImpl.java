@@ -97,6 +97,7 @@ public class LinfVisitorImpl extends ComplexStaticAnalysisBaseVisitor<Node> {
             String id = ctx.ID().getText();
             if (ctx.block() != null) {
                 Block blk = (Block) visit(ctx.block());
+                blk.setAR();
                 return new FunDec(id, parameters, blk);
             } else {
                 return new FunPrototype(id, parameters);

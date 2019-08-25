@@ -50,7 +50,6 @@ public class Assignment extends LinfStmt {
         if (entry == null) {
             res.add(new UnboundSymbolError(id));
         } else {
-            id.setEntry(entry);
             lhSideType = entry.getType();
             nestingLevel = env.nestingLevel;
             if (!env.isLocalName(id)) {
@@ -66,5 +65,10 @@ public class Assignment extends LinfStmt {
     public String codeGen() {
         return exp.codeGen() +
                 id.LSideCodeGen();
+    }
+
+    @Override
+    public String toString() {
+        return id + " = " + exp + ";";
     }
 }

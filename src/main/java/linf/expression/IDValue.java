@@ -23,18 +23,9 @@ public class IDValue extends LinfValue {
         return entry;
     }
 
-    public void setEntry(STentry entry) {
+    private void setEntry(STentry entry) {
         this.entry = entry;
         this.setType(entry.getType());
-        this.nestingLevel = entry.getNestinglevel();
-    }
-
-    public boolean isParameter() {
-        return entry.getType().isParameter();
-    }
-
-    public void setParameter(boolean parameter) {
-        entry.getType().setParameter(parameter);
     }
 
     @Override
@@ -45,11 +36,12 @@ public class IDValue extends LinfValue {
     @Override
     public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
-        entry = env.getStEntry(value);
-        if (entry == null) {
+        STentry envEntry = env.getStEntry(value);
+        nestingLevel = env.nestingLevel;
+        if (envEntry == null) {
             res.add(new UnboundSymbolError(value));
         } else {
-            setEntry(entry);
+            setEntry(envEntry);
         }
         return res;
     }
@@ -63,8 +55,9 @@ public class IDValue extends LinfValue {
                         "lw $al " + entry.getOffset() + "($al)\n" +
                         String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
             } else {
+                int off = referred.getOffset();
                 return "lw $al " + entry.getOffset() + "($fp)\n" +
-                        String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
+                        String.format("%s $a0 " + off + "($al)\n", op);
             }
         } else if (distance > 0) {
             // free variable

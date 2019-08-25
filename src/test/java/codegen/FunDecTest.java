@@ -1,7 +1,6 @@
 package codegen;
 
 import linf.utils.LinfLib;
-import lvm.LVM;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,11 +79,10 @@ public class FunDecTest {
                 "b label1\n" +
                 "fLabel0:\n" +
                 "push $ra\n" +
-                // block
                 "move $fp $sp\n" +
-                "lw $a0 3($fp)\n" +
+                "lw $al 2($fp)\n" +
+                "lw $a0 3($al)\n" +
                 "print\n" +
-                // return control
                 "top $ra\n" +
                 "pop\n" +
                 "jr $ra\n" +

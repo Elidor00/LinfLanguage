@@ -6,6 +6,7 @@ import linf.type.LinfType;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Environment {
     // List of hash tables
@@ -23,10 +24,22 @@ public class Environment {
      * @param id
      */
     public void addName(String id, LinfType type) {
+        assert type != null;
+        assert id != null;
         STentry entry = new STentry(nestingLevel, offset, type);
         symbolsTable.peek().put(id, entry);
         if (!(type instanceof FunType)) {
             offset--;
+        }
+    }
+
+    public void setReference(String fun, int par, STentry referred) {
+        FunType type = (FunType) getStEntry(fun).getType();
+        List<LinfType> parTypes = type.getParTypes();
+        if (referred.getType().isReference() && referred.getType().getRefTo() != null) {
+            setReference(fun, par, referred.getType().getRefTo());
+        } else {
+            parTypes.get(par).setRefTo(referred);
         }
     }
 

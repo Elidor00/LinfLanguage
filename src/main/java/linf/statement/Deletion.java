@@ -35,7 +35,7 @@ public class Deletion extends LinfStmt {
         if (entry == null) {
             res.add(new UnboundDeletionSymbolError(id));
         } else {
-            id.setEntry(entry);
+            res.addAll(id.checkSemantics(env));
             if (id.getType().isDeleted()) {
                 res.add(new IllegalDeletionError(id));
             } else {

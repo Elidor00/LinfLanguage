@@ -59,7 +59,6 @@ public final class TestUtils {
         LVM vm = new LVM();
         try {
             vm.run(bytecode);
-            assertEquals(MEMSIZE - 1, vm.getSp());
             return vm;
         } catch (LVMError err) {
             err.printStackTrace();

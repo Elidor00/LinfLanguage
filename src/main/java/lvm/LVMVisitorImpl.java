@@ -15,7 +15,7 @@ public class LVMVisitorImpl extends LVMBaseVisitor {
     private final HashMap<Integer, String> labelRef = new HashMap<>();
     private int i = 0;
 
-    public int[] getCode() {
+    int[] getCode() {
         for (Integer refAdd : labelRef.keySet()) {
             String lab = labelRef.get(refAdd);
             int val = labelAdd.get(lab);
