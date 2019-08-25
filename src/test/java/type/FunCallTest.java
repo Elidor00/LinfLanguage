@@ -28,7 +28,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_WrongParameterNumberError() throws TypeError {
+    public void CheckType_ShouldFail_WrongParameterNumberErrorGreater() throws TypeError {
         exception.expect(WrongParameterNumberError.class);
         checkType(
                 "{" +
@@ -37,6 +37,20 @@ public class FunCallTest {
                         "y = y && false;" +
                         "}" +
                         "f(3, true, 4, 43);" +
+                        "}"
+        );
+    }
+
+    @Test
+    public void CheckType_ShouldFail_WrongParameterNumberErrorLess() throws TypeError {
+        exception.expect(WrongParameterNumberError.class);
+        checkType(
+                "{" +
+                        "f(int x, bool y){" +
+                        "x = x - 7;" +
+                        "y = y && false;" +
+                        "}" +
+                        "f(3);" +
                         "}"
         );
     }
@@ -56,7 +70,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_ReferenceParameterError() throws TypeError {
+    public void CheckType_ShouldFail_ReferenceParameterErrorInt() throws TypeError {
         exception.expect(ReferenceParameterError.class);
         checkType(
                 "{" +
@@ -70,7 +84,21 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail() throws TypeError {
+    public void CheckType_ShouldFail_ReferenceParameterErrorBool() throws TypeError {
+        exception.expect(ReferenceParameterError.class);
+        checkType(
+                "{" +
+                        "bool x = true;" +
+                        "f(var bool x) {" +
+                        "x = x || false;" +
+                        "}" +
+                        "f(false);" +
+                        "}"
+        );
+    }
+
+    @Test
+    public void CheckType_ShouldFail_IncompatibleBehaviourError() throws TypeError {
         exception.expect(IncompatibleBehaviourError.class);
         checkType(
                 "{" +
