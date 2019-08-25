@@ -28,7 +28,6 @@ public class FunCallTest {
     }
 
     @Test
-
     public void CheckType_ShouldFail_WrongParameterNumberErrorGreater() throws TypeError {
         exception.expect(WrongParameterNumberError.class);
         checkType(
@@ -100,21 +99,6 @@ public class FunCallTest {
 
     @Test
     public void CheckType_ShouldFail_IncompatibleBehaviourError() throws TypeError {
-        exception.expect(IncompatibleBehaviourError.class);
-        checkType(
-                "{" +
-                        "int y = 1;" +
-                        "f() {" +
-                        "y = y + 4;" +
-                        "delete y;" +
-                        "}" +
-                        "f();" +
-                        "}"
-        );
-    }
-
-    @Test
-    public void CheckType_ShouldFail() throws TypeError {
         exception.expect(IncompatibleBehaviourError.class);
         checkType(
                 "{" +
