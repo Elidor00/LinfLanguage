@@ -1,0 +1,23 @@
+{
+    fibonacci(int x, var int out) {
+        if (( x == 0 ) || (x == 1)) then {
+            out = x;
+        } else {
+            fibonacci(x - 1, out);
+            int old = out;
+            fibonacci(x - 2, out);
+            out = out + old;
+        }
+    }
+    int out = 0;
+
+    fibonacci(0, out);
+    print out;
+
+    fibonacci(1, out);
+    print out;
+
+    // 13
+    fibonacci(7, out);
+    print out;
+}

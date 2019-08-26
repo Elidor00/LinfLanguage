@@ -53,6 +53,13 @@ public final class TestUtils {
         }
     }
 
+    public static LVM runScript(String linfCode) {
+        String bytecode = cgen(linfCode);
+        LVM vm = runBytecode(bytecode);
+        assertEquals(MEMSIZE - 1, vm.getSp());
+        return vm;
+    }
+
     public static LVM runBytecode(String code) {
         int[] bytecode = LVM.assemble(code + "\n halt");
         //exe vm
