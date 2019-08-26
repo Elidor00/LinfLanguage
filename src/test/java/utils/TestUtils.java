@@ -6,7 +6,6 @@ import linf.error.type.TypeError;
 import linf.parser.ComplexStaticAnalysisLexer;
 import linf.parser.ComplexStaticAnalysisParser;
 import linf.statement.Block;
-import linf.type.LinfType;
 import linf.utils.Environment;
 import lvm.LVM;
 import lvm.error.LVMError;
@@ -15,6 +14,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.util.List;
 
+import static lvm.LVM.MEMSIZE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -36,11 +36,28 @@ public final class TestUtils {
         return makeAST(code).checkSemantics(new Environment());
     }
 
-    public static LinfType checkType(String code) throws TypeError {
+    public static Block checkType(String code) throws TypeError {
         Block mainBlock = makeAST(code);
         List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
         assertEquals(0, errors.size());
-        return mainBlock.checkType();
+        mainBlock.checkType();
+        return mainBlock;
+    }
+
+    public static String cgen(String linfCode) {
+        try {
+            return checkType(linfCode).codeGen();
+        } catch (TypeError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static LVM runScript(String linfCode) {
+        String bytecode = cgen(linfCode);
+        LVM vm = runBytecode(bytecode);
+        assertEquals(MEMSIZE - 1, vm.getSp());
+        return vm;
     }
 
     public static LVM runBytecode(String code) {
@@ -49,9 +66,10 @@ public final class TestUtils {
         LVM vm = new LVM();
         try {
             vm.run(bytecode);
+            return vm;
         } catch (LVMError err) {
             err.printStackTrace();
+            return null;
         }
-        return vm;
     }
 }

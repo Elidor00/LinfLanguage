@@ -24,7 +24,7 @@ functioncall    : ID '(' (exp (',' exp)* )? ')' ;
 ifthenelse 	    : 'if' '(' exp ')' 'then' block 'else' block ;
 
 declaration	    : type ID '=' exp ';'
-		  	    | ID '(' ( parameter ( ',' parameter)* )? ')' block ;
+		  	    | ID '(' ( parameter ( ',' parameter)* )? ')' (';' | block) ;
 
 type   		    : 'int'
         	    | 'bool'  ;

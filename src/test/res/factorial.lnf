@@ -1,11 +1,14 @@
 {
   printfactorial(int x) {
+
       fact(var int out, int x) {
             if ( x > 1 ) then {
-                int other = out;
-                fact(other, x - 1);
-                out = other;
-            } else {}
+                int old = out;
+                fact(out, x - 1);
+                out = old * out;
+            } else {
+                out = 1;
+            }
       }
 
       int out = 1;
@@ -14,5 +17,6 @@
       print out;
   }
 
+  // 3628800
   printfactorial(10);
 }

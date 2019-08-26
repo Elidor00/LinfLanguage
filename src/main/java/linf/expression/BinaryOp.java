@@ -8,6 +8,7 @@ import linf.type.LinfType;
 import linf.utils.Environment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BinaryOp<LeftType extends Node, RightType extends Node> extends LinfValue {
     private LeftType left;
@@ -51,7 +52,7 @@ public abstract class BinaryOp<LeftType extends Node, RightType extends Node> ex
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>(left.checkSemantics(env));
 
         if (right != null) {

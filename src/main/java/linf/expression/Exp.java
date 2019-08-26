@@ -4,8 +4,8 @@ import linf.error.semantic.SemanticError;
 import linf.utils.Environment;
 import linf.utils.STentry;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Exp extends BinaryOp<Term, Exp> {
     private final HashSet<IDValue> rwIDs = new HashSet<>();
@@ -13,10 +13,6 @@ public class Exp extends BinaryOp<Term, Exp> {
 
     public void setTerm(Term term) {
         setLeft(term);
-    }
-
-    public boolean isNegative() {
-        return isNegative;
     }
 
     public void setNegative(boolean negative) {
@@ -38,8 +34,8 @@ public class Exp extends BinaryOp<Term, Exp> {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> res = super.checkSemantics(env);
+    public List<SemanticError> checkSemantics(Environment env) {
+        List<SemanticError> res = super.checkSemantics(env);
         // populates rwIDs with all identifiers which are not local to this scope
         if (isID() && !(env.isLocalName(this.toString()))) {
             rwIDs.add((IDValue) getLeft().getFactor().getValue());
@@ -73,6 +69,18 @@ public class Exp extends BinaryOp<Term, Exp> {
 
     @Override
     public String codeGen() {
-        return null;
+        String cgenExp = this.getLeft().codeGen();
+        cgenExp += this.isNegative ? "li $t1 0\nsub $a0 $t1 $a0\n" : "";
+        if (this.getRight() != null) {
+            cgenExp += "push $a0\n";
+            cgenExp += this.getRight().codeGen();
+            cgenExp += "top $t1\npop\n";
+            if (this.getOp().equals("+")) {
+                cgenExp += "add $a0 $t1 $a0\n";
+            } else {
+                cgenExp += "sub $a0 $t1 $a0\n";
+            }
+        }
+        return cgenExp;
     }
 }

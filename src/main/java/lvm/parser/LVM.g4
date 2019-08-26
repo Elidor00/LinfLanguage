@@ -21,11 +21,11 @@ instruction:
 	  | l = LABEL ':'
 	  | BRANCH          l = LABEL
 	  | BRANCHEQ        r1 = REGISTER r2 = REGISTER l = LABEL
+	  | BRANCHNOTEQ     r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHLESS      r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHLESSEQ    r1 = REGISTER r2 = REGISTER l  = LABEL
 	  | BRANCHGREATER   r1 = REGISTER r2 = REGISTER l = LABEL
 	  | BRANCHGREATEREQ r1 = REGISTER r2 = REGISTER l = LABEL
-	  | JAL l = LABEL
 	  | JR r1 = REGISTER
 	  | PRINT
 	  | TOP r1 = REGISTER
@@ -35,7 +35,6 @@ instruction:
 //Lexer Rules
 
 JR	                        : 'jr' ;
-JAL	                        : 'jal' ;
 TOP                         : 'top' ;
 PRINT	                    : 'print' ;
 HALT	                    : 'halt' ;
@@ -53,12 +52,13 @@ STOREW	                    : 'sw' ;
 LOADW	                    : 'lw' ;
 BRANCH	                    : 'b' ;
 BRANCHEQ                    : 'beq' ;
+BRANCHNOTEQ                 : 'bne' ;
 BRANCHLESS                  : 'blr' ;
 BRANCHLESSEQ                : 'blre' ;
 BRANCHGREATER               : 'bgr' ;
 BRANCHGREATEREQ             : 'bgre' ;
 
-REGISTER : '$a0' | '$t1' | '$sp' | '$fp' | '$al' | '$ra' ;
+REGISTER : '$a0' | '$t1' | '$sp' | '$fp' | '$al' | '$ra' | '$ip';
 
 LABEL	 : ('a'..'z'|'A'..'Z')('a'..'z' | 'A'..'Z' | '0'..'9')* ;
 NUMBER	 : '0' | ('-')?(('1'..'9')('0'..'9')*) ;

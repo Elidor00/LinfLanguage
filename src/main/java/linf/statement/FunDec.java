@@ -1,69 +1,87 @@
 package linf.statement;
 
-import linf.Parameter;
-import linf.error.semantic.FunctionNameShadowingError;
 import linf.error.semantic.SemanticError;
+import linf.error.type.MismatchedPrototype;
 import linf.error.type.TypeError;
 import linf.expression.IDValue;
 import linf.type.FunType;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.LinfLib;
 import linf.utils.STentry;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class FunDec extends StmtDec {
-    private final List<Parameter> parList = new ArrayList<>();
+public class FunDec extends FunPrototype {
     private final Block body;
+    private STentry envEntry;
 
-    public FunDec(String id, Block body) {
-        this.id = id;
+    public FunDec(String id, List<Parameter> parameters, Block body) {
+        super(id, parameters);
+        ((FunType) this.type).setPrototype(false);
         this.body = body;
-        this.type = new FunType();
-    }
-
-    public void addPar(Parameter par) {
-        parList.add(par);
-        ((FunType) type).addParType(par.getType());
     }
 
     @Override
     public LinfType checkType() throws TypeError {
+        if (envEntry != null) {
+            if (!type.equals(envEntry.getType())) {
+                throw new MismatchedPrototype(id, (FunType) envEntry.getType(), (FunType) type);
+            } else {
+                String label = ((FunType) envEntry.getType()).getFunLabel();
+                if (label != null) {
+                    ((FunType) type).setFunLabel(label);
+                }
+            }
+        }
         body.checkType();
         HashSet<IDValue> delIDs = body.getDeletedIDs();
         HashSet<IDValue> rwIDs = body.getRwIDs();
-        for (Parameter par : parList) {
-            IDValue parID = par.getId();
+        for (Parameter par : getParList()) {
+            String parID = par.getId();
             delIDs.remove(parID);
             rwIDs.remove(parID);
         }
         ((FunType) type).setDeletedIDs(delIDs);
         ((FunType) type).setRwIDs(rwIDs);
+
         return null;
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> res = super.checkSemantics(env);
+    public List<SemanticError> checkSemantics(Environment env) {
+        envEntry = env.getStEntry(id);
+        List<SemanticError> res = super.checkSemantics(env);
         HashMap<String, STentry> scope = new HashMap<>();
-        for (Parameter par : parList) {
-            String parID = par.getId().toString();
-            if (parID.equals(id)) {
-                res.add(new FunctionNameShadowingError(id));
-            }
-            res.addAll(par.checkSemantics(env));
-            scope.put(parID, par.getEntry());
+        for (Parameter par : getParList()) {
+            scope.put(par.getId(), par.getEntry());
         }
         body.setLocalEnv(scope);
         res.addAll(body.checkSemantics(env));
+        for (int i = 0; i < getParList().size(); i++) {
+            Parameter par = getParList().get(i);
+            if (envEntry != null) {
+                env.setReference(id, i, par.getEntry());
+            }
+        }
         return res;
     }
 
     @Override
     public String codeGen() {
-        return null;
+        String funLabel = ((FunType) type).getFunLabel();
+        String endLabel = LinfLib.freshLabel();
+        return "b " + endLabel.replace(":", "") +
+                funLabel +
+                "push $ra\n" +
+                body.codeGen() +
+                // pop return address
+                "top $ra\n" +
+                "pop\n" +
+                // return control to caller
+                "jr $ra\n" +
+                endLabel;
     }
 }

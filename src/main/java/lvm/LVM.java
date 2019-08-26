@@ -1,6 +1,7 @@
 package lvm;
 
 import lvm.error.StackOverflowError;
+import lvm.error.StackUnderflowError;
 import lvm.error.*;
 import lvm.parser.LVMLexer;
 import lvm.parser.LVMParser;
@@ -12,18 +13,16 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 import static lvm.utils.Registers.*;
-import static lvm.utils.Strings.IP;
-
-//import java.util.HashMap;
 
 
 public class LVM {
 
-    public static final int MEMSIZE = 10000;
+    public static final int MEMSIZE = 100000000;
     static final int CODESIZE = 10000;
 
     private final int[] memory = new int[MEMSIZE];
     private final List<String> stdOut = new ArrayList<>();
+    private int[] code = new int[CODESIZE];
     //registers
     private int ip = 0;
     private int sp = MEMSIZE - 1;
@@ -32,7 +31,7 @@ public class LVM {
     private int al = MEMSIZE - 1;
     private int t1 = 0; //TMP
     private int ra;
-    private int[] code;
+
     /*
     private int ip = 0;
     private HashMap<String,Integer> registers = new HashMap<String,Integer>(){{
@@ -52,19 +51,19 @@ public class LVM {
         lvmParser.setBuildParseTree(true);
         LVMVisitorImpl lvmVisitor = new LVMVisitorImpl();
         lvmVisitor.visitProgram(lvmParser.program());
-        return lvmVisitor.code;
+        return lvmVisitor.getCode();
     }
 
     public void run(int[] program) throws LVMError {
         code = program;
         while (true) {
             if (sp >= MEMSIZE) {
-                throw new StackOverflowError();
-            }
-            if (sp < 0) {
                 throw new StackUnderflowError();
             }
-            int v1, v2, address, offset;
+            if (sp < 0) {
+                throw new StackOverflowError();
+            }
+            int v1, v2, offset;
             String r1, r2;
             int bytecode = code[ip++];
             switch (bytecode) {
@@ -106,8 +105,8 @@ public class LVM {
                     SET_REGISTER_VALUE.get(r1).apply(this, resDiv);
                     break;
                 case LVMParser.BRANCH:
-                    address = code[ip];
-                    ip = address;
+                    ra = ip + 1;
+                    ip = code[ip];
                     break;
                 case LVMParser.BRANCHEQ:
                     branchCond((Integer first, Integer second) -> first.intValue() == second.intValue());
@@ -157,13 +156,9 @@ public class LVM {
                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     SET_REGISTER_VALUE.get(r1).apply(this, memory[sp + 1]);
                     break;
-                case LVMParser.JAL:
-                    ra = ip + 1;
-                    SET_REGISTER_VALUE.get(IP).apply(this, code[ip]);
-                    break;
                 case LVMParser.JR:
-                    r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
-                    SET_REGISTER_VALUE.get(IP).apply(this, GET_REGISTER_VALUE.get(r1).apply(this));
+                    r1 = INT_TO_STRING_REGISTER.get(code[ip]);
+                    ip = GET_REGISTER_VALUE.get(r1).apply(this);
                     break;
                 case LVMParser.ADDI:
                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
@@ -188,21 +183,21 @@ public class LVM {
         }
     }
 
-    private void pop() throws StackOverflowError {
+    private void pop() throws StackUnderflowError {
         if (sp + 1 < MEMSIZE) {
             sp = sp + 1;
         } else {
-            throw new StackOverflowError();
+            throw new StackUnderflowError();
         }
     }
 
-    private void push(int register) throws StackUnderflowError {
+    private void push(int register) throws StackOverflowError {
         if (sp - 1 >= 0) {
             String name = INT_TO_STRING_REGISTER.get(register);
             memory[sp] = GET_REGISTER_VALUE.get(name).apply(this);
             sp = sp - 1;
         } else {
-            throw new StackUnderflowError();
+            throw new StackOverflowError();
         }
     }
 

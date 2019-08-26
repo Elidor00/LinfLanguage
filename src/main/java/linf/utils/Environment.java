@@ -1,23 +1,46 @@
 package linf.utils;
 
 import linf.expression.IDValue;
+import linf.type.FunType;
 import linf.type.LinfType;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Environment {
     // List of hash tables
     private final LinkedList<HashMap<String, STentry>> symbolsTable = new LinkedList<>();
     public int nestingLevel = -1;
+    private int offset = 0;
+
+    private void resetOffset() {
+        offset = 0;
+    }
 
     /**
      * Adds variable with the given id to existence
      *
      * @param id
      */
-    public void addName(String id, STentry val) {
-        symbolsTable.peek().put(id, val);
+    public void addName(String id, LinfType type) {
+        assert type != null;
+        assert id != null;
+        STentry entry = new STentry(nestingLevel, offset, type);
+        symbolsTable.peek().put(id, entry);
+        if (!(type instanceof FunType)) {
+            offset--;
+        }
+    }
+
+    public void setReference(String fun, int par, STentry referred) {
+        FunType type = (FunType) getStEntry(fun).getType();
+        List<LinfType> parTypes = type.getParTypes();
+        if (referred.getType().isReference() && referred.getType().getRefTo() != null) {
+            setReference(fun, par, referred.getType().getRefTo());
+        } else {
+            parTypes.get(par).setRefTo(referred);
+        }
     }
 
     public HashMap<String, STentry> local() {
@@ -29,7 +52,16 @@ public class Environment {
     }
 
     public boolean isLocalName(String id) {
-        return symbolsTable.peek().containsKey(id);
+        if (symbolsTable.peek().containsKey(id)) {
+            STentry entry = symbolsTable.peek().get(id);
+            boolean isPrototype = false;
+            if (entry.getType() instanceof FunType) {
+                isPrototype = ((FunType) entry.getType()).isPrototype();
+            }
+            return (entry.getOffset() == offset && !isPrototype);
+        } else {
+            return false;
+        }
     }
 
     public boolean isLocalName(IDValue id) {
@@ -42,6 +74,7 @@ public class Environment {
     private void openScope() {
         symbolsTable.push(new HashMap<>());
         nestingLevel++;
+        resetOffset();
     }
 
     public void openScope(HashMap<String, STentry> scope) {
@@ -50,6 +83,7 @@ public class Environment {
         } else {
             symbolsTable.push(scope);
             nestingLevel++;
+            resetOffset();
         }
     }
 
