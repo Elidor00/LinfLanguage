@@ -50,5 +50,16 @@ public class AssignmentTest {
         );
     }
 
+    @Test
+    public void CheckType_ShouldFail_WithIncompatibleTypesAssignment() throws TypeError {
+        exception.expect(IncompatibleTypesError.class);
+        checkType(
+                "{" +
+                        "bool b = true;" +
+                        "int a = (b + 3);" +
+                        "}"
+        );
+    }
+
 }
 

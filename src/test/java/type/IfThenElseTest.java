@@ -29,6 +29,20 @@ public class IfThenElseTest {
     }
 
     @Test
+    public void CheckType_ShouldPass_SimpleIfThenElse2() throws TypeError {
+        checkType(
+                "{" +
+                        "int x = 1;" +
+                        "if (x == 1) then {" +
+                        "print x;" +
+                        "} else { " +
+                        "x = 2;" +
+                        "}" +
+                        "}"
+        );
+    }
+
+    @Test
     public void CheckType_ShouldFail_UnbalanceDeletionBehaviourError() throws TypeError {
         exception.expect(UnbalancedDeletionBehaviourError.class);
         checkType(
