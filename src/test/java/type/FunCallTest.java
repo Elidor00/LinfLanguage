@@ -47,8 +47,6 @@ public class FunCallTest {
         checkType(
                 "{" +
                         "f(int x, bool y){" +
-                        "x = x - 7;" +
-                        "y = y && false;" +
                         "}" +
                         "f(3);" +
                         "}"
