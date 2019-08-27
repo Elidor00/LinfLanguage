@@ -5,5 +5,5 @@ bytecode.txt
 gen/
 *.iml
 src/main/*.iml
-src/tests/*.iml
+src/test/*.iml
 lib/
