@@ -58,7 +58,7 @@ public class Environment {
             if (entry.getType() instanceof FunType) {
                 isPrototype = ((FunType) entry.getType()).isPrototype();
             }
-            return (entry.getOffset() == offset && !isPrototype);
+            return (entry.getNestinglevel() == nestingLevel && !isPrototype);
         } else {
             return false;
         }

@@ -1,4 +1,5 @@
 import lvm.LVM;
+import lvm.error.StackOverflowError;
 import org.antlr.v4.runtime.CharStreams;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +9,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static lvm.LVM.MEMSIZE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static utils.TestUtils.cgen;
 import static utils.TestUtils.runScript;
 
 @RunWith(JUnit4.class)
@@ -88,5 +89,48 @@ public class LinfTests {
         assertEquals("1", out.get(0));
         assertEquals("0", out.get(1));
         assertEquals(0, vm.peekMemory(MEMSIZE - 3));
+    }
+
+    @Test
+    public void test1() {
+        String t1 = getCode("test1.lnf");
+        LVM vm = runScript(t1);
+        assertNotNull(vm);
+
+        List<String> out = vm.getStdOut();
+        assertEquals(1, out.size());
+        assertEquals("1", out.get(0));
+        assertEquals(1, vm.peekMemory(MEMSIZE - 3));
+    }
+
+    @Test
+    public void test2() {
+        String t2 = getCode("test2.lnf");
+        LVM vm = runScript(t2);
+        assertNotNull(vm);
+
+        List<String> out = vm.getStdOut();
+        assertEquals(1, out.size());
+        assertEquals("720", out.get(0));
+        assertEquals(1, vm.peekMemory(MEMSIZE - 3));
+    }
+
+    @Test
+    public void test3() {
+        String t3 = getCode("test3.lnf");
+        LVM vm = runScript(t3);
+        assertNotNull(vm);
+
+        List<String> out = vm.getStdOut();
+        assertEquals(1, out.size());
+        assertEquals("9", out.get(0));
+    }
+
+    @Test
+    public void test4() {
+        String t4 = getCode("test4.lnf");
+        int[] bytecode = LVM.assemble(cgen(t4));
+        LVM vm = new LVM();
+        assertThrows(StackOverflowError.class, () -> vm.run(bytecode));
     }
 }
