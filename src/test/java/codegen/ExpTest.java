@@ -287,41 +287,95 @@ public class ExpTest {
 
     @Test
     public void complexExp() {
-        String result = cgen("{ int x = (78 / 2 + 454) * 2 - ((3 - (9 *3) + (527*2))) ;}");
-        String test = "subi $t1 $sp 2\n" +
-                "push $t1\n" +
-                "push $t1\n" +
-                "move $fp $sp\n" +
-                "li $a0 78\n" +
-                "li $t1 2\n" +
-                "div $a0 $a0 $t1\n" +
-                "addi $a0 $a0 454\n" +
-                "li $t1 2\n" +
-                "mult $a0 $a0 $t1\n" +
-                "push $a0\n" +
-                "li $a0 9\n" +
-                "li $t1 3\n" +
-                "mult $a0 $a0 $t1\n" +
-                "push $a0\n" +
-                "li $a0 572\n" +
-                "li $t1 2\n" +
-                "mult $a0 $a0 $t1\n" +
-                "top $t1\n" +
-                "pop\n" +
-                "add $a0 $a0 $t1\n" +
-                "addi $a0 $a0 3\n" +
-                "top $t1\n" +
-                "pop\n" +
-                "sub $a0 $t1 $a0\n" +
-                "addi $sp $sp 1\n" +
-                "lw $fp 2($sp)\n" +
-                "addi $sp $sp 2\n";
-        //assertEquals(test, result);
+        String result = cgen("{ int x = (78 / 2 + 454) * 2 - ((3 - (9 * 4) + (527*2))) ;}"); //-35
+        String test =
+                "subi $t1 $sp 2\n" +
+                        "push $t1\n" +
+                        "push $t1\n" +
+                        "move $fp $sp\n" +
+                        "li $a0 78\n" +
+                        "push $a0\n" +
+                        "li $a0 2\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "div $a0 $t1 $a0\n" +
+                        "push $a0\n" +
+                        "li $a0 454\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "add $a0 $t1 $a0\n" +
+                        "push $a0\n" +
+                        "li $a0 2\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "mult $a0 $t1 $a0\n" +
+                        "push $a0\n" +
+                        "li $a0 3\n" +
+                        "push $a0\n" +
+                        "li $a0 9\n" +
+                        "push $a0\n" +
+                        "li $a0 4\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "mult $a0 $t1 $a0\n" +
+                        "push $a0\n" +
+                        "li $a0 527\n" +
+                        "push $a0\n" +
+                        "li $a0 2\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "mult $a0 $t1 $a0\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "add $a0 $t1 $a0\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "sub $a0 $t1 $a0\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "sub $a0 $t1 $a0\n" +
+                        "push $a0\n" +
+                        "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
+                        "addi $sp $sp 2\n";
+        assertEquals(test, result);
         LVM vm = runBytecode(test);
-        List<String> out = vm.getStdOut();
-        assertEquals(-44, vm.getA0());
-        assertEquals(-44, vm.peekMemory(MEMSIZE - 3));
-        assertEquals("-44", out.get(0));
+        assertEquals(2073, vm.getA0());
+        assertEquals(2073, vm.peekMemory(MEMSIZE - 3));
+
+    }
+
+    // Le parentesi hanno la precedenza sugli operatori per la grammatica:
+    // 9 + 2 = 11
+    // 3 - 11  = -8
+
+    @Test
+    public void expWithUselessParentheses() {
+        String result = cgen("{ int x =  ((3 - (9) + (2))) ;}"); //-4
+        String test =
+                "subi $t1 $sp 2\n" +
+                        "push $t1\n" +
+                        "push $t1\n" +
+                        "move $fp $sp\n" +
+                        "li $a0 3\n" +
+                        "push $a0\n" +
+                        "li $a0 9\n" +
+                        "push $a0\n" +
+                        "li $a0 2\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "add $a0 $t1 $a0\n" +
+                        "top $t1\n" +
+                        "pop\n" +
+                        "sub $a0 $t1 $a0\n" +
+                        "push $a0\n" +
+                        "addi $sp $sp 1\n" +
+                        "lw $fp 2($sp)\n" +
+                        "addi $sp $sp 2\n";
+        assertEquals(test, result);
+        LVM vm = runBytecode(test);
+        assertEquals(-8, vm.getA0());
+        assertEquals(-8, vm.peekMemory(MEMSIZE - 3));
 
     }
 }
