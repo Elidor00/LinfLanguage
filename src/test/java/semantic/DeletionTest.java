@@ -69,6 +69,35 @@ public class DeletionTest {
     }
 
     @Test
+    public void CheckSemantics_ShouldFail_WithIllegalDeletionError() {
+        List<SemanticError> errors = checkSemantics(
+                "{ "
+                        + "int y = 0;"
+                        + "delete y;"
+                        + "delete y;"
+                        + "}"
+        );
+        assertEquals(1, errors.size());
+        SemanticError err = errors.get(0);
+        assertEquals(IllegalDeletionError.class, err.getClass());
+        assertEquals("y", ((IllegalDeletionError) err).getId());
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_WithUnboundDeletionSymbolError() {
+        List<SemanticError> errors = checkSemantics(
+                "{ "
+                        + "delete y;"
+                        + "}"
+        );
+        assertEquals(1, errors.size());
+        SemanticError err = errors.get(0);
+        assertEquals(UnboundDeletionSymbolError.class, err.getClass());
+        assertEquals("y", ((UnboundDeletionSymbolError) err).getId());
+    }
+
+
+    @Test
     public void CheckSemantics_ShouldFail_WithUnboundSymbol() {
         List<SemanticError> errors = checkSemantics(
                 "{ "

@@ -40,20 +40,5 @@ public class DeletionTest {
                         "}"
         );
     }
-
-    @Test
-    public void CheckType_ShouldFail_DoubleDeletionErrorNestedBlock() throws TypeError {
-        exception.expect(DoubleDeletionError.class);
-        checkType(
-                "{" +
-                        "{" +
-                        "int x = 1;" +
-                        "delete x;" +
-                        "delete x;" +
-                        "}" +
-                        "}"
-        );
-    }
-
 }
 
