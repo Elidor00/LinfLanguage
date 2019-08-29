@@ -2,8 +2,8 @@ package execution;
 
 import lvm.LVM;
 import lvm.error.DivisionByZeroError;
-import lvm.error.StackOverflowError;
 import lvm.error.StackUnderflowError;
+import lvm.error.StackOverflowError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -40,7 +40,7 @@ public class LVMTest {
         LVM vm = new LVM();
         vm.setT1(2000);
         vm.setSp(0);
-        assertThrows(StackUnderflowError.class, () -> vm.run(bytecode));
+        assertThrows(StackOverflowError.class, () -> vm.run(bytecode));
     }
 
     @Test
@@ -49,14 +49,14 @@ public class LVMTest {
                 "li $a0 40 \n push $a0 \n pop"
         );
         assertEquals(40, vm.getA0());
-        assertEquals(MEMSIZE - 1, vm.getSp());
+
     }
 
     @Test
     public void Pop_ShouldFail_WithEmptyStack() {
         int[] bytecode = LVM.assemble("pop");
         LVM vm = new LVM();
-        assertThrows(StackOverflowError.class, () -> vm.run(bytecode));
+        assertThrows(StackUnderflowError.class, () -> vm.run(bytecode));
     }
 
     @Test
@@ -114,6 +114,7 @@ public class LVMTest {
                 "li $a0 50 \n b label \n li $a0 200 \n halt \n label: \n li $a0 42"
         );
         assertEquals(42, vm.getA0());
+        assertEquals(5, vm.getRa());
     }
 
     @Test
@@ -321,18 +322,6 @@ public class LVMTest {
     }
 
     @Test
-    public void JumpLabel_Should_JustJump() {
-        LVM vm = runBytecode(
-                "li $a0 576\n" +
-                        "jal label\n" +
-                        "li $a0 665\n" +
-                        "label:\n" +
-                        "li $a0 666"
-        );
-        assertEquals(666, vm.getA0());
-    }
-
-    @Test
     public void AddI_Should_JustWork() {
         LVM vm = runBytecode("li $a0 200 addi $t1 $a0 200");
         assertEquals(400, vm.getT1());
@@ -347,6 +336,6 @@ public class LVMTest {
     @Test
     public void Halt() {
         LVM vm = runBytecode("halt li $sp 200");
-        assertEquals(MEMSIZE - 1, vm.getSp());
+
     }
 }

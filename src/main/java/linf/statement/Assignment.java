@@ -11,11 +11,13 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Assignment extends LinfStmt {
     private final IDValue id;
     private final Exp exp;
     private LinfType lhSideType;
+    private int nestingLevel;
 
     public Assignment(String name, Exp exp) {
         this.exp = exp;
@@ -40,29 +42,33 @@ public class Assignment extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         //create result list
         ArrayList<SemanticError> res = new ArrayList<>();
-
         STentry entry = env.getStEntry(id);
-
 
         if (entry == null) {
             res.add(new UnboundSymbolError(id));
         } else {
-            id.setEntry(entry);
             lhSideType = entry.getType();
+            nestingLevel = env.nestingLevel;
             if (!env.isLocalName(id)) {
                 lhSideType.setRwAccess();
             }
+            res.addAll(id.checkSemantics(env));
         }
-
         res.addAll(exp.checkSemantics(env));
         return res;
     }
 
     @Override
     public String codeGen() {
-        return null;
+        return exp.codeGen() +
+                id.LSideCodeGen();
+    }
+
+    @Override
+    public String toString() {
+        return id + " = " + exp + ";";
     }
 }

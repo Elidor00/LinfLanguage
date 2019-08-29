@@ -1,0 +1,19 @@
+{
+
+int u = 1 ;
+
+f(var int x, int n){
+
+    int y = 2*n ;
+
+	if (n == 0) then { print x; }
+
+	else {  f(y,n-1) ; }
+
+	delete x ;
+
+}
+
+f(u,6) ;
+
+}

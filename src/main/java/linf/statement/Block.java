@@ -11,24 +11,25 @@ import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Block extends LinfStmt {
-    private final ArrayList<LinfStmt> stmtList = new ArrayList<>();
+    private final List<LinfStmt> stmtList;
     private final HashSet<IDValue> deletedIDs = new HashSet<>();
     private final HashSet<IDValue> rwIDs = new HashSet<>();
     private HashMap<String, STentry> localEnv;
+    private int nestingLevel;
+    private boolean isAR = false;
+
+    public Block(List<LinfStmt> list) {
+        this.stmtList = List.copyOf(list);
+    }
 
 
     void setLocalEnv(HashMap<String, STentry> localEnv) {
         this.localEnv = localEnv;
-    }
-
-    public void addStmt(LinfStmt stmt) {
-        stmtList.add(stmt);
     }
 
     private HashSet<IDValue> filterLocalIDs(HashSet<IDValue> idSet) {
@@ -52,6 +53,10 @@ public class Block extends LinfStmt {
 
     HashSet<IDValue> getRwIDs() {
         return filterLocalIDs(rwIDs);
+    }
+
+    public void setAR() {
+        isAR = true;
     }
 
     private void checkDeletions(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
@@ -99,14 +104,25 @@ public class Block extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope(localEnv);
+        nestingLevel = env.nestingLevel;
 
+       /* Map<Boolean, List<LinfStmt>> mutatesEnv = stmtList.stream()
+                .collect(Collectors.partitioningBy(
+                        stmt -> (stmt instanceof StmtDec ||
+                                stmt instanceof Deletion)));
+
+        // Declarations
+        for (LinfStmt stmt : mutatesEnv.get(true)) {
+            errors.addAll(stmt.checkSemantics(env));
+        }*/
+
+        // Rest
         for (LinfStmt stmt : stmtList) {
-            ArrayList<SemanticError> errs = stmt.checkSemantics(env);
-            errors.addAll(errs);
+            errors.addAll(stmt.checkSemantics(env));
 
             if (stmt instanceof Deletion) {
                 IDValue id = ((Deletion) stmt).getId();
@@ -125,15 +141,39 @@ public class Block extends LinfStmt {
         }
 
         localEnv = env.local();
-
         env.closeScope();
-
         return errors;
     }
 
     @Override
     public String codeGen() {
-        return null;
+        StringBuilder code = new StringBuilder();
+        //check varDec inside block
+        long numVarDec = stmtList.stream()
+                .filter((stmt) -> stmt instanceof VarDec)
+                .count();
+
+        code.append("move $fp $sp\n");
+        //codegen statement inside block
+        for (LinfStmt statement : stmtList) {
+            code.append(statement.codeGen());
+        }
+
+        if (numVarDec > 0)
+            code.append("addi $sp $sp ").append(numVarDec).append("\n");
+        if (!isAR) {
+            if (nestingLevel == 0) {
+                code.insert(0, "push $t1\n".repeat(2))
+                        .insert(0, "subi $t1 $sp 2\n");
+            } else {
+                code.insert(0, "push $fp\n".repeat(2));
+            }
+            // restore $fp
+            code.append("lw $fp 2($sp)\n");
+            // pop return address and access link
+            code.append("addi $sp $sp 2\n");
+        }
+        return code.toString();
     }
 }
 

@@ -7,10 +7,12 @@ import java.util.Objects;
 public class STentry {
 
     private final int nestingLevel;
+    private final int offset;
     private final LinfType type;
 
-    public STentry(int n, LinfType t) {
+    public STentry(int n, int o, LinfType t) {
         nestingLevel = n;
+        offset = o;
         type = t;
     }
 
@@ -20,6 +22,10 @@ public class STentry {
 
     public int getNestinglevel() {
         return nestingLevel;
+    }
+
+    public int getOffset() {
+        return offset;
     }
 
     @Override

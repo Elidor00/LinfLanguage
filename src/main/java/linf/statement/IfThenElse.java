@@ -5,8 +5,10 @@ import linf.error.type.TypeError;
 import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.LinfLib;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IfThenElse extends LinfStmt {
 
@@ -37,7 +39,7 @@ public class IfThenElse extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>(exp.checkSemantics(env));
         res.addAll(thenBranch.checkSemantics(env));
         res.addAll(elseBranch.checkSemantics(env));
@@ -46,6 +48,15 @@ public class IfThenElse extends LinfStmt {
 
     @Override
     public String codeGen() {
-        return null;
+        String end = LinfLib.freshLabel();
+        String elseBranchCg = LinfLib.freshLabel();
+        return exp.codeGen() +
+                "li $t1 0\n" +
+                "beq $a0 $t1 " + elseBranchCg.replace(":", "") + //branch if equal
+                thenBranch.codeGen() +
+                "b " + end.replace(":", "") +   //jump to label
+                elseBranchCg +
+                elseBranch.codeGen() +
+                end;
     }
 }

@@ -6,7 +6,7 @@ import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Print extends LinfStmt {
     private final Exp exp;
@@ -26,12 +26,12 @@ public class Print extends LinfStmt {
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        return new ArrayList<>();
+    public List<SemanticError> checkSemantics(Environment env) {
+        return exp.checkSemantics(env);
     }
 
     @Override
     public String codeGen() {
-        return null;
+        return exp.codeGen() + "print\n";
     }
 }
