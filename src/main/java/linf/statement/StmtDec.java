@@ -12,7 +12,7 @@ public abstract class StmtDec extends LinfStmt {
     String id;
     LinfType type;
 
-    StmtDec(String id, LinfType type){
+    StmtDec(String id, LinfType type) {
         this.id = id;
         this.type = type;
     }

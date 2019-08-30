@@ -2,8 +2,8 @@ package execution;
 
 import lvm.LVM;
 import lvm.error.DivisionByZeroError;
-import lvm.error.StackUnderflowError;
 import lvm.error.StackOverflowError;
+import lvm.error.StackUnderflowError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

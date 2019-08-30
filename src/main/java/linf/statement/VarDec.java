@@ -14,7 +14,7 @@ public class VarDec extends StmtDec {
     private final Exp exp;
 
     public VarDec(LinfType type, String id, Exp exp) {
-        super(id,type);
+        super(id, type);
         this.exp = exp;
     }
 

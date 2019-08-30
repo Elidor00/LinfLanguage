@@ -12,10 +12,8 @@ import lvm.error.LVMError;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Token;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.System.exit;

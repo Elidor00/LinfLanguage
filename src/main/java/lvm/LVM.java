@@ -1,7 +1,6 @@
 package lvm;
 
 import lvm.error.StackOverflowError;
-import lvm.error.StackUnderflowError;
 import lvm.error.*;
 import lvm.parser.LVMLexer;
 import lvm.parser.LVMParser;

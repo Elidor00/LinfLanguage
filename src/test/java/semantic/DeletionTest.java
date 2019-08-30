@@ -2,7 +2,7 @@ package semantic;
 
 import linf.error.semantic.IllegalDeletionError;
 import linf.error.semantic.SemanticError;
-import linf.error.semantic.UnboundDeletionSymbolError;
+import linf.error.semantic.UnboundSymbolError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -55,14 +55,15 @@ public class DeletionTest {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int y = 0;"
-                        + "f() { delete y; }"
-                        + "int x = 50 * 10;"
                         + "delete y;"
-                        + "f();"
+                        + "delete y;"
                         + "}"
         );
-        assertEquals(1, errors.size());
+        assertEquals(2, errors.size());
         SemanticError err = errors.get(0);
+        assertEquals(UnboundSymbolError.class, err.getClass());
+        assertEquals("y", ((UnboundSymbolError) err).getId());
+        err = errors.get(1);
         assertEquals(IllegalDeletionError.class, err.getClass());
         assertEquals("y", ((IllegalDeletionError) err).getId());
     }
@@ -78,7 +79,7 @@ public class DeletionTest {
         );
         assertEquals(1, errors.size());
         SemanticError err = errors.get(0);
-        assertEquals(UnboundDeletionSymbolError.class, err.getClass());
-        assertEquals("x", ((UnboundDeletionSymbolError) err).getId());
+        assertEquals(UnboundSymbolError.class, err.getClass());
+        assertEquals("x", ((UnboundSymbolError) err).getId());
     }
 }

@@ -58,7 +58,9 @@ public class Environment {
             if (entry.getType() instanceof FunType) {
                 isPrototype = ((FunType) entry.getType()).isPrototype();
             }
-            return (entry.getNestinglevel() == nestingLevel && !isPrototype);
+            return (entry.getNestinglevel() == nestingLevel &&
+                    !entry.getType().isDeleted() &&
+                    !isPrototype);
         } else {
             return false;
         }
@@ -149,6 +151,15 @@ public class Environment {
 
     public STentry getStEntry(IDValue id) {
         return getStEntry(id.toString());
+    }
+
+    public LinfType getType(IDValue id) {
+        int here = lookupName(id.toString(), nestingLevel);
+        if (here > -1) {
+            return symbolsTable.get(here).get(id.toString()).getType();
+        } else {
+            return null;
+        }
     }
 
     /**

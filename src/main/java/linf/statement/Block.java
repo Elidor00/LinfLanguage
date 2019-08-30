@@ -11,8 +11,10 @@ import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 
 public class Block extends LinfStmt {
@@ -110,17 +112,6 @@ public class Block extends LinfStmt {
         env.openScope(localEnv);
         nestingLevel = env.nestingLevel;
 
-       /* Map<Boolean, List<LinfStmt>> mutatesEnv = stmtList.stream()
-                .collect(Collectors.partitioningBy(
-                        stmt -> (stmt instanceof StmtDec ||
-                                stmt instanceof Deletion)));
-
-        // Declarations
-        for (LinfStmt stmt : mutatesEnv.get(true)) {
-            errors.addAll(stmt.checkSemantics(env));
-        }*/
-
-        // Rest
         for (LinfStmt stmt : stmtList) {
             errors.addAll(stmt.checkSemantics(env));
 
