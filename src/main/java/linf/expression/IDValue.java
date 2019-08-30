@@ -38,8 +38,9 @@ public class IDValue extends LinfValue {
         ArrayList<SemanticError> res = new ArrayList<>();
         STentry envEntry = env.getStEntry(value);
         nestingLevel = env.nestingLevel;
+        setType(env.getType(this));
         if (envEntry == null) {
-            res.add(new UnboundSymbolError(value));
+            res.add(new UnboundSymbolError(this));
         } else {
             setEntry(envEntry);
         }
@@ -82,11 +83,12 @@ public class IDValue extends LinfValue {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IDValue idValue = (IDValue) o;
-        return Objects.equals(getEntry(), idValue.getEntry()) && nestingLevel == idValue.nestingLevel;
+        boolean t = Objects.equals(getType(), idValue.getType());
+        return t && value.equals(idValue.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getEntry());
+        return Objects.hash(value);
     }
 }

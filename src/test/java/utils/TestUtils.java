@@ -38,8 +38,7 @@ public final class TestUtils {
 
     public static Block checkType(String code) throws TypeError {
         Block mainBlock = makeAST(code);
-        List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
-        assertEquals(0, errors.size());
+        mainBlock.checkSemantics(new Environment());
         mainBlock.checkType();
         return mainBlock;
     }

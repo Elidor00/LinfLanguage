@@ -34,6 +34,7 @@ public class STentry {
         if (o == null || getClass() != o.getClass()) return false;
         STentry sTentry = (STentry) o;
         return nestingLevel == sTentry.nestingLevel &&
+                offset == sTentry.getOffset() &&
                 getType().equals(sTentry.getType());
     }
 
