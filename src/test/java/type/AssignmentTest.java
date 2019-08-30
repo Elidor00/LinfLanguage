@@ -1,64 +1,69 @@
 package type;
 
-import linf.error.type.*;
-import org.junit.Rule;
+import linf.error.type.IncompatibleTypesError;
+import linf.error.type.TypeError;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import static org.junit.Assert.assertThrows;
 import static utils.TestUtils.checkType;
 
 @RunWith(JUnit4.class)
 public class AssignmentTest {
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
     @Test
-    public void CheckType_ShouldPass_SimpleIntAssignment() throws TypeError {
-        checkType(
-                "{" +
-                        "int x = 2;" +
-                        "int y = 42;" +
-                        "}"
-        );
+    public void CheckType_ShouldPass_SimpleIntAssignment() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 2;" +
+                            "int y = 42;" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleBoolAssignment() throws TypeError {
-        checkType(
-                "{" +
-                        "bool x = true;" +
-                        "bool y = false;" +
-                        "}"
-        );
+    public void CheckType_ShouldPass_SimpleBoolAssignment() {
+        try {
+            checkType(
+                    "{" +
+                            "bool x = true;" +
+                            "bool y = false;" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
     }
 
     @Test
-    public void CheckType_ShouldFail_WithIncompatibleTypesBoolInt() throws TypeError {
-        exception.expect(IncompatibleTypesError.class);
-        checkType(
+    public void CheckType_ShouldFail_WithIncompatibleTypesBoolInt() {
+        assertThrows(IncompatibleTypesError.class, () -> checkType(
                 "{bool x = 2;}"
-        );
+        ));
     }
 
     @Test
-    public void CheckType_ShouldFail_WithIncompatibleTypesIntBool() throws TypeError {
-        exception.expect(IncompatibleTypesError.class);
-        checkType(
+    public void CheckType_ShouldFail_WithIncompatibleTypesIntBool() {
+        assertThrows(IncompatibleTypesError.class, () -> checkType(
                 "{int x = true;}"
-        );
+        ));
     }
 
     @Test
-    public void CheckType_ShouldFail_WithIncompatibleTypesAssignment() throws TypeError {
-        exception.expect(IncompatibleTypesError.class);
-        checkType(
+    public void CheckType_ShouldFail_WithIncompatibleTypesAssignment() {
+        assertThrows(IncompatibleTypesError.class, () -> checkType(
                 "{" +
                         "bool b = true;" +
                         "int a = (b + 3);" +
                         "}"
-        );
+        ));
     }
 
 }

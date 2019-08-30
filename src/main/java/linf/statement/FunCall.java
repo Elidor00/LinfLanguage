@@ -118,9 +118,9 @@ public class FunCall extends LinfStmt {
                         }
                     }
                     throw new WrongParameterNumberError(id, formalParTypes.size(), actualParList.size());
-                    } catch (IndexOutOfBoundsException | WrongParameterNumberError e) {
-                        e.getMessage();
-                    }
+                } catch (IndexOutOfBoundsException | WrongParameterNumberError e) {
+                    e.getMessage();
+                }
             } else {
                 res.add(new SymbolUsedAsFunctionError(id, entry.getType()));
             }

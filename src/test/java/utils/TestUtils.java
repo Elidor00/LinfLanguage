@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public final class TestUtils {
-    private static Block makeAST(String code) {
+    public static Block makeAST(String code) {
         ComplexStaticAnalysisLexer lexer = new ComplexStaticAnalysisLexer(
                 CharStreams.fromString(code)
         );
