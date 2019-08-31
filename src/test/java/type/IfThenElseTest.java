@@ -51,6 +51,30 @@ public class IfThenElseTest {
     }
 
     @Test
+    public void CheckType_ShouldPass_NestedIfThenElse() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 0;" +
+                            "int y = 0;" +
+                            "if (x == 0) then {" +
+                                "if (x == 0) then {" +
+                                    "delete y;" +
+                                "} else {" +
+                                    "delete y;" +
+                                "}" +
+                            "} else {" +
+                                "delete y;" +
+                            "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
     public void CheckType_ShouldFail_UnbalanceDeletionBehaviourError() {
         assertThrows(UnbalancedDeletionBehaviourError.class, () -> checkType(
                 "{" +
@@ -95,4 +119,45 @@ public class IfThenElseTest {
                         "int x = 3 ; f(x,x) ;\n" +
                         "}"));
     }
+
+    @Test
+    public void CheckType_ShouldFail_UnbalancedDeletionBehaviourError3() {
+        assertThrows(UnbalancedDeletionBehaviourError.class, () -> checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "f() {" +
+                                "if (x == 0) then {" +
+                                    "g() {" +
+                                        "f();" +
+                                    "}" +
+                                    "g();" +
+                                "} else {" +
+                                    "g() {" +
+                                        "f();" +
+                                    "}" +
+                                    "g();" +
+                                    "delete x;" +
+                                "}" +
+                            "}" +
+                            "f();" +
+                            "}"
+            ));
+    }
+
+    @Test
+    public void CheckType_ShouldFail_UnbalancedDeletionBehaviourError4() {
+        assertThrows(UnbalancedDeletionBehaviourError.class, () -> checkType(
+                "{" +
+                        "f() {" +
+                            "int x = 5;" +
+                            "if (x == 5) then {" +
+                                "delete f;" +
+                            "} else {" +
+                                "print x;" +
+                            "}" +
+                        "}" +
+                        "}"
+        ));
+    }
+
 }
