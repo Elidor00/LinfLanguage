@@ -107,4 +107,17 @@ public class BlockTest {
 
                 "}"));
     }
+
+    @Test
+    public void CheckType_ShouldFail_WithDoubleDeletion_OnVarId3() {
+        assertThrows(DoubleDeletionError.class, () -> checkType("{\n" +
+
+                "g(var bool x, var bool y){ delete x ; delete y ;}\n" +
+
+                "f(var bool z){ g(z,z) ; }\n" +
+
+                "bool x = true ; f(x) ;\n" +
+
+                "}"));
+    }
 }

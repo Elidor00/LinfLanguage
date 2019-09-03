@@ -28,6 +28,22 @@ public class AssignmentTest {
     }
 
     @Test
+    public void CheckType_ShouldPass_SimpleIntAssignment2() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 2;" +
+                            "int y = 42;" +
+                            "x = x + y;" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
     public void CheckType_ShouldPass_SimpleBoolAssignment() {
         try {
             checkType(

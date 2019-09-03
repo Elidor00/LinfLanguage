@@ -11,32 +11,65 @@ import static utils.TestUtils.checkType;
 public class DeletionTest {
 
     @Test
-    public void CheckType_ShouldPass_SimpleDeletion() throws TypeError {
-        checkType(
+    public void CheckType_ShouldPass_SimpleDeletion() {
+        try {
+            checkType(
                 "{" +
                         "bool x = true;" +
                         "int y = 1;" +
                         "delete x;" +
                         "delete y;" +
                         "}"
-        );
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_MultipleDeletion() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 5;" +
+                            "int y = 3;" +
+                            "f(var int a, var int b){" +
+                                "delete x;" +
+                                "g() {" +
+                                    "delete a;" +
+                                    "delete y;" +
+                                "}" +
+                                "g();" +
+                            "}" +
+                            "{" +
+                                "{" +
+                                    "int a = 2;" +
+                                    "int b = 3;" +
+                                    "f(a,b);" +
+                                "}" +
+                            "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
     }
 
     @Test
     public void CheckType_ShouldPass_OnNestedDeletion() {
         try {
-            checkType("{\n" +
-                    "\n" +
-                    "int x = 1;\n" +
-                    "\n" +
-                    "{\n" +
-                    "    int x = 2;\n" +
-                    "    delete x;\n" +
-                    "}\n" +
-                    "\n" +
-                    "delete x;\n" +
-                    "\n" +
-                    "}");
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "{" +
+                                "int x = 2;" +
+                                "delete x;" +
+                            "}" +
+                                "delete x;" +
+                            "}"
+            );
         } catch (TypeError e) {
             e.printStackTrace();
             assert false;

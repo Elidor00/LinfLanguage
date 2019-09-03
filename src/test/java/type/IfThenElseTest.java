@@ -51,7 +51,7 @@ public class IfThenElseTest {
     }
 
     @Test
-    public void CheckType_ShouldPass_NestedIfThenElse() {
+    public void CheckType_ShouldPass_NestedIfThenElseDelete() {
         try {
             checkType(
                     "{" +
@@ -112,7 +112,7 @@ public class IfThenElseTest {
                         "    if (y == 0) then {\n" +
                         "        delete x;\n" +
                         "    } else {\n" +
-                        "        x=x+y ;\n" +
+                        "        x = x+y ;\n" +
                         "    }\n" +
                         "}\n" +
 
@@ -156,6 +156,23 @@ public class IfThenElseTest {
                                 "print x;" +
                             "}" +
                         "}" +
+                        "}"
+        ));
+    }
+
+    @Test
+    public void CheckType_ShouldFail_UnbalancedDeletionBehaviourError5() {
+        assertThrows(UnbalancedDeletionBehaviourError.class, () -> checkType(
+                "{" +
+                        "f() { }" +
+                            "g() {" +
+                                "int a = 5;" +
+                                "if (a == 3) then {" +
+                                    "delete f;" +
+                                "} else {" +
+                                    "delete a;" +
+                                "}" +
+                            "}" +
                         "}"
         ));
     }

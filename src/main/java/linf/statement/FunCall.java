@@ -101,15 +101,18 @@ public class FunCall extends LinfStmt {
             if (entry.getType() instanceof FunType) {
                 FunType type = (FunType) entry.getType();
                 formalParTypes.addAll(type.getParTypes());
-
                 try {
                     for (int i = 0; i < formalParTypes.size(); i++) {
-                        Exp exp = actualParList.get(i); // out of bound with actualparlist < formalparlist
+                        //Out of bound with actualparlist < formalparlist
+                        Exp exp = actualParList.get(i);
                         LinfType formalType = formalParTypes.get(i);
                         res.addAll(exp.checkSemantics(env));
-
+                        if (!res.isEmpty()) {
+                            throw new DoubleDeletionError(exp.toIDValue());
+                        }
                         if (exp.isID()) {
                             if (formalType.isReference()) {
+                                //3° parameter can be null if previously deleted
                                 env.setReference(id, i, exp.toIDValue().getEntry());
                             }
                             if (formalType.isDeleted()) {
@@ -118,7 +121,7 @@ public class FunCall extends LinfStmt {
                         }
                     }
                     throw new WrongParameterNumberError(id, formalParTypes.size(), actualParList.size());
-                } catch (IndexOutOfBoundsException | WrongParameterNumberError e) {
+                } catch (IndexOutOfBoundsException | WrongParameterNumberError | DoubleDeletionError e) {
                     e.getMessage();
                 }
             } else {

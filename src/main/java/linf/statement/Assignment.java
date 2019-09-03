@@ -35,7 +35,7 @@ public class Assignment extends LinfStmt {
     @Override
     public LinfType checkType() throws TypeError {
         LinfType rhSideType = exp.checkType();
-        if (!rhSideType.getClass().equals(lhSideType.getClass())) {
+        if (!rhSideType.getClass().equals(lhSideType.getClass())) {  //lhSideType may be null
             throw new IncompatibleTypesError(lhSideType, rhSideType);
         }
         return rhSideType;
