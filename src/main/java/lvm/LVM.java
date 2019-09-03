@@ -15,7 +15,6 @@ import static lvm.utils.Registers.*;
 
 
 public class LVM {
-
     public static final int MEMSIZE = 100000000;
     static final int CODESIZE = 10000;
 
@@ -30,18 +29,6 @@ public class LVM {
     private int al = MEMSIZE - 1;
     private int t1 = 0; //TMP
     private int ra;
-
-    /*
-    private int ip = 0;
-    private HashMap<String,Integer> registers = new HashMap<String,Integer>(){{
-        put("$fp", MEMSIZE);
-        put("$al", MEMSIZE);
-        put("$ra", 0);
-        put("$a0", 0);
-        put("$t1", 0);
-        put("$sp", MEMSIZE);
-    }};
-    */
 
     public static int[] assemble(String code) {
         LVMLexer lvmLexer = new LVMLexer(CharStreams.fromString(code));
@@ -89,7 +76,9 @@ public class LVM {
                 case LVMParser.MULT:
                     r1 = INT_TO_STRING_REGISTER.get(code[ip++]);
                     v1 = GET_REGISTER_VALUE.get(INT_TO_STRING_REGISTER.get(code[ip++])).apply(this);
-                    v2 = GET_REGISTER_VALUE.get(INT_TO_STRING_REGISTER.get(code[ip++])).apply(this);
+                    int index = code[ip++];
+                    String name = INT_TO_STRING_REGISTER.get(index);
+                    v2 = GET_REGISTER_VALUE.get(name).apply(this);
                     int resMult = v1 * v2;
                     SET_REGISTER_VALUE.get(r1).apply(this, resMult);
                     break;

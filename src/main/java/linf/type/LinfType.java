@@ -49,7 +49,7 @@ public abstract class LinfType implements Node {
         if (o == null || getClass() != o.getClass()) return false;
 
         LinfType linfType = (LinfType) o;
-        return isReference == linfType.isReference;
+        return isReference() == linfType.isReference();
     }
 
     @Override

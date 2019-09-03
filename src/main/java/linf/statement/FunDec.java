@@ -24,6 +24,10 @@ public class FunDec extends FunPrototype {
         this.body = body;
     }
 
+    Block getBody() {
+        return body;
+    }
+
     @Override
     public LinfType checkType() throws TypeError {
         if (envEntry != null) {
@@ -37,17 +41,7 @@ public class FunDec extends FunPrototype {
             }
         }
         body.checkType();
-        HashSet<IDValue> delIDs = body.getDeletedIDs();
-        HashSet<IDValue> rwIDs = body.getRwIDs();
-        for (Parameter par : getParList()) {
-            String parID = par.getId();
-            delIDs.remove(parID);
-            rwIDs.remove(parID);
-        }
-        ((FunType) type).setDeletedIDs(delIDs);
-        ((FunType) type).setRwIDs(rwIDs);
-
-        return null;
+         return null;
     }
 
     @Override
@@ -60,12 +54,20 @@ public class FunDec extends FunPrototype {
         }
         body.setLocalEnv(scope);
         res.addAll(body.checkSemantics(env));
+        HashSet<IDValue> delIDs = body.getDeletedIDs();
+        HashSet<IDValue> rwIDs = body.getRwIDs();
         for (int i = 0; i < getParList().size(); i++) {
             Parameter par = getParList().get(i);
             if (envEntry != null) {
-                env.setReference(id, i, par.getEntry());
+                env.setReference(((FunType) type)
+                        .getParEntries().get(i), par.getEntry());
             }
+            String parID = par.getId();
+            delIDs.remove(parID);
+            rwIDs.remove(parID);
         }
+        ((FunType) type).setDeletedIDs(delIDs);
+        ((FunType) type).setRwIDs(rwIDs);
         return res;
     }
 

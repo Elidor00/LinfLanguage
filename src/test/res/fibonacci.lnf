@@ -1,7 +1,7 @@
 {
     fibonacci(int x, var int out) {
-        if (( x == 0 ) || (x == 1)) then {
-            out = x;
+        if (x <= 1) then {
+           out = x;
         } else {
             fibonacci(x - 1, out);
             int old = out;

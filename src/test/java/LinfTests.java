@@ -35,8 +35,8 @@ public class LinfTests {
 
         List<String> out = vm.getStdOut();
         assertEquals(1, out.size());
-        assertEquals("65533", out.get(0));
-        assertEquals(65533, vm.peekMemory(MEMSIZE - 3));
+        assertEquals("4", out.get(0));
+        assertEquals(4, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class LinfTests {
         List<String> out = vm.getStdOut();
         assertEquals(1, out.size());
         assertEquals("3628800", out.get(0));
-        assertEquals(3628800, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(1, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class LinfTests {
         assertEquals("0", out.get(0));
         assertEquals("1", out.get(1));
         assertEquals("13", out.get(2));
-        assertEquals(13, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(13, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class LinfTests {
         assertEquals(2, out.size());
         assertEquals("8", out.get(0));
         assertEquals("7", out.get(1));
-        assertEquals(7, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(7, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class LinfTests {
         assertEquals(2, out.size());
         assertEquals("1", out.get(0));
         assertEquals("0", out.get(1));
-        assertEquals(0, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(0, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class LinfTests {
         List<String> out = vm.getStdOut();
         assertEquals(1, out.size());
         assertEquals("1", out.get(0));
-        assertEquals(1, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(1, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class LinfTests {
         List<String> out = vm.getStdOut();
         assertEquals(1, out.size());
         assertEquals("720", out.get(0));
-        assertEquals(1, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(1, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test

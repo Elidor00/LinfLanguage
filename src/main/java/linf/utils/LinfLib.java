@@ -17,13 +17,21 @@ public abstract class LinfLib {
         return "fLabel" + (funLabelCount++) + ":\n";
     }
 
-    public static String followChain(int distance) {
+    private static String followChain(int distance, int linkOffset) {
         if (distance > 1) {
-            return "lw $al 2($fp)\n" +
+            return "lw $al " + linkOffset + "($fp)\n" +
                     "lw $al 2($al)\n".repeat(distance - 1);
         } else {
             return "lw $al 2($fp)\n";
         }
+    }
+
+    public static String followAl(int distance) {
+        return followChain(distance, 2);
+    }
+
+    public static String followCl(int distance) {
+        return followChain(distance, 3);
     }
 
     public static String pushAl(int distance) {

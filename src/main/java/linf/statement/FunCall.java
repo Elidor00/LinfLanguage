@@ -1,9 +1,9 @@
 package linf.statement;
 
-import linf.error.semantic.FunctionDeclarationOutOfScopeError;
-import linf.error.semantic.SemanticError;
-import linf.error.semantic.SymbolUsedAsFunctionError;
-import linf.error.type.*;
+import linf.error.semantic.*;
+import linf.error.type.ReferenceParameterError;
+import linf.error.type.TypeError;
+import linf.error.type.WrongParameterTypeError;
 import linf.expression.Exp;
 import linf.expression.IDValue;
 import linf.type.FunType;
@@ -32,6 +32,10 @@ public class FunCall extends LinfStmt {
         this.id = id;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void addPar(Exp exp) {
         actualParList.add(exp);
     }
@@ -46,46 +50,21 @@ public class FunCall extends LinfStmt {
 
     @Override
     public LinfType checkType() throws TypeError {
-        // the entry can be null if the function ID was deleted before the call
-        if(entry == null) {
-            throw new FunctionNameDeletionError(id);
-        }
         FunType type = (FunType) entry.getType();
-        rwIDs.addAll(type.getRwIDs());
-        deletedIDs.addAll(type.getDeletedIDs());
-        // checking number of parameters
-        if (formalParTypes.size() != actualParList.size()) {
-            throw new WrongParameterNumberError(id, formalParTypes.size(), actualParList.size());
-        } else {
-            for (int i = 0; i < formalParTypes.size(); i++) {
-                Exp exp = actualParList.get(i);
-                LinfType formalType = formalParTypes.get(i);
-                LinfType actualType = exp.checkType();
 
-                // checking types of single parameters
-                if (!formalType.getClass().equals(actualType.getClass())) {
-                    throw new WrongParameterTypeError(id, formalType, actualType);
-                }
+        for (int i = 0; i < formalParTypes.size(); i++) {
+            Exp exp = actualParList.get(i);
+            LinfType formalType = formalParTypes.get(i);
+            LinfType actualType = exp.checkType();
 
-                if (formalType.isReference()) {
-                    if (exp.isID()) {
-                        // checking deleted parameters
-                        IDValue idValue = exp.toIDValue();
-                        if (formalType.isDeleted()) {
-                            if (deletedIDs.contains(idValue)) {
-                                throw new DoubleDeletionError(idValue);
-                            } else {
-                                deletedIDs.add(idValue);
-                            }
-                        }
-                        if (formalType.isRwAccess()) {
-                            rwIDs.add(idValue);
-                        }
-                    } else {
-                        // checking parameters passed by reference
-                        throw new ReferenceParameterError(id, exp);
-                    }
-                }
+            // checking types of single parameters
+            if (!formalType.getClass().equals(actualType.getClass())) {
+                throw new WrongParameterTypeError(id, formalType, actualType);
+            }
+
+            if (formalType.isReference() && !exp.isID()) {
+                // checking parameters passed by reference
+                throw new ReferenceParameterError(id, exp);
             }
         }
         return null;
@@ -103,29 +82,39 @@ public class FunCall extends LinfStmt {
             nestingLevel = env.nestingLevel;
             if (entry.getType() instanceof FunType) {
                 FunType type = (FunType) entry.getType();
+                rwIDs.addAll(type.getRwIDs());
+                deletedIDs.addAll(type.getDeletedIDs());
                 formalParTypes.addAll(type.getParTypes());
-                try {
+
+                if (formalParTypes.size() != actualParList.size()) {
+                    // checking number of parameters
+                    res.add(new WrongParameterNumberError(id, formalParTypes.size(), actualParList.size()));
+                } else {
+                    for (Exp exp : actualParList) {
+                        res.addAll(exp.checkSemantics(env));
+                    }
                     for (int i = 0; i < formalParTypes.size(); i++) {
-                        //Out of bound with actualparlist < formalparlist
                         Exp exp = actualParList.get(i);
                         LinfType formalType = formalParTypes.get(i);
-                        res.addAll(exp.checkSemantics(env));
-                        if (!res.isEmpty()) {
-                            throw new DoubleDeletionError(exp.toIDValue());
-                        }
-                        if (exp.isID()) {
-                            if (formalType.isReference()) {
-                                //3° parameter can be null if previously deleted
-                                env.setReference(id, i, exp.toIDValue().getEntry());
-                            }
+                        if (exp.isID() && formalType.isReference()) {
+                            env.setReference(type.getParEntries().get(i), exp.toIDValue().getEntry());
+                            // checking deleted parameters
+                            IDValue idValue = exp.toIDValue();
+                            STentry entry = idValue.getEntry();
                             if (formalType.isDeleted()) {
                                 env.deleteName(exp.toString());
+
+                                if (deletedIDs.contains(idValue)) {
+                                    res.add(new VarParameterDoubleDeletionError(idValue, this));
+                                } else {
+                                    deletedIDs.add(idValue);
+                                }
+                            }
+                            if (formalType.isRwAccess()) {
+                                rwIDs.add(idValue);
                             }
                         }
                     }
-                    throw new WrongParameterNumberError(id, formalParTypes.size(), actualParList.size());
-                } catch (IndexOutOfBoundsException | WrongParameterNumberError | DoubleDeletionError e) {
-                    e.getMessage();
                 }
             } else {
                 res.add(new SymbolUsedAsFunctionError(id, entry.getType()));
@@ -138,15 +127,14 @@ public class FunCall extends LinfStmt {
     /**
      * f() { g(); }
      * g() { print 0; }
-     * 1. the control link which points to AR of caller of g
-     * 2. actual parameters
+     * 1. actual parameters
+     * 2. the control link which points to AR of caller of g
      * 3. the ACCESS/STATIC link
      * 4. the return address
      */
     @Override
     public String codeGen() {
-        // Dynamic/control link, i.e. pointer to the env in which f is called
-        StringBuilder builder = new StringBuilder("push $fp\n");
+        StringBuilder builder = new StringBuilder();
 
         // Actual parameters
         Collections.reverse(actualParList);
@@ -156,33 +144,24 @@ public class FunCall extends LinfStmt {
             LinfType formalType = formalParTypes.get(i);
 
             if (formalType.isReference()) {
-                STentry referred = formalType.getRefTo();
-                int offset = referred.getOffset();
-
-                builder.append(LinfLib.followChain(nestingLevel - entry.getNestinglevel()))
-                        .append("move $a0 $al\n");
-
-                if (offset != 0) {
-                    builder.append("addi $a0 $a0 ")
-                            .append(offset)
-                            .append("\n");
-                }
+                builder.append(exp.toIDValue().loadAddress());
             } else {
                 builder.append(exp.codeGen());
             }
             builder.append("push $a0\n");
         }
 
-        // Static/access link, i.e. pointer to the env in which f is declared
-        return builder.append(LinfLib.pushAl(nestingLevel - entry.getNestinglevel()))
+        // Dynamic/control link, i.e. pointer to the env in which f is called
+        return builder.append("push $fp\n")
+                // Static/access link, i.e. pointer to the env in which f is declared
+                .append(LinfLib.pushAl(nestingLevel - entry.getNestinglevel()))
                 // Give control to called
                 .append("b ")
                 .append(((FunType) entry.getType()).getFunLabel().replace(":", ""))
-                // pop access link and parameters
-                .append("addi $sp $sp ").append(actualParList.size() + 1).append("\n")
-                // pop control link
-                .append("top $fp\n")
-                .append("pop\n")
+                // restore $fp to point to the AR of caller
+                .append("lw $fp 2($sp)\n")
+                // pop access link, control link and parameters
+                .append("addi $sp $sp ").append(actualParList.size() + 2).append("\n")
                 .toString();
     }
 }

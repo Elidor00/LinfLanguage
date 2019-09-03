@@ -15,13 +15,10 @@ public class FunPrototype extends StmtDec {
 
     public FunPrototype(String id, List<Parameter> parameters) {
         super(id, new FunType());
-        parameters.forEach(this::addPar);
-    }
-
-    private void addPar(Parameter par) {
-        parList.add(par);
-        par.setOffset(parList.size());
-        ((FunType) type).addParType(par.getType());
+        parameters.forEach((par) -> {
+            parList.add(par);
+            par.setOffset(parList.size());
+        });
     }
 
     List<Parameter> getParList() {
@@ -37,6 +34,7 @@ public class FunPrototype extends StmtDec {
                 errors.add(new FunctionNameShadowingError(id));
             }
             errors.addAll(par.checkSemantics(env));
+            ((FunType) type).addPar(par.getEntry());
         }
         return errors;
     }

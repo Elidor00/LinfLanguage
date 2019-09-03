@@ -8,7 +8,7 @@ isEven(int x, var bool out) {
     if (x == 0) then {
         out = true;
     } else {
-        isOdd(n - 1, out);
+        isOdd(x - 1, out);
     }
 }
 
@@ -16,13 +16,13 @@ isOdd(int x, var bool out) {
     if (x == 0) then {
         out = false;
     } else {
-        isEven(n - 1, out);
+        isEven(x - 1, out);
     }
 }
 
-isEven(100, out);
+isEven(10, out);
 print out;
 
-isOdd(100, out);
+isOdd(10, out);
 print out;
 }

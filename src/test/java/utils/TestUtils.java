@@ -38,7 +38,12 @@ public final class TestUtils {
 
     public static Block checkType(String code) throws TypeError {
         Block mainBlock = makeAST(code);
-        mainBlock.checkSemantics(new Environment());
+        List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
+        if (errors.size() > 0) {
+            for (SemanticError e : errors) {
+                System.out.println(e);
+            }
+        }
         mainBlock.checkType();
         return mainBlock;
     }
@@ -55,7 +60,7 @@ public final class TestUtils {
     public static LVM runScript(String linfCode) {
         String bytecode = cgen(linfCode);
         LVM vm = runBytecode(bytecode);
-        assertEquals(MEMSIZE - 1, vm.getSp());
+        assert MEMSIZE - 1 == vm.getSp();
         return vm;
     }
 
@@ -65,9 +70,11 @@ public final class TestUtils {
         LVM vm = new LVM();
         try {
             vm.run(bytecode);
+            assertEquals(MEMSIZE - 1, vm.getSp());
             return vm;
         } catch (LVMError err) {
             err.printStackTrace();
+            System.exit(-1);
             return null;
         }
     }

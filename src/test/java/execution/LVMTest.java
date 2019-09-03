@@ -28,10 +28,10 @@ public class LVMTest {
     @Test
     public void Push_ShouldPass_WithEmptyStack() {
         LVM vm = runBytecode(
-                "li $a0 500 \n push $a0"
+                "li $a0 500 \n push $a0\npop"
         );
         assertEquals(500, vm.getA0());
-        assertEquals(500, vm.peekMemory(vm.getSp() + 1));
+        assertEquals(500, vm.peekMemory(vm.getSp()));
     }
 
     @Test
@@ -302,7 +302,8 @@ public class LVMTest {
         LVM vm = runBytecode(
                 "li $a0 576\n" +
                         "push $a0\n" +
-                        "top $t1"
+                        "top $t1\n" +
+                        "pop"
         );
         assertEquals(576, vm.getA0());
         assertEquals(576, vm.peekMemory(MEMSIZE - 1));

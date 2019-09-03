@@ -20,7 +20,8 @@ public class FunDecTest {
     @Test
     public void Empty_FunDec_Should_JustWork() {
         String actual = cgen("{ f(){} }");
-        String expected = "subi $t1 $sp 2\n" +
+        String expected = "subi $t1 $sp 3\n" +
+                "push $t1\n" +
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
@@ -35,7 +36,7 @@ public class FunDecTest {
                 "jr $ra\n" +
                 "label0:\n" +
                 "lw $fp 2($sp)\n" +
-                "addi $sp $sp 2\n";
+                "addi $sp $sp 3\n";
         assertEquals(expected, actual);
         runBytecode(actual);
     }
@@ -43,7 +44,8 @@ public class FunDecTest {
     @Test
     public void Unary_FunDec_Should_JustWork() {
         String actual = cgen("{ f(int x){ print x; } }");
-        String expected = "subi $t1 $sp 2\n" +
+        String expected = "subi $t1 $sp 3\n" +
+                "push $t1\n" +
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
@@ -52,7 +54,7 @@ public class FunDecTest {
                 "push $ra\n" +
                 // block
                 "move $fp $sp\n" +
-                "lw $a0 3($fp)\n" +
+                "lw $a0 4($fp)\n" +
                 "print\n" +
                 // return control
                 "top $ra\n" +
@@ -60,7 +62,7 @@ public class FunDecTest {
                 "jr $ra\n" +
                 "label0:\n" +
                 "lw $fp 2($sp)\n" +
-                "addi $sp $sp 2\n";
+                "addi $sp $sp 3\n";
         assertEquals(expected, actual);
         runBytecode(actual);
     }
@@ -68,7 +70,8 @@ public class FunDecTest {
     @Test
     public void NestedDec_Should_JustWork() {
         String actual = cgen("{ f(int x){ g() { print x; } g(); } }");
-        String expected = "subi $t1 $sp 2\n" +
+        String expected = "subi $t1 $sp 3\n" +
+                "push $t1\n" +
                 "push $t1\n" +
                 "push $t1\n" +
                 "move $fp $sp\n" +
@@ -81,7 +84,7 @@ public class FunDecTest {
                 "push $ra\n" +
                 "move $fp $sp\n" +
                 "lw $al 2($fp)\n" +
-                "lw $a0 3($al)\n" +
+                "lw $a0 4($al)\n" +
                 "print\n" +
                 "top $ra\n" +
                 "pop\n" +
@@ -90,15 +93,14 @@ public class FunDecTest {
                 "push $fp\n" +
                 "push $fp\n" +
                 "b fLabel0\n" +
-                "addi $sp $sp 1\n" +
-                "top $fp\n" +
-                "pop\n" +
+                "lw $fp 2($sp)\n" +
+                "addi $sp $sp 2\n" +
                 "top $ra\n" +
                 "pop\n" +
                 "jr $ra\n" +
                 "label0:\n" +
                 "lw $fp 2($sp)\n" +
-                "addi $sp $sp 2\n";
+                "addi $sp $sp 3\n";
         assertEquals(expected, actual);
         runBytecode(actual);
     }

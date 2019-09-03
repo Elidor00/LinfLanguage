@@ -19,6 +19,10 @@ public class IDValue extends LinfValue {
         setValue(value);
     }
 
+    public int getNestingLevel() {
+        return nestingLevel;
+    }
+
     public STentry getEntry() {
         return entry;
     }
@@ -38,11 +42,12 @@ public class IDValue extends LinfValue {
         ArrayList<SemanticError> res = new ArrayList<>();
         STentry envEntry = env.getStEntry(value);
         nestingLevel = env.nestingLevel;
-        setType(env.getType(this));
+
         if (envEntry == null) {
             res.add(new UnboundSymbolError(this));
         } else {
             setEntry(envEntry);
+            setType(env.getType(this));
         }
         return res;
     }
@@ -52,21 +57,47 @@ public class IDValue extends LinfValue {
         if (entry.getType().isReference()) {
             STentry referred = entry.getType().getRefTo();
             if (distance > 0) {
-                return LinfLib.followChain(distance) +
+                return LinfLib.followCl(distance) +
                         "lw $al " + entry.getOffset() + "($al)\n" +
                         String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
             } else {
-                int off = referred.getOffset();
                 return "lw $al " + entry.getOffset() + "($fp)\n" +
-                        String.format("%s $a0 " + off + "($al)\n", op);
+                        String.format("%s $a0 0($al)\n", op);
             }
         } else if (distance > 0) {
             // free variable
-            return LinfLib.followChain(distance) +
+            return LinfLib.followAl(distance) +
                     String.format("%s $a0 " + entry.getOffset() + "($al)\n", op);
         } else {
             return String.format("%s $a0 " + entry.getOffset() + "($fp)\n", op);
         }
+    }
+
+    public String loadAddress() {
+        String code = "";
+        int distance = nestingLevel - entry.getNestinglevel();
+        if (entry.getType().isReference()) {
+            STentry referred = entry.getType().getRefTo();
+            if (distance > 0) {
+                code += LinfLib.followCl(distance) +
+                        "lw $al " + entry.getOffset() + "($al)\n";
+            } else {
+                code += "lw $al " + entry.getOffset() + "($fp)\n";
+            }
+            code += "move $a0 $al\n";
+        } else {
+            if (distance > 0) {
+                // free variable
+                return LinfLib.followAl(distance) +
+                        "move $a0 $al\n";
+            } else {
+                code += "move $a0 $fp\n";
+            }
+            if (entry.getOffset() != 0) {
+                code += "addi $a0 $a0 " + entry.getOffset() + "\n";
+            }
+        }
+        return code;
     }
 
     public String LSideCodeGen() {
@@ -83,8 +114,7 @@ public class IDValue extends LinfValue {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IDValue idValue = (IDValue) o;
-        boolean t = Objects.equals(getType(), idValue.getType());
-        return t && value.equals(idValue.value);
+        return nestingLevel == idValue.nestingLevel && value.equals(idValue.value);
     }
 
     @Override

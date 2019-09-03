@@ -1,8 +1,6 @@
 package semantic;
 
-import linf.error.semantic.FunctionDeclarationOutOfScopeError;
-import linf.error.semantic.SemanticError;
-import linf.error.semantic.SymbolUsedAsFunctionError;
+import linf.error.semantic.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -53,5 +51,69 @@ public class FunCallTest {
         SemanticError err = errors.get(0);
         assertEquals(SymbolUsedAsFunctionError.class, err.getClass());
         assertEquals("f", ((SymbolUsedAsFunctionError) err).getId());
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_WrongParameterNumberErrorGreater() {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "f(int x, bool y){" +
+                        "x = x - 7;" +
+                        "y = y && false;" +
+                        "}" +
+                        "f(3, true, 4, 43);" +
+                        "}"
+        );
+        assertEquals(1, errors.size());
+        SemanticError err = errors.get(0);
+        assertEquals(WrongParameterNumberError.class, err.getClass());
+        assertEquals("f", ((WrongParameterNumberError) err).getId());
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_WrongParameterNumberErrorLess() {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "f(int x, bool y){" +
+                        "}" +
+                        "f(3);" +
+                        "}"
+        );
+        assertEquals(1, errors.size());
+        SemanticError err = errors.get(0);
+        assertEquals(WrongParameterNumberError.class, err.getClass());
+        assertEquals("f", ((WrongParameterNumberError) err).getId());
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarParameter() {
+        List<SemanticError> errors = checkSemantics("{\n" +
+                "\n" +
+                "f(var int x, var int y){ delete x; delete y; }\n" +
+                "\n" +
+                "int x = 3; f(x,x) ;\n" +
+                "\n" +
+                "}");
+
+        assertEquals(1, errors.size());
+        assertEquals(VarParameterDoubleDeletionError.class, errors.get(0).getClass());
+        assertEquals("x", (((VarParameterDoubleDeletionError) errors.get(0)).getId().toString()));
+    }
+
+    @Test
+    public void CheckType_ShouldFail_WithDoubleDeletion_OnVarId2() {
+        List<SemanticError> errors = checkSemantics("{\n" +
+
+                "g(var int x, var int y){ delete x ; delete y ;}\n" +
+
+                "f(var int z){ g(z,z) ; }\n" +
+
+                "int x = 3 ; f(x) ;\n" +
+
+                "}");
+
+        assertEquals(1, errors.size());
+        assertEquals(VarParameterDoubleDeletionError.class, errors.get(0).getClass());
+        assertEquals("z", (((VarParameterDoubleDeletionError) errors.get(0)).getId().toString()));
     }
 }

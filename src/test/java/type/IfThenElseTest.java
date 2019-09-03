@@ -13,8 +13,7 @@ import static utils.TestUtils.checkType;
 public class IfThenElseTest {
 
     @Test
-    public void CheckType_ShouldPass_SimpleIfThenElse() {
-        try {
+    public void CheckType_ShouldPass_SimpleIfThenElse() throws TypeError {
             checkType(
                     "{" +
                             "int x = 1;" +
@@ -25,15 +24,10 @@ public class IfThenElseTest {
                             "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleIfThenElse2() {
-        try {
+    public void CheckType_ShouldPass_SimpleIfThenElse2() throws TypeError {
             checkType(
                     "{" +
                             "int x = 1;" +
@@ -44,15 +38,10 @@ public class IfThenElseTest {
                             "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleIfThenElse3() {
-        try {
+    public void CheckType_ShouldPass_SimpleIfThenElse3() throws TypeError {
             checkType(
                     "{" +
                             "int x = 1;" +
@@ -64,15 +53,10 @@ public class IfThenElseTest {
                                 "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleIfThenElse4() {
-        try {
+    public void CheckType_ShouldPass_SimpleIfThenElse4() throws TypeError {
             checkType(
                     "{" +
                             "int x = 1;" +
@@ -84,15 +68,10 @@ public class IfThenElseTest {
                                 "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleIfThenElseDelete() {
-        try {
+    public void CheckType_ShouldPass_SimpleIfThenElseDelete() throws TypeError {
             checkType(
                     "{" +
                             "int x = 1;" +
@@ -103,15 +82,10 @@ public class IfThenElseTest {
                             "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleNestedIfThenElse() {
-        try {
+    public void CheckType_ShouldPass_SimpleNestedIfThenElse() throws TypeError {
             checkType(
                     "{" +
                             "int x = 1;" +
@@ -127,15 +101,10 @@ public class IfThenElseTest {
                             "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleNestedIfThenElse2() {
-        try {
+    public void CheckType_ShouldPass_SimpleNestedIfThenElse2() throws TypeError {
             checkType(
                     "{" +
                             "int x = 1;" +
@@ -151,15 +120,10 @@ public class IfThenElseTest {
                                 "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
         }
-    }
 
     @Test
-    public void CheckType_ShouldPass_NestedIfThenElseDelete() {
-        try {
+    public void CheckType_ShouldPass_NestedIfThenElseDelete() throws TypeError {
             checkType(
                     "{" +
                             "int x = 0;" +
@@ -175,15 +139,10 @@ public class IfThenElseTest {
                             "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test
-    public void CheckType_ShouldPass_NestedIfThenElseDelete2() {
-        try {
+    public void CheckType_ShouldPass_NestedIfThenElseDelete2() throws TypeError{
             checkType(
                     "{" +
                             "int x = 0;" +
@@ -199,10 +158,6 @@ public class IfThenElseTest {
                                 "}" +
                             "}"
             );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
     }
 
     @Test

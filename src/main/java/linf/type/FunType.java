@@ -4,13 +4,15 @@ import linf.error.semantic.SemanticError;
 import linf.expression.IDValue;
 import linf.utils.Environment;
 import linf.utils.LinfLib;
+import linf.utils.STentry;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FunType extends LinfType {
-    private List<LinfType> parTypes = new ArrayList<>();
+    private List<STentry> parEntries = new ArrayList<>();
     private HashSet<IDValue> rwIDs = new HashSet<>();
     private HashSet<IDValue> deletedIDs = new HashSet<>();
     private boolean isPrototype = true;
@@ -25,15 +27,17 @@ public class FunType extends LinfType {
     }
 
     public List<LinfType> getParTypes() {
-        return parTypes;
+        return parEntries.stream()
+                .map(STentry::getType)
+                .collect(Collectors.toList());
     }
 
-    public void addParType(LinfType type) {
-        this.parTypes.add(type);
+    public List<STentry> getParEntries() {
+        return parEntries;
     }
 
-    public void setParType(int index, LinfType type) {
-        parTypes.set(index, type);
+    public void addPar(STentry entry) {
+        parEntries.add(entry);
     }
 
     public HashSet<IDValue> getRwIDs() {
@@ -77,13 +81,11 @@ public class FunType extends LinfType {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder("( ");
-        for (LinfType type : parTypes) {
-            str.append(type.toString());
-            str.append(" ");
-        }
-        str.append(") -> void");
-        return str.toString();
+        return "(" +
+                getParTypes().stream()
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", ")) +
+                ") -> void";
     }
 
     @Override
@@ -92,12 +94,12 @@ public class FunType extends LinfType {
         if (o == null || getClass() != o.getClass()) return false;
 
         FunType funType = (FunType) o;
-        return parTypes.equals(funType.parTypes);
+        return getParTypes().equals(funType.getParTypes());
     }
 
     @Override
     public int hashCode() {
-        int result = parTypes.hashCode();
+        int result = getParTypes().hashCode();
         result = 31 * result + rwIDs.hashCode();
         result = 31 * result + deletedIDs.hashCode();
         result = 31 * result + (isPrototype ? 1 : 0);

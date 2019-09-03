@@ -1,18 +1,18 @@
 {
+  int ONE = 1;
   printfactorial(int x) {
 
       fact(var int out, int x) {
             if ( x > 1 ) then {
-                int old = out;
                 fact(out, x - 1);
-                out = old * out;
+                out = x * out;
             } else {
-                out = 1;
+                out = ONE;
             }
       }
 
       int out = 1;
-      fact(out, x);
+     {{ fact(out, x); }}
 
       print out;
   }

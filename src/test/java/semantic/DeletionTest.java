@@ -126,6 +126,7 @@ public class DeletionTest {
                 "int y = 3 ; f(x,y) ;\n" +
                 "x = 3;\n" +
                 "}");
+        assertEquals(1, errors.size());
         SemanticError err = errors.get(0);
         assertEquals(UnboundSymbolError.class, err.getClass());
         assertEquals("x", ((UnboundSymbolError) err).getId());

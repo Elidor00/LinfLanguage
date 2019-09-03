@@ -24,6 +24,10 @@ public class BoolType extends LinfType {
 
     @Override
     public String toString() {
-        return "bool";
+        String name = "bool";
+        if (isReference()){
+            name = "var " + name;
+        }
+        return name;
     }
 }

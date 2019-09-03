@@ -16,7 +16,7 @@ ack(int m, int n, var int out) {
     } else {}
 }
 
-// 65533
-ack(4, 1, out);
+// 4
+ack(1, 2, out);
 print out;
 }

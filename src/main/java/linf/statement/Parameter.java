@@ -44,7 +44,7 @@ public class Parameter extends LinfStmt {
 
     @Override
     public List<SemanticError> checkSemantics(Environment env) {
-        entry = new STentry(env.nestingLevel + 1, offset + 2, type);
+        entry = new STentry(env.nestingLevel + 1, offset + 3, type);
         return new ArrayList<>();
     }
 

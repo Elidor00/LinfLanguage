@@ -1,5 +1,6 @@
 package type;
 
+import linf.error.semantic.UnboundSymbolError;
 import linf.error.type.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,88 +27,6 @@ public class FunCallTest {
             e.printStackTrace();
             assert false;
         }
-    }
-
-    @Test
-    public void CheckType_ShouldPass_SimpleFunCallWithExpParameters() {
-        try {
-            checkType(
-                    "{" +
-                            "int a = 5;" +
-                            "bool b = true;" +
-                            "f(int a, bool b, var bool c){" +
-                                "print a;" +
-                                "print c;" +
-                            "}" +
-                            "f((a+5), (b && false), b);" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
-    @Test
-    public void CheckType_ShouldPass_SimplePrototype() {
-        try {
-            checkType(
-                    "{" +
-                            "f(int x);" +
-                            "int x = 42;" +
-                            "f(int x){ print x; }" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
-    @Test
-    public void CheckType_ShouldFail_SimplePrototypeError() {
-        assertThrows(MismatchedPrototype.class, () -> checkType(
-                    "{" +
-                            "f(int x);" +
-                            "bool x = true;" +
-                            "f(bool x){ print a; }" +
-                            "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_SimplePrototypeError1() {
-        assertThrows(MismatchedPrototype.class, () -> checkType(
-                "{" +
-                        "f(bool x);" +
-                        "int a = 3;" +
-                        "f(int a){ print a; }" +
-                        "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_WrongParameterNumberErrorGreater() {
-        assertThrows(WrongParameterNumberError.class, () -> checkType(
-                "{" +
-                        "f(int x, bool y){" +
-                        "x = x - 7;" +
-                        "y = y && false;" +
-                        "}" +
-                        "f(3, true, 4, 43);" +
-                        "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_WrongParameterNumberErrorLess() {
-        assertThrows(WrongParameterNumberError.class, () -> checkType(
-                "{" +
-                        "f(int x, bool y){" +
-                        "}" +
-                        "f(3);" +
-                        "}"
-        ));
     }
 
     @Test
@@ -150,22 +69,47 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_IncompatibleBehaviourError() {
-        assertThrows(IncompatibleBehaviourError.class, () -> checkType(
-                "{" +
-                        "int y = 1;" +
-                        "f() {" +
-                        "y = y + 4;" +
-                        "delete y;" +
-                        "}" +
-                        "f();" +
-                        "}"
-        ));
+    public void CheckType_ShouldFail_WithDoubleDeletionBehaviour() {
+        assertThrows(DoubleDeletionError.class, () -> checkType("{\n" +
+
+                "int x = 1;\n" +
+
+                "foo(){delete x;}\n" +
+
+                "{\n" +
+                "int x = 2; foo();\n" +
+                "}\n" +
+
+                "foo();\n" +
+                "}"));
     }
 
     @Test
+    public void CheckType_ShouldFail_WithIncompatibleBehaviour() {
+        assertThrows(IncompatibleBehaviourError.class, () -> checkType("{\n" +
+                "int x = 3;\n" +
+
+                "foo(var int a) {\n" +
+                "    a = x + 1;\n" +
+                "    delete a;\n" +
+                "    x = 35;\n" +
+                "}\n" +
+
+                "int y = 2;\n" +
+
+                "foo(y);\n" +
+                "foo(x); // <--- QUI DEVE DARE ERRORE!\n" +
+
+                "bar(var int a){\n" +
+                "    a = a + 1;\n" +
+                "    delete a;\n" +
+                "}\n" +
+                "}"));
+    }
+}
+    @Test
     public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled() {
-        assertThrows(FunctionNameDeletionError.class, () -> checkType(
+        assertThrows(UnboundSymbolError.class, () -> checkType(
                 "{" +
                         "int x = 5;" +
                         "f(int x) {" +
@@ -180,7 +124,7 @@ public class FunCallTest {
 
     @Test
     public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled1() {
-        assertThrows(FunctionNameDeletionError.class, () -> checkType(
+        assertThrows(UnboundSymbolError.class, () -> checkType(
                 "{" +
                         "int x = 5;" +
                         "f(int x) {" +
@@ -199,7 +143,7 @@ public class FunCallTest {
 
     @Test
     public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled2() {
-        assertThrows(FunctionNameDeletionError.class, () -> checkType(
+        assertThrows(UnboundSymbolError.class, () -> checkType(
                 "{" +
                         "f(int x) {" +
                             "delete f;" +

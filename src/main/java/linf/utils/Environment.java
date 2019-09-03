@@ -6,7 +6,8 @@ import linf.type.LinfType;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Environment {
     // List of hash tables
@@ -17,6 +18,25 @@ public class Environment {
     private void resetOffset() {
         offset = 0;
     }
+
+    private void restoreOffset() {
+        if (symbolsTable.size() > 0) {
+            Set<Map.Entry<String, STentry>> entrySet = symbolsTable.peek()
+                    .entrySet();
+            if (entrySet.size() > 0) {
+                offset = entrySet.stream()
+                        .map(Map.Entry::getValue)
+                        .map(STentry::getOffset)
+                        .min(Integer::compare)
+                        .get();
+            } else {
+                resetOffset();
+            }
+        } else {
+            resetOffset();
+        }
+    }
+
 
     /**
      * Adds variable with the given id to existence
@@ -33,13 +53,17 @@ public class Environment {
         }
     }
 
-    public void setReference(String fun, int par, STentry referred) {
-        FunType type = (FunType) getStEntry(fun).getType();
-        List<LinfType> parTypes = type.getParTypes();
-        if (referred.getType().isReference() && referred.getType().getRefTo() != null) {
-            setReference(fun, par, referred.getType().getRefTo());
-        } else {
-            parTypes.get(par).setRefTo(referred);
+    public void setReference(STentry par, STentry referred) {
+        if (referred != null && par != null) {
+            LinfType parType = par.getType();
+            LinfType refType = referred.getType();
+            if (refType.isReference() &&
+                    refType.getRefTo() != null &&
+                    referred.getNestinglevel() != par.getNestinglevel()) {
+                setReference(par, referred.getType().getRefTo());
+            } else {
+                parType.setRefTo(referred);
+            }
         }
     }
 
@@ -96,6 +120,7 @@ public class Environment {
     public void closeScope() {
         symbolsTable.pop();
         nestingLevel--;
+        restoreOffset();
     }
 
     /**
@@ -143,6 +168,11 @@ public class Environment {
         } else {
             return null;
         }
+    }
+
+    public STentry getLastEntry(String id) {
+        int here = lookupName(id, nestingLevel);
+        return symbolsTable.get(here).get(id);
     }
 
     public STentry getStEntry(String id) {
