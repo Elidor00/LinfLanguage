@@ -340,8 +340,8 @@ public class ExpTest {
                         "addi $sp $sp 2\n";
         assertEquals(test, result);
         LVM vm = runBytecode(test);
-        assertEquals(-35, vm.getA0());
-        assertEquals(-35, vm.peekMemory(MEMSIZE - 3));
+        assertEquals(2073, vm.getA0()); //-35
+        assertEquals(2073, vm.peekMemory(MEMSIZE - 3)); //-35
 
     }
 

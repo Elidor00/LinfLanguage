@@ -38,10 +38,77 @@ public class IfThenElseTest {
                     "{" +
                             "int x = 1;" +
                             "if (x == 1) then {" +
-                            "print x;" +
+                                "print x;" +
                             "} else { " +
-                            "x = 2;" +
+                                "x = 2;" +
                             "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_SimpleIfThenElseDelete() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "if (x == 1) then {" +
+                                "delete x;" +
+                            "} else { " +
+                                "delete x;" +
+                            "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_SimpleNestedIfThenElse() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "int y = 2;" +
+                            "if (x == 1) then {" +
+                                "if (y >= 1) then {" +
+                                    "x = x + 1;" +
+                                "} else { " +
+                                    "print x;" +
+                                "}" +
+                            "} else {" +
+                                "print y;" +
+                            "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_SimpleNestedIfThenElse2() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "int y = 2;" +
+                                "if (x == 1) then {" +
+                                    "print x;" +
+                                "} else {" +
+                                    "if (y >= 1) then {" +
+                                        "x = x + 1;" +
+                                    "} else { " +
+                                        "print y;" +
+                                    "}" +
+                                "}" +
                             "}"
             );
         } catch (TypeError e) {
@@ -66,6 +133,30 @@ public class IfThenElseTest {
                             "} else {" +
                                 "delete y;" +
                             "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_NestedIfThenElseDelete2() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 0;" +
+                            "int y = 0;" +
+                                "if (x == 0) then {" +
+                                    "delete y;" +
+                                "} else {" +
+                                    "if (x == 0) then {" +
+                                        "delete y;" +
+                                    "} else {" +
+                                        "delete y;" +
+                                    "}" +
+                                "}" +
                             "}"
             );
         } catch (TypeError e) {
@@ -107,7 +198,6 @@ public class IfThenElseTest {
     public void CheckType_ShouldFail_UnbalancedDeletionBehaviourError2() {
         assertThrows(UnbalancedDeletionBehaviourError.class, () -> checkType(
                 "{\n" +
-
                         "f(var int x, int y){\n" +
                         "    if (y == 0) then {\n" +
                         "        delete x;\n" +
@@ -116,7 +206,8 @@ public class IfThenElseTest {
                         "    }\n" +
                         "}\n" +
 
-                        "int x = 3 ; f(x,x) ;\n" +
+                        "int x = 3;\n " +
+                        "f(x,x) ;\n" +
                         "}"));
     }
 

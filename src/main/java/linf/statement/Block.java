@@ -19,6 +19,8 @@ import java.util.List;
 
 public class Block extends LinfStmt {
     private final List<LinfStmt> stmtList;
+    private final HashSet<IDValue> deletedIDsThenB = new HashSet<>();
+    private final HashSet<IDValue> deletedIDsElseB = new HashSet<>();
     private final HashSet<IDValue> deletedIDs = new HashSet<>();
     private final HashSet<IDValue> rwIDs = new HashSet<>();
     private HashMap<String, STentry> localEnv;
@@ -49,6 +51,14 @@ public class Block extends LinfStmt {
         return ids;
     }
 
+    private HashSet<IDValue> getDeletedIDsThenB() {
+        return filterLocalIDs(deletedIDsThenB);
+    }
+
+    private HashSet<IDValue> getDeletedIDsElseB() {
+        return filterLocalIDs(deletedIDsElseB);
+    }
+
     HashSet<IDValue> getDeletedIDs() {
         return filterLocalIDs(deletedIDs);
     }
@@ -76,9 +86,34 @@ public class Block extends LinfStmt {
         deletedIDs.addAll(delSet);
     }
 
+    private void checkDeletions(HashSet<IDValue> rwSet, HashSet<IDValue> delSet, int flag) throws TypeError {
+        for (IDValue id : rwSet) {
+            if (delSet.contains(id)) {
+                throw new IncompatibleBehaviourError(id);
+            }
+        }
+        if (flag == 1) {
+            for (IDValue id : delSet) {
+                if (deletedIDsThenB.contains(id)) {
+                    throw new DoubleDeletionError(id);
+                }
+            }
+            deletedIDsThenB.addAll(delSet);
+        } else if (flag == 0) {
+            for (IDValue id : delSet) {
+                if (deletedIDsElseB.contains(id)) {
+                    throw new DoubleDeletionError(id);
+                }
+            }
+            deletedIDsElseB.addAll(delSet);
+        }
+        rwIDs.addAll(rwSet);
+    }
+
     @Override
     public LinfType checkType() throws TypeError {
         for (LinfStmt stmt : stmtList) {
+            // check all stmt
             stmt.checkType();
             // check deletions
             if (stmt instanceof FunCall) {
@@ -89,17 +124,17 @@ public class Block extends LinfStmt {
                 checkDeletions(blk.getRwIDs(), blk.getDeletedIDs());
             } else if (stmt instanceof IfThenElse) {
                 IfThenElse ite = (IfThenElse) stmt;
-                Block then = ite.getThenBranch();
+                Block thenB = ite.getThenBranch();
                 Block elseB = ite.getElseBranch();
-                HashSet<IDValue> thenDel = then.getDeletedIDs();
-                HashSet<IDValue> elseDel = elseB.getDeletedIDs();
-                HashSet<IDValue> thenRw = then.getRwIDs();
+                HashSet<IDValue> thenDel = thenB.getDeletedIDsThenB();
+                HashSet<IDValue> elseDel = elseB.getDeletedIDsElseB();
+                HashSet<IDValue> thenRw = thenB.getRwIDs();
                 HashSet<IDValue> elseRw = elseB.getRwIDs();
                 if (!thenDel.equals(elseDel)) {
                     throw new UnbalancedDeletionBehaviourError();
                 }
-                checkDeletions(thenRw, thenDel);
-                checkDeletions(elseRw, elseDel);
+                checkDeletions(thenRw, thenDel, 1);
+                checkDeletions(elseRw, elseDel, 0);
             }
         }
         return null;
@@ -122,6 +157,8 @@ public class Block extends LinfStmt {
                 }
                 if (!env.isLocalName(id)) {
                     deletedIDs.add(((Deletion) stmt).getId());
+                    deletedIDsThenB.add(((Deletion) stmt).getId());
+                    deletedIDsElseB.add(((Deletion) stmt).getId());
                 }
             } else if (stmt instanceof VarDec) {
                 rwIDs.addAll(((VarDec) stmt).getExp().getRwIDs());
