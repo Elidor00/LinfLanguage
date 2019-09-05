@@ -76,7 +76,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_SimplePrototypeError2() {
+    public void CheckType_ShouldFail_SimplePrototypeError1() {
         assertThrows(MismatchedPrototype.class, () -> checkType(
                 "{" +
                         "f(bool x);" +
@@ -179,7 +179,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled2() {
+    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled1() {
         assertThrows(FunctionNameDeletionError.class, () -> checkType(
                 "{" +
                         "int x = 5;" +
@@ -198,7 +198,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled3() {
+    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled2() {
         assertThrows(FunctionNameDeletionError.class, () -> checkType(
                 "{" +
                         "f(int x) {" +

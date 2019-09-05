@@ -79,7 +79,76 @@ public class DeletionTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_BOH() {
+    public void CheckType_ShouldPass_OnNestedDeletion1() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "f(var int a) {" +
+                                "delete a;" +
+                            "}" +
+                            "{" +
+                                "int x = 2;" +
+                                "f(x);" +
+                            "}" +
+                            "f(x);" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_OnNestedDeletion2() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "f(var int w){" +
+                                "delete x;" +
+                                "int z = 3;" +
+                                "g(var int a){" +
+                                    "delete a;" +
+                                    "delete w;" +
+                                "}" +
+                                "g(z);"+
+                            "}" +
+                            "int y = 2;" +
+                            "f(y);" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_AssignmentAndDeletion() {
+        try {
+            checkType(
+                    "{" +
+                            "f(var int x, var int y, var bool z){" +
+                                "int w = x;" +
+                                "delete x;" +
+                                "y = y + w;" +
+                            "}" +
+                            "int x = 3;" +
+                            "int y = 4;" +
+                            "bool z = true;" +
+                            "f(x,y,z);" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldFail_DoubleDeletionError() {
         assertThrows(DoubleDeletionError.class, () -> checkType(
                     "{" +
                             "int z = 5;" +
@@ -97,5 +166,20 @@ public class DeletionTest {
                             "}"
         ));
     }
-}
 
+    @Test
+    public void CheckType_ShouldFail_DoubleDeletionError1() {
+        assertThrows(DoubleDeletionError.class, () -> checkType(
+                "{" +
+                        "int x = 1;" + // always delete this x
+                        "f(int y){" +
+                            "delete x;" +
+                        "}" +
+                        "f(42);" +
+                        "int x = 6;" +
+                        "f(41);" +
+                        "}"
+        ));
+    }
+
+}
