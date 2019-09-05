@@ -46,6 +46,10 @@ public class FunCall extends LinfStmt {
 
     @Override
     public LinfType checkType() throws TypeError {
+        // the entry can be null if the function ID was deleted before the call
+        if(entry == null) {
+            throw new FunctionNameDeletionError(id);
+        }
         FunType type = (FunType) entry.getType();
         rwIDs.addAll(type.getRwIDs());
         deletedIDs.addAll(type.getDeletedIDs());
@@ -84,7 +88,6 @@ public class FunCall extends LinfStmt {
                 }
             }
         }
-
         return null;
     }
 

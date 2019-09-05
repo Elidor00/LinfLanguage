@@ -51,9 +51,7 @@ public class Block extends LinfStmt {
         return ids;
     }
 
-    private HashSet<IDValue> getDeletedIDsThenB() {
-        return filterLocalIDs(deletedIDsThenB);
-    }
+    private HashSet<IDValue> getDeletedIDsThenB() { return filterLocalIDs(deletedIDsThenB); }
 
     private HashSet<IDValue> getDeletedIDsElseB() {
         return filterLocalIDs(deletedIDsElseB);
@@ -99,7 +97,7 @@ public class Block extends LinfStmt {
                 }
             }
             deletedIDsThenB.addAll(delSet);
-        } else if (flag == 0) {
+        } else {
             for (IDValue id : delSet) {
                 if (deletedIDsElseB.contains(id)) {
                     throw new DoubleDeletionError(id);
@@ -115,7 +113,6 @@ public class Block extends LinfStmt {
         for (LinfStmt stmt : stmtList) {
             // check all stmt
             stmt.checkType();
-            // check deletions
             if (stmt instanceof FunCall) {
                 FunCall funCall = (FunCall) stmt;
                 checkDeletions(funCall.getRwIDs(), funCall.getDeletedIDs());
@@ -133,6 +130,7 @@ public class Block extends LinfStmt {
                 if (!thenDel.equals(elseDel)) {
                     throw new UnbalancedDeletionBehaviourError();
                 }
+                // check deletions and rw for both branches
                 checkDeletions(thenRw, thenDel, 1);
                 checkDeletions(elseRw, elseDel, 0);
             }
@@ -176,13 +174,13 @@ public class Block extends LinfStmt {
     @Override
     public String codeGen() {
         StringBuilder code = new StringBuilder();
-        //check varDec inside block
+        // check varDec inside block
         long numVarDec = stmtList.stream()
                 .filter((stmt) -> stmt instanceof VarDec)
                 .count();
 
         code.append("move $fp $sp\n");
-        //codegen statement inside block
+        // codegen statement inside block
         for (LinfStmt statement : stmtList) {
             code.append(statement.codeGen());
         }

@@ -1,11 +1,6 @@
 package type;
 
-import linf.error.type.IncompatibleBehaviourError;
-import linf.error.type.ReferenceParameterError;
-import linf.error.type.TypeError;
-import linf.error.type.WrongParameterNumberError;
-import linf.error.type.WrongParameterTypeError;
-import linf.error.type.MismatchedPrototype;
+import linf.error.type.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -168,5 +163,53 @@ public class FunCallTest {
         ));
     }
 
-}
+    @Test
+    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled() {
+        assertThrows(FunctionNameDeletionError.class, () -> checkType(
+                "{" +
+                        "int x = 5;" +
+                        "f(int x) {" +
+                            "print x;" +
+                        "}" +
+                        "delete f;" +
+                        "int a = 4;" +
+                        "f(a);" +
+                        "}"
+        ));
+    }
 
+    @Test
+    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled2() {
+        assertThrows(FunctionNameDeletionError.class, () -> checkType(
+                "{" +
+                        "int x = 5;" +
+                        "f(int x) {" +
+                            "print x;" +
+                        "}" +
+                        "if (x > 2) then {" +
+                            "delete f;" +
+                        "} else {" +
+                            "x = x + 1;" +
+                        "int a = 4;" +
+                        "f(a);" +
+                        "}" +
+                        "}"
+        ));
+    }
+
+    @Test
+    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled3() {
+        assertThrows(FunctionNameDeletionError.class, () -> checkType(
+                "{" +
+                        "f(int x) {" +
+                            "delete f;" +
+                            "x = 42;" +
+                        "}" +
+                        "int y = 2;" +
+                        "f(y);" +
+                        "f(y);" +
+                        "}"
+        ));
+    }
+
+}
