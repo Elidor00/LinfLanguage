@@ -4,6 +4,7 @@ import linf.Node;
 import linf.error.semantic.SemanticError;
 import linf.error.type.IncompatibleTypesError;
 import linf.error.type.TypeError;
+import linf.type.BoolType;
 import linf.type.LinfType;
 import linf.utils.Environment;
 
@@ -46,6 +47,15 @@ public abstract class BinaryOp<LeftType extends Node, RightType extends Node> ex
             LinfType rhSideType = right.checkType();
             if (!type.getClass().equals(rhSideType.getClass())) {
                 throw new IncompatibleTypesError(type, rhSideType);
+            }
+            if (op.equals("==") || op.equals(">") || op.equals("<") || op.equals("<=") || op.equals(">=") || op.equals("!=")) {
+                return new BoolType();
+            } else if (op.equals("&&") || op.equals("||")) {
+                if (type.getClass().equals(BoolType.class)) {
+                    return new BoolType();
+                } else {
+                    throw new IncompatibleTypesError(type, rhSideType);
+                }
             }
         }
         return type;

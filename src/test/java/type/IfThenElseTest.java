@@ -51,6 +51,46 @@ public class IfThenElseTest {
     }
 
     @Test
+    public void CheckType_ShouldPass_SimpleIfThenElse3() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "bool b = false;" +
+                                "if (false && (((x + 5) < 10) || (true || (x >= 6)))) then {" +
+                                    "print x;" +
+                                "} else { " +
+                                    "x = 2;" +
+                                "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void CheckType_ShouldPass_SimpleIfThenElse4() {
+        try {
+            checkType(
+                    "{" +
+                            "int x = 1;" +
+                            "int y = 4;" +
+                                "if ( (((x + 5) > (y + 3)) && ((x - 1) <= (y - 2))) ) then {" +
+                                    "print x;" +
+                                "} else { " +
+                                    "x = 2;" +
+                                "}" +
+                            "}"
+            );
+        } catch (TypeError e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
     public void CheckType_ShouldPass_SimpleIfThenElseDelete() {
         try {
             checkType(
