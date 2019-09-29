@@ -19,7 +19,6 @@ import java.util.List;
 import static java.lang.System.exit;
 
 class App {
-
     public static void main(String[] args) {
         String fileName = "test.lnf";
 

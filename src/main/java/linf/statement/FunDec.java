@@ -41,7 +41,7 @@ public class FunDec extends FunPrototype {
             }
         }
         body.checkType();
-         return null;
+        return null;
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.util.List;
 
 public class Factor extends BinaryOp<LinfValue, LinfValue> {
 
-
     public LinfValue getValue() {
         return getLeft();
     }

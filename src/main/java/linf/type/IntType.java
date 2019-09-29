@@ -25,7 +25,7 @@ public class IntType extends LinfType {
     @Override
     public String toString() {
         String name = "int";
-        if (isReference()){
+        if (isReference()) {
             name = "var " + name;
         }
         return name;

@@ -2,11 +2,26 @@
 
 > Yet another bright and funny quotation...
 
+## Introduction
+
+
+##  Semantic Analysis
+
+
+## Type Checking
+
+
+## Code Generation
+
+
+## Conclusioni
+
+
 ## Features
 
+- Mutual Recursion
 - Static Scope
-- Deep Binding
-- Static Typing
+
 
 ## Authors
 

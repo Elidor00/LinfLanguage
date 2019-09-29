@@ -1,6 +1,5 @@
 package type;
 
-import linf.error.semantic.UnboundSymbolError;
 import linf.error.type.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,55 +104,6 @@ public class FunCallTest {
                 "    delete a;\n" +
                 "}\n" +
                 "}"));
-    }
-}
-    @Test
-    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled() {
-        assertThrows(UnboundSymbolError.class, () -> checkType(
-                "{" +
-                        "int x = 5;" +
-                        "f(int x) {" +
-                            "print x;" +
-                        "}" +
-                        "delete f;" +
-                        "int a = 4;" +
-                        "f(a);" +
-                        "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled1() {
-        assertThrows(UnboundSymbolError.class, () -> checkType(
-                "{" +
-                        "int x = 5;" +
-                        "f(int x) {" +
-                            "print x;" +
-                        "}" +
-                        "if (x > 2) then {" +
-                            "delete f;" +
-                        "} else {" +
-                            "x = x + 1;" +
-                        "int a = 4;" +
-                        "f(a);" +
-                        "}" +
-                        "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled2() {
-        assertThrows(UnboundSymbolError.class, () -> checkType(
-                "{" +
-                        "f(int x) {" +
-                            "delete f;" +
-                            "x = 42;" +
-                        "}" +
-                        "int y = 2;" +
-                        "f(y);" +
-                        "f(y);" +
-                        "}"
-        ));
     }
 
 }

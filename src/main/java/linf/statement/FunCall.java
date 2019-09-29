@@ -76,7 +76,7 @@ public class FunCall extends LinfStmt {
         ArrayList<SemanticError> res = new ArrayList<>();
 
         if (!env.containsName(id)) {
-            res.add(new FunctionDeclarationOutOfScopeError(id));
+            res.add(new UnboundSymbolError(id));
         } else {
             entry = env.getStEntry(id);
             nestingLevel = env.nestingLevel;

@@ -10,7 +10,7 @@ public class VarParameterDoubleDeletionError extends SemanticError {
 
 
     public VarParameterDoubleDeletionError(IDValue id, FunCall f) {
-        super(id.getType().toString() + " " + id +  msg + f.getId());
+        super(id.getType().toString() + " " + id + msg + f.getId());
         this.id = id;
         this.fun = f;
     }

@@ -1,6 +1,5 @@
 package type;
 
-import linf.error.type.DoubleDeletionError;
 import linf.error.type.IncompatibleTypesError;
 import linf.error.type.TypeError;
 import org.junit.Test;

@@ -16,12 +16,12 @@ public class DeletionTest {
     public void CheckType_ShouldPass_SimpleDeletion() {
         try {
             checkType(
-                "{" +
-                        "bool x = true;" +
-                        "int y = 1;" +
-                        "delete x;" +
-                        "delete y;" +
-                        "}"
+                    "{" +
+                            "bool x = true;" +
+                            "int y = 1;" +
+                            "delete x;" +
+                            "delete y;" +
+                            "}"
             );
         } catch (TypeError e) {
             e.printStackTrace();
@@ -37,19 +37,19 @@ public class DeletionTest {
                             "int x = 5;" +
                             "int y = 3;" +
                             "f(var int a, var int b){" +
-                                "delete x;" +
-                                "g() {" +
-                                    "delete a;" +
-                                    "delete y;" +
-                                "}" +
-                                "g();" +
+                            "delete x;" +
+                            "g() {" +
+                            "delete a;" +
+                            "delete y;" +
+                            "}" +
+                            "g();" +
                             "}" +
                             "{" +
-                                "{" +
-                                    "int a = 2;" +
-                                    "int b = 3;" +
-                                    "f(a,b);" +
-                                "}" +
+                            "{" +
+                            "int a = 2;" +
+                            "int b = 3;" +
+                            "f(a,b);" +
+                            "}" +
                             "}" +
                             "}"
             );
@@ -66,10 +66,10 @@ public class DeletionTest {
                     "{" +
                             "int x = 1;" +
                             "{" +
-                                "int x = 2;" +
-                                "delete x;" +
+                            "int x = 2;" +
+                            "delete x;" +
                             "}" +
-                                "delete x;" +
+                            "delete x;" +
                             "}"
             );
         } catch (TypeError e) {
@@ -85,11 +85,11 @@ public class DeletionTest {
                     "{" +
                             "int x = 1;" +
                             "f(var int a) {" +
-                                "delete a;" +
+                            "delete a;" +
                             "}" +
                             "{" +
-                                "int x = 2;" +
-                                "f(x);" +
+                            "int x = 2;" +
+                            "f(x);" +
                             "}" +
                             "f(x);" +
                             "}"
@@ -107,13 +107,13 @@ public class DeletionTest {
                     "{" +
                             "int x = 1;" +
                             "f(var int w){" +
-                                "delete x;" +
-                                "int z = 3;" +
-                                "g(var int a){" +
-                                    "delete a;" +
-                                    "delete w;" +
-                                "}" +
-                                "g(z);"+
+                            "delete x;" +
+                            "int z = 3;" +
+                            "g(var int a){" +
+                            "delete a;" +
+                            "delete w;" +
+                            "}" +
+                            "g(z);" +
                             "}" +
                             "int y = 2;" +
                             "f(y);" +
@@ -131,9 +131,9 @@ public class DeletionTest {
             checkType(
                     "{" +
                             "f(var int x, var int y, var bool z){" +
-                                "int w = x;" +
-                                "delete x;" +
-                                "y = y + w;" +
+                            "int w = x;" +
+                            "delete x;" +
+                            "y = y + w;" +
                             "}" +
                             "int x = 3;" +
                             "int y = 4;" +
@@ -150,20 +150,20 @@ public class DeletionTest {
     @Test
     public void CheckType_ShouldFail_DoubleDeletionError() {
         assertThrows(DoubleDeletionError.class, () -> checkType(
-                    "{" +
-                            "int z = 5;" +
-                            "f(var int a, var int b) {" +
-                                "{" +
-                                    "delete a;" +
-                                    "delete b;" +
-                                    "delete z;" +
-                                "}" +
-                            "}" +
-                            "{" +
-                                "int x = 3;" +
-                                "f(x,x);" +
-                            "}" +
-                            "}"
+                "{" +
+                        "int z = 5;" +
+                        "f(var int a, var int b) {" +
+                        "{" +
+                        "delete a;" +
+                        "delete b;" +
+                        "delete z;" +
+                        "}" +
+                        "}" +
+                        "{" +
+                        "int x = 3;" +
+                        "f(x,x);" +
+                        "}" +
+                        "}"
         ));
     }
 
@@ -173,7 +173,7 @@ public class DeletionTest {
                 "{" +
                         "int x = 1;" + // always delete this x
                         "f(int y){" +
-                            "delete x;" +
+                        "delete x;" +
                         "}" +
                         "f(42);" +
                         "int x = 6;" +

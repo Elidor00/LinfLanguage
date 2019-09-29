@@ -34,8 +34,8 @@ public class FunCallTest {
         );
         assertEquals(1, errors.size());
         SemanticError err = errors.get(0);
-        assertEquals(FunctionDeclarationOutOfScopeError.class, err.getClass());
-        assertEquals("f", ((FunctionDeclarationOutOfScopeError) err).getId());
+        assertEquals(UnboundSymbolError.class, err.getClass());
+        assertEquals("f", ((UnboundSymbolError) err).getId());
     }
 
     @Test
@@ -115,5 +115,62 @@ public class FunCallTest {
         assertEquals(1, errors.size());
         assertEquals(VarParameterDoubleDeletionError.class, errors.get(0).getClass());
         assertEquals("z", (((VarParameterDoubleDeletionError) errors.get(0)).getId().toString()));
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled() {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "int x = 5;" +
+                        "f(int x) {" +
+                        "print x;" +
+                        "}" +
+                        "delete f;" +
+                        "int a = 4;" +
+                        "f(a);" +
+                        "}"
+        );
+        assertEquals(1, errors.size());
+        assertEquals(UnboundSymbolError.class, errors.get(0).getClass());
+        assertEquals("f", (((UnboundSymbolError) errors.get(0)).getId()));
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled1() {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "int x = 5;" +
+                        "f(int x) {" +
+                        "print x;" +
+                        "}" +
+                        "if (x > 2) then {" +
+                        "delete f;" +
+                        "} else {" +
+                        "x = x + 1;" +
+                        "int a = 4;" +
+                        "f(a);" +
+                        "}" +
+                        "}"
+        );
+        assertEquals(1, errors.size());
+        assertEquals(UnboundSymbolError.class, errors.get(0).getClass());
+        assertEquals("f", (((UnboundSymbolError) errors.get(0)).getId()));
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled2() {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "f(int x) {" +
+                        "delete f;" +
+                        "x = 42;" +
+                        "}" +
+                        "int y = 2;" +
+                        "f(y);" +
+                        "f(y);" +
+                        "}");
+        assertEquals(1, errors.size());
+        assertEquals(UnboundSymbolError.class, errors.get(0).getClass());
+        assertEquals("f", (((UnboundSymbolError) errors.get(0)).getId()));
     }
 }

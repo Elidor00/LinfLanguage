@@ -66,9 +66,9 @@ public class LinfTests {
     }
 
     @Test
-    public void hofstadter() {
-        String hof = getCode("Hofstadter_FM.lnf");
-        LVM vm = runScript(hof);
+    public void pingPong() {
+        String ping = getCode("pingPong.lnf");
+        LVM vm = runScript(ping);
         assertNotNull(vm);
 
         List<String> out = vm.getStdOut();

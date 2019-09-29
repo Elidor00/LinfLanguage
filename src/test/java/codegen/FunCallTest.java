@@ -142,21 +142,21 @@ public class FunCallTest {
     }
 
     @Test
-    public void FunCall_WithComplexExp_ShouldJustWork(){
+    public void FunCall_WithComplexExp_ShouldJustWork() {
         String actual = cgen("{\n" +
                 "fun(int y, int x, var int out) {\n" +
                 "if(y == 0) then {\n" +
                 "out = x;\n" +
                 "}else{\n" +
                 "fun(y - 1, x, out);\n" +
-                "}\n"+
+                "}\n" +
                 "}\n" +
                 "int out = 0;\n" +
                 "int x = 7;\n" +
                 "fun(10," +
                 "x * x * (23984 / (27 - 54 * 8)) + x * (x - 1) ," +
                 "out);\n" +
-                "print out;\n"+
+                "print out;\n" +
                 "}");
 
         LVM vm = runBytecode(actual);
@@ -783,7 +783,7 @@ public class FunCallTest {
 
                 // print k
                 "lw $a0 0($fp)\n" +
-                "print\n"+
+                "print\n" +
 
                 // end block
                 "addi $sp $sp 1\n" +

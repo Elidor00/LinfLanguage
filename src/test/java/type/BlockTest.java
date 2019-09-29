@@ -1,6 +1,5 @@
 package type;
 
-import linf.error.semantic.VarParameterDoubleDeletionError;
 import linf.error.type.DoubleDeletionError;
 import linf.error.type.IncompatibleBehaviourError;
 import linf.error.type.TypeError;
@@ -29,7 +28,6 @@ public class BlockTest {
 
                 "}");
     }
-
 
 
     @Test

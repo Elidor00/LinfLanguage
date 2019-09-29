@@ -4,7 +4,6 @@ package semantic;
 import linf.error.semantic.IllegalDeletionError;
 import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;
-import linf.error.semantic.VarParameterDoubleDeletionError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
