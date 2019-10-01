@@ -29,7 +29,7 @@ public class Deletion extends LinfStmt {
     public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>(id.checkSemantics(env));
         if (env.getStEntry(id) != null) {
-            env.deleteName(id.toString());
+           env.deleteName(id.toString());
         }
         return res;
     }

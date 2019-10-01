@@ -106,6 +106,7 @@ public class DeletionTest {
             checkType(
                     "{" +
                             "int x = 1;" +
+
                             "f(var int w){" +
                             "delete x;" +
                             "int z = 3;" +
@@ -113,8 +114,10 @@ public class DeletionTest {
                             "delete a;" +
                             "delete w;" +
                             "}" +
+
                             "g(z);" +
                             "}" +
+
                             "int y = 2;" +
                             "f(y);" +
                             "}"
@@ -145,26 +148,6 @@ public class DeletionTest {
             e.printStackTrace();
             assert false;
         }
-    }
-
-    @Test
-    public void CheckType_ShouldFail_DoubleDeletionError() {
-        assertThrows(DoubleDeletionError.class, () -> checkType(
-                "{" +
-                        "int z = 5;" +
-                        "f(var int a, var int b) {" +
-                        "{" +
-                        "delete a;" +
-                        "delete b;" +
-                        "delete z;" +
-                        "}" +
-                        "}" +
-                        "{" +
-                        "int x = 3;" +
-                        "f(x,x);" +
-                        "}" +
-                        "}"
-        ));
     }
 
     @Test

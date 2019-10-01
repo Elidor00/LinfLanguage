@@ -60,32 +60,31 @@ public class Block extends LinfStmt {
         isAR = true;
     }
 
-    private void checkDeletions(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
+    private void checkBehavior(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
         for (IDValue id : rwSet) {
             if (delSet.contains(id)) {
                 throw new IncompatibleBehaviourError(id);
             }
         }
+    }
+
+    private void checkDeletions(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
         for (IDValue id : delSet) {
             if (getDeletedIDs().contains(id)) {
                 throw new DoubleDeletionError(id);
             }
         }
-        rwIDs.addAll(rwSet);
-        deletedIDs.addAll(delSet);
+        checkBehavior(rwSet, delSet);
     }
 
     @Override
     public LinfType checkType() throws TypeError {
         for (LinfStmt stmt : stmtList) {
-
+            stmt.checkType();
             // check deletions
             if (stmt instanceof FunCall) {
                 FunCall funCall = (FunCall) stmt;
                 checkDeletions(funCall.getRwIDs(), funCall.getDeletedIDs());
-            } else if (stmt instanceof FunDec) {
-                Block blk = ((FunDec) stmt).getBody();
-                checkDeletions(blk.getRwIDs(), blk.getDeletedIDs());
             } else if (stmt instanceof Block) {
                 Block blk = (Block) stmt;
                 checkDeletions(blk.getRwIDs(), blk.getDeletedIDs());
@@ -102,9 +101,11 @@ public class Block extends LinfStmt {
                 }
                 checkDeletions(thenRw, thenDel);
                 checkDeletions(elseRw, elseDel);
+                deletedIDs.addAll(thenDel);
+                rwIDs.addAll(thenRw);
+                rwIDs.addAll(elseRw);
             }
-            checkDeletions(rwIDs, deletedIDs);
-            stmt.checkType();
+            checkBehavior(rwIDs, deletedIDs);
         }
         return null;
     }
@@ -123,8 +124,7 @@ public class Block extends LinfStmt {
                 IDValue id = ((Deletion) stmt).getId();
                 if (deletedIDs.contains(id)) {
                     errors.add(new IllegalDeletionError(id));
-                }
-                if (!env.isLocalName(id)) {
+                } else {
                     deletedIDs.add(id);
                 }
             } else if (stmt instanceof VarDec) {

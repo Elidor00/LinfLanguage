@@ -1,10 +1,34 @@
 package linf.expression;
 
+import linf.error.type.IncompatibleTypesError;
+import linf.error.type.TypeError;
+import linf.type.BoolType;
+import linf.type.LinfType;
 import linf.utils.LinfLib;
 
 import java.util.List;
 
 public class Factor extends BinaryOp<LinfValue, LinfValue> {
+
+    @Override
+    public LinfType checkType() throws TypeError {
+        LinfType type = super.checkType();
+        String op = getOp();
+        LinfValue right = getRight();
+        if (right != null && op != null) {
+            LinfType rhSideType = right.checkType();
+            if (op.equals("==") || op.equals(">") || op.equals("<") || op.equals("<=") || op.equals(">=") || op.equals("!=")) {
+                return new BoolType();
+            } else if (op.equals("&&") || op.equals("||")) {
+                if (type.getClass().equals(BoolType.class)) {
+                    return new BoolType();
+                } else {
+                    throw new IncompatibleTypesError(type, rhSideType);
+                }
+            }
+        }
+        return type;
+    }
 
     public LinfValue getValue() {
         return getLeft();

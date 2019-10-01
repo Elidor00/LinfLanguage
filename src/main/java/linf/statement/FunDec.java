@@ -59,8 +59,8 @@ public class FunDec extends FunPrototype {
         for (int i = 0; i < getParList().size(); i++) {
             Parameter par = getParList().get(i);
             if (envEntry != null) {
-                env.setReference(((FunType) type)
-                        .getParEntries().get(i), par.getEntry());
+                env.setReference(((FunType) type).getParEntries().get(i),
+                        par.getEntry());
             }
             String parID = par.getId();
             delIDs.remove(parID);

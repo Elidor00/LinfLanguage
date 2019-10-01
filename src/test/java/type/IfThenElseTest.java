@@ -128,15 +128,19 @@ public class IfThenElseTest {
                 "{" +
                         "int x = 0;" +
                         "int y = 0;" +
+
                         "if (x == 0) then {" +
+
                         "if (x == 0) then {" +
                         "delete y;" +
                         "} else {" +
                         "delete y;" +
                         "}" +
+
                         "} else {" +
                         "delete y;" +
                         "}" +
+
                         "}"
         );
     }

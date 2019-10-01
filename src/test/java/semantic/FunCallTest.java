@@ -115,6 +115,50 @@ public class FunCallTest {
         assertEquals(1, errors.size());
         assertEquals(VarParameterDoubleDeletionError.class, errors.get(0).getClass());
         assertEquals("z", (((VarParameterDoubleDeletionError) errors.get(0)).getId().toString()));
+        assertEquals("g", ((VarParameterDoubleDeletionError) errors.get(0)).getFun().getId());
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarId3() {
+        List<SemanticError> errors = checkSemantics("{\n" +
+
+                "g(var bool x, var bool y){ delete x ; delete y ;}\n" +
+
+                "f(var bool z){ g(z,z) ; }\n" +
+
+                "bool x = true ; f(x) ;\n" +
+
+                "}");
+        assertEquals(1, errors.size());
+
+        SemanticError err = errors.get(0);
+        assertEquals(VarParameterDoubleDeletionError.class, err.getClass());
+        assertEquals("z", ((VarParameterDoubleDeletionError) err).getId().toString());
+        assertEquals("g", ((VarParameterDoubleDeletionError) err).getFun().getId());
+    }
+
+    @Test
+    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarId4() {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "int z = 5;" +
+                        "f(var int a, var int b) {" +
+                        "{" +
+                        "delete a;" +
+                        "delete b;" +
+                        "delete z;" +
+                        "}" +
+                        "}" +
+                        "{" +
+                        "int x = 3;" +
+                        "f(x,x);" +
+                        "}" +
+                        "}"
+        );
+        SemanticError err = errors.get(0);
+        assertEquals(VarParameterDoubleDeletionError.class, err.getClass());
+        assertEquals("x", ((VarParameterDoubleDeletionError) err).getId().toString());
+        assertEquals("f", ((VarParameterDoubleDeletionError) err).getFun().getId());
     }
 
     @Test

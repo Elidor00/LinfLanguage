@@ -48,15 +48,6 @@ public abstract class BinaryOp<LeftType extends Node, RightType extends Node> ex
             if (!type.getClass().equals(rhSideType.getClass())) {
                 throw new IncompatibleTypesError(type, rhSideType);
             }
-            if (op.equals("==") || op.equals(">") || op.equals("<") || op.equals("<=") || op.equals(">=") || op.equals("!=")) {
-                return new BoolType();
-            } else if (op.equals("&&") || op.equals("||")) {
-                if (type.getClass().equals(BoolType.class)) {
-                    return new BoolType();
-                } else {
-                    throw new IncompatibleTypesError(type, rhSideType);
-                }
-            }
         }
         return type;
     }
