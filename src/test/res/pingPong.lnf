@@ -6,7 +6,8 @@ pong(var int out);
 
 ping(var int out){
         if (out == 0) then { print 1000;} else {
-             if (((out / 2) * 2) == out) then {
+             int doubleHalfOut = ((out / 2) * 2) ;
+             if (doubleHalfOut == out) then {
                  print 0;
              } else {}
              out = out  - 1;
@@ -16,7 +17,9 @@ ping(var int out){
 
 pong(var int out){
         if (out == 0) then { print 1000;} else {
-             if ((((out / 2) * 2) == out) == false) then {
+             int doubleHalfOut = ((out / 2) * 2) ;
+             bool outIsEven = doubleHalfOut == out;
+             if (outIsEven == false) then {
                  print 1;
              } else {}
              out = out  - 1;

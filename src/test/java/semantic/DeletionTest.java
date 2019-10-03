@@ -61,11 +61,11 @@ public class DeletionTest {
         );
         assertEquals(2, errors.size());
         SemanticError err = errors.get(0);
-        assertEquals(UnboundSymbolError.class, err.getClass());
-        assertEquals("y", ((UnboundSymbolError) err).getId());
-        err = errors.get(1);
         assertEquals(IllegalDeletionError.class, err.getClass());
         assertEquals("y", ((IllegalDeletionError) err).getId());
+        err = errors.get(1);
+        assertEquals(UnboundSymbolError.class, err.getClass());
+        assertEquals("y", ((UnboundSymbolError) err).getId());
     }
 
     @Test
@@ -79,11 +79,11 @@ public class DeletionTest {
         );
         assertEquals(2, errors.size());
 
-        SemanticError err = errors.get(0);
+        SemanticError err = errors.get(1);
         assertEquals(UnboundSymbolError.class, err.getClass());
         assertEquals("y", ((UnboundSymbolError) err).getId());
 
-        err = errors.get(1);
+        err = errors.get(0);
         assertEquals(IllegalDeletionError.class, err.getClass());
         assertEquals("y", ((IllegalDeletionError) err).getId());
     }

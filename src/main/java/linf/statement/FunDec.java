@@ -3,7 +3,6 @@ package linf.statement;
 import linf.error.semantic.SemanticError;
 import linf.error.type.MismatchedPrototype;
 import linf.error.type.TypeError;
-import linf.expression.IDValue;
 import linf.type.FunType;
 import linf.type.LinfType;
 import linf.utils.Environment;
@@ -54,8 +53,8 @@ public class FunDec extends FunPrototype {
         }
         body.setLocalEnv(scope);
         res.addAll(body.checkSemantics(env));
-        HashSet<IDValue> delIDs = body.getDeletedIDs();
-        HashSet<IDValue> rwIDs = body.getRwIDs();
+        HashSet<STentry> delIDs = body.getDeletedIDs();
+        HashSet<STentry> rwIDs = body.getRwIDs();
         for (int i = 0; i < getParList().size(); i++) {
             Parameter par = getParList().get(i);
             if (envEntry != null) {

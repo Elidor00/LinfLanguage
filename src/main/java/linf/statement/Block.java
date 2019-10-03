@@ -1,6 +1,5 @@
 package linf.statement;
 
-import linf.error.semantic.IllegalDeletionError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.DoubleDeletionError;
 import linf.error.type.IncompatibleBehaviourError;
@@ -19,8 +18,8 @@ import java.util.List;
 
 public class Block extends LinfStmt {
     private final List<LinfStmt> stmtList;
-    private final HashSet<IDValue> deletedIDs = new HashSet<>();
-    private final HashSet<IDValue> rwIDs = new HashSet<>();
+    private final HashSet<STentry> deletedIDs = new HashSet<>();
+    private final HashSet<STentry> rwIDs = new HashSet<>();
     private HashMap<String, STentry> localEnv;
     private int nestingLevel;
     private boolean isAR = false;
@@ -33,26 +32,21 @@ public class Block extends LinfStmt {
         this.localEnv = localEnv;
     }
 
-    private HashSet<IDValue> filterLocalIDs(HashSet<IDValue> idSet) {
-        HashSet<IDValue> ids = new HashSet<>(idSet);
-        for (IDValue id : idSet) {
-            String idName = id.toString();
-            if (localEnv.containsKey(idName)) {
-                STentry localEntry = localEnv.get(idName);
-                STentry idEntry = id.getEntry();
-                if (localEntry.getNestinglevel() == idEntry.getNestinglevel()) {
-                    ids.remove(id);
-                }
+    private HashSet<STentry> filterLocalIDs(HashSet<STentry> idSet) {
+        HashSet<STentry> ids = new HashSet<>(idSet);
+        for (STentry id : idSet) {
+            if (nestingLevel == id.getNestinglevel()) {
+                ids.remove(id);
             }
         }
         return ids;
     }
 
-    HashSet<IDValue> getDeletedIDs() {
+    HashSet<STentry> getDeletedIDs() {
         return filterLocalIDs(deletedIDs);
     }
 
-    HashSet<IDValue> getRwIDs() {
+    HashSet<STentry> getRwIDs() {
         return filterLocalIDs(rwIDs);
     }
 
@@ -60,18 +54,18 @@ public class Block extends LinfStmt {
         isAR = true;
     }
 
-    private void checkBehavior(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
-        for (IDValue id : rwSet) {
+    private void checkBehavior(HashSet<STentry> rwSet, HashSet<STentry> delSet) throws TypeError {
+        for (STentry id : rwSet) {
             if (delSet.contains(id)) {
-                throw new IncompatibleBehaviourError(id);
+                throw new IncompatibleBehaviourError(id.getName());
             }
         }
     }
 
-    private void checkDeletions(HashSet<IDValue> rwSet, HashSet<IDValue> delSet) throws TypeError {
-        for (IDValue id : delSet) {
-            if (getDeletedIDs().contains(id)) {
-                throw new DoubleDeletionError(id);
+    private void checkDeletions(HashSet<STentry> rwSet, HashSet<STentry> delSet) throws TypeError {
+        for (STentry id : delSet) {
+            if (deletedIDs.contains(id)) {
+                throw new DoubleDeletionError(id.getName());
             }
         }
         checkBehavior(rwSet, delSet);
@@ -85,17 +79,21 @@ public class Block extends LinfStmt {
             if (stmt instanceof FunCall) {
                 FunCall funCall = (FunCall) stmt;
                 checkDeletions(funCall.getRwIDs(), funCall.getDeletedIDs());
+                deletedIDs.addAll(funCall.getDeletedIDs());
+                rwIDs.addAll(funCall.getRwIDs());
             } else if (stmt instanceof Block) {
                 Block blk = (Block) stmt;
                 checkDeletions(blk.getRwIDs(), blk.getDeletedIDs());
+                deletedIDs.addAll(blk.getDeletedIDs());
+                rwIDs.addAll(blk.getRwIDs());
             } else if (stmt instanceof IfThenElse) {
                 IfThenElse ite = (IfThenElse) stmt;
                 Block thenB = ite.getThenBranch();
                 Block elseB = ite.getElseBranch();
-                HashSet<IDValue> thenDel = thenB.getDeletedIDs();
-                HashSet<IDValue> elseDel = elseB.getDeletedIDs();
-                HashSet<IDValue> thenRw = thenB.getRwIDs();
-                HashSet<IDValue> elseRw = elseB.getRwIDs();
+                HashSet<STentry> thenDel = thenB.getDeletedIDs();
+                HashSet<STentry> elseDel = elseB.getDeletedIDs();
+                HashSet<STentry> thenRw = thenB.getRwIDs();
+                HashSet<STentry> elseRw = elseB.getRwIDs();
                 if (!thenDel.equals(elseDel)) {
                     throw new UnbalancedDeletionBehaviourError();
                 }
@@ -118,27 +116,25 @@ public class Block extends LinfStmt {
         nestingLevel = env.nestingLevel;
 
         for (LinfStmt stmt : stmtList) {
-            errors.addAll(stmt.checkSemantics(env));
+            List<SemanticError> errs = stmt.checkSemantics(env);
+            errors.addAll(errs);
 
-            if (stmt instanceof Deletion) {
-                IDValue id = ((Deletion) stmt).getId();
-                if (deletedIDs.contains(id)) {
-                    errors.add(new IllegalDeletionError(id));
-                } else {
-                    deletedIDs.add(id);
+            if (errs.size() == 0) {
+                if (stmt instanceof Deletion) {
+                    Deletion del = (Deletion) stmt;
+                    deletedIDs.add(del.getEntry());
                 }
-            } else if (stmt instanceof VarDec) {
-                rwIDs.addAll(((VarDec) stmt).getExp().getRwIDs());
-            } else if (stmt instanceof Assignment) {
-                rwIDs.add(((Assignment) stmt).getId());
-                rwIDs.addAll(((Assignment) stmt).getExp().getRwIDs());
-            } else if (stmt instanceof FunCall) {
-                deletedIDs.addAll(((FunCall) stmt).getDeletedIDs());
-                rwIDs.addAll(((FunCall) stmt).getRwIDs());
+                if (stmt instanceof VarDec) {
+                    rwIDs.addAll(((VarDec) stmt).getExp().getRwIDs());
+                } else if (stmt instanceof Assignment) {
+                    IDValue id = ((Assignment) stmt).getId();
+                    rwIDs.add(env.getLastEntry(id.toString(), env.nestingLevel));
+                    rwIDs.addAll(((Assignment) stmt).getExp().getRwIDs());
+                }
             }
         }
 
-        localEnv = env.local();
+
         env.closeScope();
         return errors;
     }

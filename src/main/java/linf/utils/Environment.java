@@ -4,14 +4,12 @@ import linf.expression.IDValue;
 import linf.type.FunType;
 import linf.type.LinfType;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Environment {
     // List of hash tables
     private final LinkedList<HashMap<String, STentry>> symbolsTable = new LinkedList<>();
+    private final LinkedList<HashSet<STentry>> deletedIDs = new LinkedList<>();
     public int nestingLevel = -1;
     private int offset = 0;
 
@@ -46,7 +44,7 @@ public class Environment {
     public void addName(String id, LinfType type) {
         assert type != null;
         assert id != null;
-        STentry entry = new STentry(nestingLevel, offset, type);
+        STentry entry = new STentry(nestingLevel, offset, type, id);
         symbolsTable.peek().put(id, entry);
         if (!(type instanceof FunType)) {
             offset--;
@@ -98,19 +96,15 @@ public class Environment {
      * Inserts a new scope into the environment.
      */
     private void openScope() {
-        symbolsTable.push(new HashMap<>());
         nestingLevel++;
         resetOffset();
     }
 
     public void openScope(HashMap<String, STentry> scope) {
-        if (scope == null) {
-            openScope();
-        } else {
-            symbolsTable.push(scope);
-            nestingLevel++;
-            resetOffset();
-        }
+        symbolsTable.push(Objects.requireNonNullElseGet(scope, HashMap::new));
+        deletedIDs.push(new HashSet<>());
+        nestingLevel++;
+        resetOffset();
     }
 
     /**
@@ -119,6 +113,7 @@ public class Environment {
      */
     public void closeScope() {
         symbolsTable.pop();
+        deletedIDs.pop();
         nestingLevel--;
         restoreOffset();
     }
@@ -160,7 +155,7 @@ public class Environment {
         int here = lookupName(id, nl);
         if (here > -1) {
             STentry entry = symbolsTable.get(here).get(id);
-            if (entry.getType().isDeleted()) {
+            if (isDeleted(entry, here)) {
                 return getStEntry(id, here - 1);
             } else {
                 return entry;
@@ -170,9 +165,14 @@ public class Environment {
         }
     }
 
-    public STentry getLastEntry(String id) {
+    public STentry getLastEntry(String id, int nestingLevel) {
         int here = lookupName(id, nestingLevel);
-        return symbolsTable.get(here).get(id);
+
+        if (here > -1) {
+            return symbolsTable.get(here).get(id);
+        } else {
+            return null;
+        }
     }
 
     public STentry getStEntry(String id) {
@@ -200,10 +200,30 @@ public class Environment {
      * @param id
      */
     public void deleteName(String id) {
+        deleteName(id, nestingLevel);
+    }
+
+    public void deleteName(String id, int nestingLevel) {
         int here = lookupName(id, nestingLevel);
         if (here > -1) {
-            LinfType type = symbolsTable.get(here).get(id).getType();
+            STentry entry = symbolsTable.get(here).get(id);
+            LinfType type = entry.getType();
+            deletedIDs.peek().add(entry);
             type.setDeleted(true);
+        }
+    }
+
+    public boolean isDeleted(STentry entry) {
+        return isDeleted(entry, nestingLevel);
+    }
+
+    public boolean isDeleted(STentry entry, int nestingLevel) {
+        if (deletedIDs.get(nestingLevel).contains(entry)) {
+            return true;
+        } else if (nestingLevel > 0) {
+            return isDeleted(entry, nestingLevel - 1);
+        } else {
+            return false;
         }
     }
 }

@@ -25,8 +25,8 @@ public class FunCall extends LinfStmt {
     private STentry entry;
     private int nestingLevel;
 
-    private HashSet<IDValue> rwIDs = new HashSet<>();
-    private HashSet<IDValue> deletedIDs = new HashSet<>();
+    private HashSet<STentry> rwIDs = new HashSet<>();
+    private HashSet<STentry> deletedIDs = new HashSet<>();
 
     public FunCall(String id) {
         this.id = id;
@@ -40,18 +40,16 @@ public class FunCall extends LinfStmt {
         actualParList.add(exp);
     }
 
-    HashSet<IDValue> getRwIDs() {
+    HashSet<STentry> getRwIDs() {
         return rwIDs;
     }
 
-    HashSet<IDValue> getDeletedIDs() {
+    HashSet<STentry> getDeletedIDs() {
         return deletedIDs;
     }
 
     @Override
     public LinfType checkType() throws TypeError {
-        FunType type = (FunType) entry.getType();
-
         for (int i = 0; i < formalParTypes.size(); i++) {
             Exp exp = actualParList.get(i);
             LinfType formalType = formalParTypes.get(i);
@@ -93,6 +91,13 @@ public class FunCall extends LinfStmt {
                     for (Exp exp : actualParList) {
                         res.addAll(exp.checkSemantics(env));
                     }
+                    for (STentry entry : deletedIDs) {
+                        if (env.isDeleted(entry, this.entry.getNestinglevel())) {
+                            res.add(new IllegalDeletionError(entry.getName()));
+                        } else {
+                            env.deleteName(entry.getName(), this.entry.getNestinglevel());
+                        }
+                    }
                     for (int i = 0; i < formalParTypes.size(); i++) {
                         Exp exp = actualParList.get(i);
                         LinfType formalType = formalParTypes.get(i);
@@ -100,18 +105,17 @@ public class FunCall extends LinfStmt {
                             env.setReference(type.getParEntries().get(i), exp.toIDValue().getEntry());
                             // checking deleted parameters
                             IDValue idValue = exp.toIDValue();
-                            STentry entry = idValue.getEntry();
+                            STentry entry = env.getLastEntry(idValue.toString(), idValue.getNestingLevel());
                             if (formalType.isDeleted()) {
-                                env.deleteName(exp.toString());
-
-                                if (deletedIDs.contains(idValue)) {
+                                env.deleteName(idValue.toString());
+                                if (deletedIDs.contains(entry)) {
                                     res.add(new VarParameterDoubleDeletionError(idValue, this));
                                 } else {
-                                    deletedIDs.add(idValue);
+                                    deletedIDs.add(entry);
                                 }
                             }
                             if (formalType.isRwAccess()) {
-                                rwIDs.add(idValue);
+                                rwIDs.add(entry);
                             }
                         }
                     }

@@ -180,28 +180,6 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled1() {
-        List<SemanticError> errors = checkSemantics(
-                "{" +
-                        "int x = 5;" +
-                        "f(int x) {" +
-                        "print x;" +
-                        "}" +
-                        "if (x > 2) then {" +
-                        "delete f;" +
-                        "} else {" +
-                        "x = x + 1;" +
-                        "int a = 4;" +
-                        "f(a);" +
-                        "}" +
-                        "}"
-        );
-        assertEquals(1, errors.size());
-        assertEquals(UnboundSymbolError.class, errors.get(0).getClass());
-        assertEquals("f", (((UnboundSymbolError) errors.get(0)).getId()));
-    }
-
-    @Test
     public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled2() {
         List<SemanticError> errors = checkSemantics(
                 "{" +
@@ -217,4 +195,5 @@ public class FunCallTest {
         assertEquals(UnboundSymbolError.class, errors.get(0).getClass());
         assertEquals("f", (((UnboundSymbolError) errors.get(0)).getId()));
     }
+
 }

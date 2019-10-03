@@ -2,18 +2,24 @@ package linf.utils;
 
 import linf.type.LinfType;
 
-import java.util.Objects;
-
 public class STentry {
 
     private final int nestingLevel;
     private final int offset;
     private final LinfType type;
+    private final String name;
 
-    public STentry(int n, int o, LinfType t) {
+    public STentry(int n, int o, LinfType t, String name) {
+        assert t != null;
+        assert name != null;
         nestingLevel = n;
         offset = o;
         type = t;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public LinfType getType() {
@@ -28,19 +34,25 @@ public class STentry {
         return offset;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         STentry sTentry = (STentry) o;
-        return nestingLevel == sTentry.nestingLevel &&
-                offset == sTentry.getOffset() &&
-                getType().equals(sTentry.getType());
+
+        if (nestingLevel != sTentry.nestingLevel) return false;
+        if (offset != sTentry.offset) return false;
+        return type.equals(sTentry.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nestingLevel, getType());
+        int result = nestingLevel;
+        result = 31 * result + offset;
+        result = 31 * result + type.hashCode();
+        return result;
     }
 }
 

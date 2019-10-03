@@ -13,69 +13,54 @@ import static utils.TestUtils.checkType;
 public class DeletionTest {
 
     @Test
-    public void CheckType_ShouldPass_SimpleDeletion() {
-        try {
-            checkType(
-                    "{" +
-                            "bool x = true;" +
-                            "int y = 1;" +
-                            "delete x;" +
-                            "delete y;" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SimpleDeletion() throws TypeError {
+        checkType(
+                "{" +
+                        "bool x = true;" +
+                        "int y = 1;" +
+                        "delete x;" +
+                        "delete y;" +
+                        "}"
+        );
     }
 
     @Test
-    public void CheckType_ShouldPass_MultipleDeletion() {
-        try {
-            checkType(
-                    "{" +
-                            "int x = 5;" +
-                            "int y = 3;" +
-                            "f(var int a, var int b){" +
-                            "delete x;" +
-                            "g() {" +
-                            "delete a;" +
-                            "delete y;" +
-                            "}" +
-                            "g();" +
-                            "}" +
-                            "{" +
-                            "{" +
-                            "int a = 2;" +
-                            "int b = 3;" +
-                            "f(a,b);" +
-                            "}" +
-                            "}" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_MultipleDeletion() throws TypeError {
+        checkType(
+                "{" +
+                        "int x = 5;" +
+                        "int y = 3;" +
+                        "f(var int a, var int b){" +
+                        "delete x;" +
+                        "g() {" +
+                        "delete a;" +
+                        "delete y;" +
+                        "}" +
+                        "g();" +
+                        "}" +
+                        "{" +
+                        "{" +
+                        "int a = 2;" +
+                        "int b = 3;" +
+                        "f(a,b);" +
+                        "}" +
+                        "}" +
+                        "}"
+        );
     }
 
     @Test
-    public void CheckType_ShouldPass_OnNestedDeletion() {
-        try {
-            checkType(
-                    "{" +
-                            "int x = 1;" +
-                            "{" +
-                            "int x = 2;" +
-                            "delete x;" +
-                            "}" +
-                            "delete x;" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_OnNestedDeletion() throws TypeError {
+        checkType(
+                "{" +
+                        "int x = 1;" +
+                        "{" +
+                        "int x = 2;" +
+                        "delete x;" +
+                        "}" +
+                        "delete x;" +
+                        "}"
+        );
     }
 
     @Test

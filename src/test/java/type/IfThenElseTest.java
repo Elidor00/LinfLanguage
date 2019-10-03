@@ -267,4 +267,23 @@ public class IfThenElseTest {
         ));
     }
 
+    @Test
+    public void CheckType_ShouldFail_FunctionIdDeletedBeforeCalled1() {
+        assertThrows(UnbalancedDeletionBehaviourError.class, () -> checkType(
+                "{" +
+                        "int x = 5;" +
+                        "f(int x) {" +
+                        "print x;" +
+                        "}" +
+                        "if (x > 2) then {" +
+                        "delete f;" +
+                        "} else {" +
+                        "x = x + 1;" +
+                        "int a = 4;" +
+                        "f(a);" +
+                        "}" +
+                        "}"
+        ));
+    }
+
 }

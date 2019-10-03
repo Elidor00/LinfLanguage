@@ -4,7 +4,6 @@ package semantic;
 import linf.error.semantic.IllegalDeletionError;
 import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;
-import linf.error.semantic.VarParameterDoubleDeletionError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,11 +33,11 @@ public class BlockTest {
 
         assertEquals(2, errors.size());
 
-        SemanticError err = errors.get(0);
+        SemanticError err = errors.get(1);
         assertEquals(UnboundSymbolError.class, err.getClass());
         assertEquals("x", ((UnboundSymbolError) err).getId());
 
-        err = errors.get(1);
+        err = errors.get(0);
         assertEquals(IllegalDeletionError.class, err.getClass());
         assertEquals("x", ((IllegalDeletionError) err).getId());
     }

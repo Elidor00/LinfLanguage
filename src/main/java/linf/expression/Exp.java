@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Exp extends BinaryOp<Term, Exp> {
-    private final HashSet<IDValue> rwIDs = new HashSet<>();
+    private final HashSet<STentry> rwIDs = new HashSet<>();
     private boolean isNegative;
 
     public void setTerm(Term term) {
@@ -19,7 +19,7 @@ public class Exp extends BinaryOp<Term, Exp> {
         isNegative = negative;
     }
 
-    public HashSet<IDValue> getRwIDs() {
+    public HashSet<STentry> getRwIDs() {
         return rwIDs;
     }
 
@@ -38,7 +38,7 @@ public class Exp extends BinaryOp<Term, Exp> {
         List<SemanticError> res = super.checkSemantics(env);
         // populates rwIDs with all identifiers which are not local to this scope
         if (isID() && !(env.isLocalName(this.toString()))) {
-            rwIDs.add((IDValue) getLeft().getFactor().getValue());
+            rwIDs.add(env.getStEntry((IDValue) getLeft().getFactor().getValue()));
         } else {
             LinfValue val = getLeft().getFactor().getValue();
             Exp right = getRight();
@@ -50,8 +50,7 @@ public class Exp extends BinaryOp<Term, Exp> {
             }
         }
 
-        for (IDValue id : rwIDs) {
-            STentry entry = env.getStEntry(id);
+        for (STentry entry : rwIDs) {
             if (entry != null) {
                 entry.getType().setRwAccess();
             }

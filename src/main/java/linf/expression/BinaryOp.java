@@ -4,7 +4,6 @@ import linf.Node;
 import linf.error.semantic.SemanticError;
 import linf.error.type.IncompatibleTypesError;
 import linf.error.type.TypeError;
-import linf.type.BoolType;
 import linf.type.LinfType;
 import linf.utils.Environment;
 
