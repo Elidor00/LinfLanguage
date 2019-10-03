@@ -5,32 +5,24 @@ ping(var int out);
 pong(var int out);
 
 ping(var int out){
-        if (out == 0) then { print 1000;} else {
-             int doubleHalfOut = ((out / 2) * 2) ;
-             if (doubleHalfOut == out) then {
-                 print 0;
-             } else {}
+        if (out <= 0) then { print 1000;} else {
              out = out  - 1;
              pong(out);
         }
 }
 
 pong(var int out){
-        if (out == 0) then { print 1000;} else {
-             int doubleHalfOut = ((out / 2) * 2) ;
-             bool outIsEven = doubleHalfOut == out;
-             if (outIsEven == false) then {
-                 print 1;
-             } else {}
+        if (out <= 0) then { print 1001;} else {
              out = out  - 1;
              ping(out);
         }
 }
 
 ping(out);
-print out;
 
 out = 12;
 pong(out);
-print out;
+
+out = 50;
+ping(out);
 }

@@ -67,16 +67,16 @@ public class LinfTests {
 
     @Test
     public void pingPong() {
-        /*String ping = getCode("pingPong.lnf");
-        System.out.println(cgen(ping));
+        String ping = getCode("pingPong.lnf");
         LVM vm = runScript(ping);
         assertNotNull(vm);
 
         List<String> out = vm.getStdOut();
-        assertEquals(2, out.size());
-        assertEquals("8", out.get(0));
-        assertEquals("7", out.get(1));
-        assertEquals(7, vm.peekMemory(MEMSIZE - 4));*/
+        assertEquals(3, out.size());
+        assertEquals("1000", out.get(0));
+        assertEquals("1001", out.get(1));
+        assertEquals("1000", out.get(2));
+        assertEquals(0, vm.peekMemory(MEMSIZE - 4));
     }
 
     @Test
