@@ -1,6 +1,7 @@
 package app;
 
 import linf.LinfVisitorImpl;
+import linf.error.lexical.LexicalErrorListener;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
 import linf.parser.ComplexStaticAnalysisLexer;
@@ -12,8 +13,10 @@ import lvm.error.LVMError;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.System.exit;
@@ -27,15 +30,23 @@ class App {
 
             //create lexer
             ComplexStaticAnalysisLexer lexer = new ComplexStaticAnalysisLexer(input);
-            //create parser
+            LexicalErrorListener listener = new LexicalErrorListener();
+     //       lexer.removeErrorListeners();
+        //    lexer.addErrorListener(listener);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+            if(listener.getErrors().size() > 0) {
+                System.exit(-1);
+            }
+
+            //create parser
             ComplexStaticAnalysisParser parser = new ComplexStaticAnalysisParser(tokens);
             parser.setBuildParseTree(true);
 
             //create custom visitor
             LinfVisitorImpl visitor = new LinfVisitorImpl();
 
-            /*
+
             ArrayList<String> lexerErrors = new ArrayList<>(); //list of LEXICAL errors
             //check LEXICAL errors
             for (Token t : lexer.getAllTokens()) { //get all token
@@ -53,7 +64,8 @@ class App {
                 exit(-1);
             }
 
-             */
+
+
             //start visit the root and then recursively visit the whole tree
             Block blk = (Block) visitor.visit(parser.block());
 
@@ -67,7 +79,6 @@ class App {
                     //typeCheck
                     blk.checkType();
                     String cgen = blk.codeGen();
-                    System.out.println(cgen);
                     int[] bytecode = LVM.assemble(cgen + "\nhalt");
                     //vm
                     LVM vm = new LVM();

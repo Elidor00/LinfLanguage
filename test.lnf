@@ -1,5 +1,9 @@
 {
 
+millanti di millanti
+
+
+/*
 f(int x, var int out);
 g(int x, var int out);
 
@@ -26,5 +30,7 @@ print out;
 
 f(out, out);
 print out;
+*/
+
 
 }

@@ -23,7 +23,7 @@
 
 ## Introduzione
 
-Lo scopo di questo progetto è l'implementazione di un compilatore per il linguaggio di alto livello `Linf` (*Linf Is Not Fool*) derivato da *FOOL* e della *Linf Virtual Machine*: una macchina virtuale che esegue il bytecode generato dal compilatore.
+Lo scopo di questo progetto è l'implementazione di un compilatore per il linguaggio di alto livello `Linf` (*Linf Is Not Fool*) derivato da *FOOL* e della *Linf Virtual Machine*, la macchina virtuale che esegue il bytecode generato dal compilatore.
 
 Il progetto si basa sul framework per la generazione di parser *ANTLR*, nella versione `4.7.2`.
 
@@ -56,15 +56,15 @@ Il compilatore è contenuto nella cartella `src/main/java/linf`. Al suo interno 
 - expression/: per l'implementazione delle espressioni definite dalla grammatica
 - statement/: per l'implementazione degli statement definiti nella grammatica
 - type/: per la definizione dei tipi in accordo con la grammatica
-- utils/: che contiene alcune classi utilizzate in vari modi all'interno del progetto (ad esempio le classi per l'environment e la symbol table)  
+- utils/: che contiene alcune classi utilizzate in vari modi all'interno del progetto
 
 Il compilatore si avvale del visitor `LinfVisitorImpl.java`, offerto da ANTLR, per scorrere l'albero di parsing e costruire l'albero di sintassi astratta formato dai nodi di vario tipo.
 
+L'analisi statica effettuata dal compilatore si compone di tre fasi:
+
+1. **Analisi Lessicale**: il compilatore controlla la sintassi del programma ed emette
+
 ### Analisi lessicale
-
-
-
-### Analisi sintattica
 
 
 
@@ -97,9 +97,9 @@ In questa fase viene effettuato il controllo dei tipi e delle operazioni consent
 `Linf` possiede 3 diversi tipi:
 - Int
 - Bool
-- Fun 
+- Fun
 
-Viene inoltre supportata una forma di controllo dei tipi comportamentali, all'interno delle funzioni e del costrutto if-the-else.
+Viene inoltre supportata una forma di controllo dei tipi comportamentali, all'interno delle funzioni e del costrutto if-then-else.
 
 Per quanto riguarda l'if-then-else, vengono mantenuti in due diversi insiemi gli identificatori a cui si accede in lettura e/o scrittura e quelli cancellati, sia per il ramo then che per l'else.
 Successivamente si controlla se i due rami sono in qualche modo sbilanciati e in quel caso si restituisce il tipo di errore appropriato.
@@ -122,10 +122,10 @@ Gli errori di tipo che possono essere catturati sono:
 ## Linf Virtual Machine
 
 L'interpete è contenuto all'interno della cartella `src/main/java/lvm`. Al suo interno sono presenti le sottocartelle:
-- error/: per la gestione degli errori a runtime (?)
+- error/: per la gestione degli errori a runtime
 - utils/: che contiene alcune classi utilizzate in vari modi all'interno della `lvm`.
 
-Anche in questo caso, come nel precedente, ci si avvale del visitor `LVMVisitorImpl.java`, offerto da ANTLR, per scorrere tutto l'albero CHE NON SO COME SI CHIAMA (?).
+Anche in questo caso, come nel precedente, ci si avvale del visitor `LVMVisitorImpl.java` per visitare il bytecode.
 
 
 
