@@ -1,0 +1,11 @@
+---
+documentclass: report
+title: Linguaggio Linf - Compilatori e Interpreti 2018-2019
+lang: it
+toc: true
+book-class: false
+fontsize: 12pt
+author:
+- Filippo Bartolini - filippo.bartolini3@studio.unibo.it
+- Giacomo Leidi - giacomo.leidi@studio.unibo.it
+...
