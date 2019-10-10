@@ -2,12 +2,15 @@ package linf.statement;
 
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
+import linf.error.type.UnbalancedDeletionBehaviourError;
 import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.LinfLib;
+import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class IfThenElse extends LinfStmt {
@@ -35,6 +38,11 @@ public class IfThenElse extends LinfStmt {
         exp.checkType();
         thenBranch.checkType();
         elseBranch.checkType();
+        HashSet<STentry> thenDel = thenBranch.getDeletedIDs();
+        HashSet<STentry> elseDel = elseBranch.getDeletedIDs();
+        if (!thenDel.equals(elseDel)) {
+            throw new UnbalancedDeletionBehaviourError();
+        }
         return null;
     }
 

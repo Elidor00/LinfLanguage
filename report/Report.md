@@ -58,7 +58,7 @@ Gli errori semantici che possono essere catturati sono:
 
 Per ogni nuovo identificatore che viene dichiarato, si aggiunge una entry corrispondente nell'environment (implementato tramite lista di tabelle hash.
 
-Ogni entry (STentry) è formata da:
+Ogni entry della tabella dei simboli è formata da:
 - il suo nesting level
 - il suo offset all'interno del nesting level
 - il tipo relativo al nodo a cui fa riferimento
@@ -67,6 +67,7 @@ Ogni entry (STentry) è formata da:
 ## Controllo dei tipi
 
 In questa fase viene effettuato il controllo dei tipi e delle operazioni consentite tra di essi. *Linf* possiede 3 diversi tipi:
+
 1. Intero
 2. Booleano
 3. Funzione
@@ -75,15 +76,24 @@ In questa fase viene effettuato il controllo dei tipi e delle operazioni consent
 
 ### Tipi comportamentali
 
-La definizione di tipo comportamentale utilizzata nel compilatore ricalca direttamente quella fornita a lezione. *Linf* è un linguaggio di stampo fortemente imperativo dunque il comportamento di un blocco può essere definito semplicemente come il comportamento degli statement contenuti in quel blocco. Più formalmente possiamo definire il comportamento di un blocco come la coppia di insiemi di identificatori $\langle RW, DEL \rangle$
+La definizione di tipo comportamentale utilizzata nel compilatore ricalca direttamente quella fornita a lezione:
 
-Gli insiemi $RW$ e $DEL$ contengono rispettivamente tutti gli identificatori acceduti in lettura/scrittura e tutti gli identificatori cancellati (da un comando `delete` o da una chiamata di funzione) all'interno di un blocco. Tali insiemi vengono popolati durante le fasi di analisi semantica e controllo dei tipi ogni blocco al termine del proprio controllo dei tipi effettua un controllo sui propri insiemi $RW$ e $DEL$ e nel caso trovi un identificatore contenuto in entrambi gli insiemi lancia un'eccezione di tipo `IncompatibleBehaviour`
+1. Una locazione di memoria non può essere acceduta nello stesso blocco sia in scrittura/lettura che in cancellazione
+2. Le locazioni di memoria cancellate dai due branch di un *if-then-else* devono essere le stesse
 
-Per quanto riguarda l'if-then-else, vengono mantenuti in due diversi insiemi gli identificatori a cui si accede in lettura e/o scrittura e quelli cancellati, sia per il ramo then che per l'else.
-Successivamente si controlla se i due rami sono in qualche modo sbilanciati e in quel caso si restituisce il tipo di errore appropriato.
+In *Linf* dunque il comportamento di un blocco è stato definito come l'insieme dei comportamenti degli statement contenuti in quel blocco. Più formalmente possiamo definire il comportamento di un blocco $B$ come la coppia di insiemi di identificatori
 
-Il comportamente per le funzioni è simile. Quando una funzione viene dichiarata, si inserisco all'interno dei due insiemi rwIDs e delIDs gli identificatori delle variabili, rispettivamente, lette e/o scritte e cancellate. Successivamente, quando la funzione viene invocata si fanno tutti i controlli sui parametri, sugli identificatori cancellati, ecc.
-Non è possibile cancellare l'identificatore di una funzione nel corpo stesso della funzione.
+$$RW = \mathop{\cup}_{s \in B} RW_s$$
+
+$$DEL = \mathop{\cup}_{s \in B} DEL_s$$
+
+Gli insiemi $RW$ e $DEL$ contengono rispettivamente tutti gli identificatori acceduti **non locali** in lettura/scrittura e tutti gli identificatori **non locali** cancellati (da un comando `delete` o da una chiamata di funzione) all'interno di un blocco.
+
+Ogni blocco al termine del proprio controllo di tipo confronta propri insiemi $RW$ e $DEL$ per verificare la regola 1 e nel caso incotri un conflitto lancia l'errore `IncompatibleBehaviourError`.
+
+Per quanto riguarda l'*if-then-else*, in fase di controllo di tipo il compilatore verifica che gli insiemi $DEL$ del ramo *then* e del ramo *else* siano uguali.
+
+Il comportamento delle funzioni è simile. Quando una funzione viene dichiarata, si inseriscono nell'environment oltre al tipo della funzione anche gli insiemi $RW$ e $DEL$ della funzione, successivamente, quando la funzione viene invocata, si controlla che gli identificatori cancellati dalla funzione (compresi i parametri passati per riferimento) non siano già presenti nell'insieme $DEL$ del blocco chiamante e nel caso viene sollevato l'errore `DoubleDeletionError`. Non è possibile cancellare l'identificatore di una funzione nel corpo stesso della funzione.
 
 ### Errori di tipo
 Gli errori di tipo che possono essere catturati sono:
@@ -97,7 +107,7 @@ Gli errori di tipo che possono essere catturati sono:
 
 ## Generazione di codice
 
-Anche la generazione di codice beneficia in maniera non indifferente dell'assenza di sottotipaggio nel linguaggio *Linf*.
+Anche la generazione di codice beneficia in maniera non indifferente dell'assenza di sottotipaggio nel linguaggio *Linf*: dato che i due tipi di dato primitivi hanno la stessa dimensione (4 byte) e non esistono i sottotipi un blocco  
 
 # Linf Virtual Machine
 

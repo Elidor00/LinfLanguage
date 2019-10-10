@@ -94,9 +94,6 @@ public class Block extends LinfStmt {
                 HashSet<STentry> elseDel = elseB.getDeletedIDs();
                 HashSet<STentry> thenRw = thenB.getRwIDs();
                 HashSet<STentry> elseRw = elseB.getRwIDs();
-                if (!thenDel.equals(elseDel)) {
-                    throw new UnbalancedDeletionBehaviourError();
-                }
                 checkDeletions(thenRw, thenDel);
                 checkDeletions(elseRw, elseDel);
                 deletedIDs.addAll(thenDel);
