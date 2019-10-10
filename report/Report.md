@@ -21,22 +21,15 @@ Al contrario, il linguaggio completo per il bytecode non ci è stato fornito, ma
 
 # Compilatore Linf
 
-Il compilatore è contenuto nella cartella `src/main/java/linf`. Al suo interno sono presenti le sottocartelle:
-
-- error/: per la definizione degli errori, rispettivamente, semantici e di tipo
-- expression/: per l'implementazione delle espressioni definite dalla grammatica
-- statement/: per l'implementazione degli statement definiti nella grammatica
-- type/: per la definizione dei tipi in accordo con la grammatica
-- utils/: che contiene alcune classi utilizzate in vari modi all'interno del progetto
-
-Il compilatore si avvale del visitor `LinfVisitorImpl.java`, offerto da ANTLR, per scorrere l'albero di parsing e costruire l'albero di sintassi astratta formato dai nodi di vario tipo.
+Il compilatore si avvale del visitor `LinfVisitorImpl.java` per scorrere l'albero di parsing e costruire l'albero di sintassi astratta formato dai nodi di vario tipo.
 
 L'analisi statica effettuata dal compilatore si compone di tre fasi:
 
-1. **Analisi Lessicale**: il compilatore controlla la sintassi del programma
+1. **Analisi lessicale**: il compilatore controlla la sintassi del programma
 2. **Analisi semantica**:
 3. **Controllo dei tipi**:
-4. **Generazione di codice**:
+
+Si noti che il fallimento di una fase implica l'interruzione dell'esecuzione. Infine il compilatore visita l'albero una quarta volta generando il bytecode di ogni nodo.
 
 ## Analisi lessicale
 
@@ -46,15 +39,6 @@ L'analisi statica effettuata dal compilatore si compone di tre fasi:
 
 In questa fase si visita l'albero di sintassi astratto costruito dal parser e si cercano eventuali errori semantici.
 
-Gli errori semantici che possono essere catturati sono:
-
-- DoubleDeclaration: una variabile può essere dichiarata, nello stesso scope, al massimo una volta
-- FunctionNameShadowing: l'id della funzione e gli id dei parametri formali devono essere diversi
-- IllegalDeletion: un id può essere cancellato al più una volta
-- SymbolUsedAsFunction: un id non può essere usato come simbolo di funzione se è di tipo diverso
-- UnboundSymbol: l'id non è presente (o è stato cancellato) nello scope attuale
-- VarParameterDoubleDeletion: cancellazione multipla di un parametro attuale di una funzione (ad esempio quando viene passato per riferimento)
-- WrongParameterNumber: numero dei parametri formali diverso dal numero dei parametri attuali
 
 Per ogni nuovo identificatore che viene dichiarato, si aggiunge una entry corrispondente nell'environment (implementato tramite lista di tabelle hash.
 
@@ -63,6 +47,19 @@ Ogni entry della tabella dei simboli è formata da:
 - il suo offset all'interno del nesting level
 - il tipo relativo al nodo a cui fa riferimento
 - il nome dell'id
+
+### Errori semantici
+
+Gli errori semantici che possono essere catturati sono:
+
+- `DoubleDeclaration`: una variabile può essere dichiarata, nello stesso scope, al massimo una volta
+- `FunctionNameShadowing`: l'id della funzione e gli id dei parametri formali devono essere diversi
+- `IllegalDeletion`: un id può essere cancellato al più una volta
+- `SymbolUsedAsFunction`: un id non può essere usato come simbolo di funzione se è di tipo diverso
+- `UnboundSymbol`: l'id non è presente (o è stato cancellato) nello scope attuale
+- `VarParameterDoubleDeletion`: cancellazione multipla di un parametro attuale passato per riferimento ad una funzione
+- `WrongParameterNumber`: numero dei parametri formali diverso dal numero dei parametri attuali
+
 
 ## Controllo dei tipi
 
@@ -83,9 +80,9 @@ La definizione di tipo comportamentale utilizzata nel compilatore ricalca dirett
 
 In *Linf* dunque il comportamento di un blocco è stato definito come l'insieme dei comportamenti degli statement contenuti in quel blocco. Più formalmente possiamo definire il comportamento di un blocco $B$ come la coppia di insiemi di identificatori
 
-$$RW = \mathop{\cup}_{s \in B} RW_s$$
+$$RW = \mathop{\bigcup}_{s \in B} RW_s$$
 
-$$DEL = \mathop{\cup}_{s \in B} DEL_s$$
+$$DEL = \mathop{\bigcup}_{s \in B} DEL_s$$
 
 Gli insiemi $RW$ e $DEL$ contengono rispettivamente tutti gli identificatori acceduti **non locali** in lettura/scrittura e tutti gli identificatori **non locali** cancellati (da un comando `delete` o da una chiamata di funzione) all'interno di un blocco.
 
@@ -97,17 +94,38 @@ Il comportamento delle funzioni è simile. Quando una funzione viene dichiarata,
 
 ### Errori di tipo
 Gli errori di tipo che possono essere catturati sono:
-- DoubleDeletion: un id viene cancellato due o più volte
-- IncompatibleBehaviour: un identificatore a cui si accede in lettura e/o scrittura, è stata cancellata
-- IncompatibleTypes: il tipo di lhs e rhs non coincidono
-- MismatchedPrototype: il tipo dei parametri formali non corrisponde con quelli attuali
-- ReferenceParameter: il parametro attuale è un'espressione invece che l'identificatore di una variabile, mentre il parametro formale è l'identificatore di una variabile passata per riferimento
-- UnbalancedDeletionBehaviour: i branch dell'if-then-else sono sbilanciati per quanto riguarda la delete
-- WrongParameterType: il tipo dei parametri formali della funzione non corrisponde con quello dei parametri attuali
+- `DoubleDeletion`: un id viene cancellato due o più volte
+- `IncompatibleBehaviour`: un identificatore a cui si accede in lettura e/o scrittura, è stata cancellata
+- `IncompatibleTypes`: il tipo di lhs e rhs non coincidono
+- `MismatchedPrototype`: il tipo dei parametri formali non corrisponde con quelli attuali
+- `ReferenceParameter`: il parametro attuale è un'espressione invece che l'identificatore di una variabile, mentre il parametro formale è l'identificatore di una variabile passata per riferimento
+- `UnbalancedDeletionBehaviour`: i branch dell'if-then-else sono sbilanciati per quanto riguarda la delete
+- `WrongParameterType`: il tipo dei parametri formali della funzione non corrisponde con quello dei parametri attuali
 
 ## Generazione di codice
 
-Anche la generazione di codice beneficia in maniera non indifferente dell'assenza di sottotipaggio nel linguaggio *Linf*: dato che i due tipi di dato primitivi hanno la stessa dimensione (4 byte) e non esistono i sottotipi un blocco  
+Anche la generazione di codice beneficia in maniera non indifferente dell'assenza di sottotipaggio nel linguaggio *Linf*: tutti i tipi di dato primitivi hanno la stessa dimensione (4 byte) che è pari alla word della LVM.
+
+La generazione di codice del compilatore *Linf* rispetta l'invariante che l'esecuzione del codice generato debba lasciare invariato il valore dello *stack pointer* e del *frame pointer*.
+
+Ogni blocco riserva le prime tre locazioni di memoria per:
+
+1. **Control link**: detto anche *dynamic link* ovvero il valore del *frame pointer* nell'ambiente chiamante
+2. **Access link**: detto anche *static link* ovvero il valore del *frame pointer* nell'ambiente in cui è stata definito il blocco
+3. **Indirizzo di ritorno**: l'indirizzo dell'istruzione successiva alla chiamata della funzione
+
+dunque il *frame pointer* all'interno di un blocco punta sempre alla prima locazione di memoria dopo l'indirizzo di ritorno.
+
+**N.B.** nel caso di blocchi annidati o di funzioni chiamate nello stesso blocco in cui sono dichiarate, il control link e l'access link possono coincidere.
+
+### Identificatori di variabile
+
+Se l'identificatore è stato definito nel blocco in cui viene utilizzato la generazione di codice si riduce ad una istruzione che accede ad un determinato offset dal valore del frame pointer.
+
+Quando una funzione, mentre genera codice per i suoi argomenti, deve generare il codice di un parametro passato per riferimento, invece che pusharne il valore, **risale all'indirizzo** della locazione di memoria puntata dal parametro attuale (che può essere a sua volta un parametro per riferimento di un'eventuale funzione chiamante) e lo pusha al posto del valore dell'identificatore.
+
+Nel caso di un accesso ad identificatori **non locali** si presentano due possibilità: l'identificatore è un parametro passato per riferimento e quindi rappresenta una cella di memoria che può essere acceduta solo risalendo il control link fino a giungere al blocco della chiamata che contiene l'indirizzo della locazione riferita, oppure l'identificatore è una variabile libera e quindi va cercata a partire dall'ambiente in cui è stato definito il blocco seguendo prima l'access link ed eventualmente il control link se l'identificatore non è definito nello stesso ambiente in cui è definito il blocco.
+
 
 # Linf Virtual Machine
 

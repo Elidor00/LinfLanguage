@@ -77,7 +77,6 @@ public class IDValue extends LinfValue {
         String code = "";
         int distance = nestingLevel - entry.getNestinglevel();
         if (entry.getType().isReference()) {
-            STentry referred = entry.getType().getRefTo();
             if (distance > 0) {
                 code += LinfLib.followCl(distance) +
                         "lw $al " + entry.getOffset() + "($al)\n";
