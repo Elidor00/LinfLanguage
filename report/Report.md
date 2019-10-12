@@ -25,15 +25,18 @@ Il compilatore si avvale del visitor `LinfVisitorImpl.java` per scorrere l'alber
 
 L'analisi statica effettuata dal compilatore si compone di tre fasi:
 
-1. **Analisi lessicale**: il compilatore controlla la sintassi del programma
-2. **Analisi semantica**:
-3. **Controllo dei tipi**:
+1. **Analisi lessicale**: il compilatore controlla la sintassi del programma, dividendo il codice sorgente in token
+    * **Analisi sintattica**: per ogni token se ne esegue il controllo sintattico, tramite la grammatica definita, e viene costruito l'albero di sintassi
+2. **Analisi semantica**: viene controllato che le varie parti che compongono il programma siano consistenti fra di loro, in base al loro significato (es. type checking)
+3. **Controllo dei tipi**:  viene controllata la corretta correlazione tra i tipi
 
-Si noti che il fallimento di una fase implica l'interruzione dell'esecuzione. Infine il compilatore visita l'albero una quarta volta generando il bytecode di ogni nodo.
+Si noti che il fallimento di una fase implica l'interruzione dell'esecuzione. 
+Infine il compilatore visita l'albero una quarta volta generando il bytecode di ogni nodo.
 
 ## Analisi lessicale
 
-
+In questa fase viene preso in input il codice sorgente del programma e viene restituita una lista di tutti i token identificati.
+In caso di errore, viene restituita la riga di codice e la posizione del token che ha causato l'errore.
 
 ## Analisi semantica
 
@@ -129,7 +132,11 @@ Nel caso di un accesso ad identificatori **non locali** si presentano due possib
 
 # Linf Virtual Machine
 
-Anche in questo caso ci si avvale del visitor `LVMVisitorImpl.java` per visitare il bytecode.
+La macchina virtuale **LVM** (Linf Virtual Machine) che esegue il bytecode è contenuta nel file `LVM.java`. 
+
+Anche in questo caso ci si avvale del visitor `LVMVisitorImpl.java`, per visitare il bytecode, mantenendo un array `code` di interi in cui vengono inseriti i codici delle istruzioni macchina man mano che vengono lette.
+Successivamente l'array `code` viene passato alla **LVM** che lo esegue, istruzione per istruzione.
+
 
 
 
