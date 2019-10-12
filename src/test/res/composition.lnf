@@ -1,0 +1,42 @@
+{
+h(int a, int b, int c, int d, var int out){
+    out = a + b + c + d;
+    print out;
+}
+
+g1(int x, var int out){
+    out = x * x;
+}
+
+g2(int x, var int out){
+    out = x + x;
+}
+
+g3(int x, var int out){
+    out = x * 2 * x;
+}
+
+g4(int x, var int out){
+    out = (x / 2) * x;
+}
+
+compose(int a, var int out){
+    int a1 = -1;
+    int b1 = -1;
+    int c1 = -1;
+    int d1 = -1;
+
+    g1(a, a1);
+    g2(a, b1);
+    g3(a, c1);
+    g4(a, d1);
+
+    h(a1, b1, c1, d1, out);
+}
+
+int out = 0;
+
+compose(1, out); // out = 5
+
+compose(6, out); // out = 138;
+}

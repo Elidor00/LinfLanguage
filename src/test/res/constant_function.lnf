@@ -1,0 +1,11 @@
+{
+int out = 2342323;
+
+const(var int out) {
+    out = 3;
+}
+
+const(out);
+
+print out;
+}

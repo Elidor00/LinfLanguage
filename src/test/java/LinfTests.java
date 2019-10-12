@@ -72,10 +72,13 @@ public class LinfTests {
         assertNotNull(vm);
 
         List<String> out = vm.getStdOut();
-        assertEquals(3, out.size());
+        assertEquals(6, out.size());
         assertEquals("1000", out.get(0));
-        assertEquals("1001", out.get(1));
-        assertEquals("1000", out.get(2));
+        assertEquals("1000", out.get(1));
+        assertEquals("1001", out.get(2));
+        assertEquals("1001", out.get(3));
+        assertEquals("1001", out.get(4));
+        assertEquals("1000", out.get(5));
         assertEquals(0, vm.peekMemory(MEMSIZE - 4));
     }
 
@@ -127,5 +130,72 @@ public class LinfTests {
         int[] bytecode = LVM.assemble(cgen(t4));
         LVM vm = new LVM();
         assertThrows(StackOverflowError.class, () -> vm.run(bytecode));
+    }
+
+    // Turing Completeness
+    @Test
+    public void constantFunction() {
+        String constant = getCode("constant_function.lnf");
+        LVM vm = runScript(constant);
+        List<String> out = vm.getStdOut();
+        assertEquals(1, out.size());
+        assertEquals("3", out.get(0));
+        assertEquals(3, vm.peekMemory(MEMSIZE - 4));
+    }
+
+    @Test
+    public void successorFunction() {
+        String succ = getCode("successor_function.lnf");
+        LVM vm = runScript(succ);
+        List<String> out = vm.getStdOut();
+        assertEquals(3, out.size());
+        assertEquals("1", out.get(0));
+        assertEquals("2", out.get(1));
+        assertEquals("3", out.get(2));
+        assertEquals(3, vm.peekMemory(MEMSIZE - 4));
+    }
+
+    @Test
+    public void projection() {
+        String proj = getCode("projection.lnf");
+        LVM vm = runScript(proj);
+        List<String> out = vm.getStdOut();
+        assertEquals(2, out.size());
+        assertEquals("1", out.get(0));
+        assertEquals("2", out.get(1));
+        assertEquals(2, vm.peekMemory(MEMSIZE - 4));
+    }
+
+    @Test
+    public void composition() {
+        String comp = getCode("composition.lnf");
+        LVM vm = runScript(comp);
+        List<String> out = vm.getStdOut();
+        assertEquals(2, out.size());
+        assertEquals("5", out.get(0));
+        assertEquals("138", out.get(1));
+        assertEquals(138, vm.peekMemory(MEMSIZE - 4));
+    }
+
+    @Test
+    public void primitiveRecursion() {
+        String rec = getCode("primitive_recursion.lnf");
+        LVM vm = runScript(rec);
+        List<String> out = vm.getStdOut();
+        assertEquals(2, out.size());
+        assertEquals("496503", out.get(0));
+        assertEquals("-4158", out.get(1));
+        assertEquals(-4158, vm.peekMemory(MEMSIZE - 4));
+    }
+
+    @Test
+    public void minimization() {
+        String min = getCode("minimization.lnf");
+        LVM vm = runScript(min);
+        List<String> out = vm.getStdOut();
+        assertEquals(2, out.size());
+        assertEquals("129", out.get(0));
+        assertEquals("124", out.get(1));
+        assertEquals(124, vm.peekMemory(MEMSIZE - 4));
     }
 }

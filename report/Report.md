@@ -4,6 +4,25 @@ Lo scopo di questo progetto è l'implementazione di un compilatore per il lingua
 
 Il progetto è realizzato in linguaggio *Java* e si basa sul framework per la generazione di parser *ANTLR*, nella versione `4.7.2`.
 
+## Setup
+
+> **N.B.** È necessario usare la versione ANTLR `4.7.2.`
+
+### Eclipse
+
+1. Lanciare Eclipse ed aprire il progetto desiderato
+2. Effettuare un click **destro** sul progetto nella vista ad albero e selezionare l'opzione *properties*
+3. Selezionare *Java Build Path* sulla sinistra, e quindi aprire la tab *Libraries*
+4. Selezionare il comando *Add External JARs* sulla destra e infine selezionare il `.jar` di ANTLR presente in `lib/`
+
+### Intellij IDEA
+
+1. Effettuare un click **destro** sul progetto nel pannello *Project Explorer*
+2. Selezionare *Open Module Settings* e aprire la tab *Dependencies*
+3. Selezionare il comando *Add* (icona a forma di +) e quindi selezionare la voce *JARs or directories*
+4. Selezionare il jar presente in `lib/` contenente la versione `4.7.2` di ANTLR
+
+
 ## Scelte progettuali
 
 - Scope statico
@@ -18,7 +37,6 @@ La grammatica di *Linf* è definita nel file `main/linf/parser/ComplexStaticAnal
 Al contrario, il linguaggio completo per il bytecode non ci è stato fornito, ma è stato definito ex novo all'interno di `main/lvm/parser/LVM.g4`.
 
 
-
 # Compilatore Linf
 
 Il compilatore si avvale del visitor `LinfVisitorImpl.java` per scorrere l'albero di parsing e costruire l'albero di sintassi astratta formato dai nodi di vario tipo.
@@ -26,11 +44,10 @@ Il compilatore si avvale del visitor `LinfVisitorImpl.java` per scorrere l'alber
 L'analisi statica effettuata dal compilatore si compone di tre fasi:
 
 1. **Analisi lessicale**: il compilatore controlla la sintassi del programma, dividendo il codice sorgente in token
-    * **Analisi sintattica**: per ogni token se ne esegue il controllo sintattico, tramite la grammatica definita, e viene costruito l'albero di sintassi
 2. **Analisi semantica**: viene controllato che le varie parti che compongono il programma siano consistenti fra di loro, in base al loro significato (es. type checking)
 3. **Controllo dei tipi**:  viene controllata la corretta correlazione tra i tipi
 
-Si noti che il fallimento di una fase implica l'interruzione dell'esecuzione. 
+Si noti che il fallimento di una fase implica l'interruzione dell'esecuzione.
 Infine il compilatore visita l'albero una quarta volta generando il bytecode di ogni nodo.
 
 ## Analisi lessicale
@@ -42,8 +59,7 @@ In caso di errore, viene restituita la riga di codice e la posizione del token c
 
 In questa fase si visita l'albero di sintassi astratto costruito dal parser e si cercano eventuali errori semantici.
 
-
-Per ogni nuovo identificatore che viene dichiarato, si aggiunge una entry corrispondente nell'environment (implementato tramite lista di tabelle hash.
+Per ogni nuovo identificatore che viene dichiarato, si aggiunge una entry corrispondente nell'environment (implementato tramite lista di tabelle hash).
 
 Ogni entry della tabella dei simboli è formata da:
 - il suo nesting level
@@ -96,7 +112,9 @@ Per quanto riguarda l'*if-then-else*, in fase di controllo di tipo il compilator
 Il comportamento delle funzioni è simile. Quando una funzione viene dichiarata, si inseriscono nell'environment oltre al tipo della funzione anche gli insiemi $RW$ e $DEL$ della funzione, successivamente, quando la funzione viene invocata, si controlla che gli identificatori cancellati dalla funzione (compresi i parametri passati per riferimento) non siano già presenti nell'insieme $DEL$ del blocco chiamante e nel caso viene sollevato l'errore `DoubleDeletionError`. Non è possibile cancellare l'identificatore di una funzione nel corpo stesso della funzione.
 
 ### Errori di tipo
+
 Gli errori di tipo che possono essere catturati sono:
+
 - `DoubleDeletion`: un id viene cancellato due o più volte
 - `IncompatibleBehaviour`: un identificatore a cui si accede in lettura e/o scrittura, è stata cancellata
 - `IncompatibleTypes`: il tipo di lhs e rhs non coincidono
@@ -132,106 +150,248 @@ Nel caso di un accesso ad identificatori **non locali** si presentano due possib
 
 # Linf Virtual Machine
 
-La macchina virtuale **LVM** (Linf Virtual Machine) che esegue il bytecode è contenuta nel file `LVM.java`. 
+La macchina virtuale **LVM** (Linf Virtual Machine) che esegue il bytecode è contenuta nel file `LVM.java`.
 
 Anche in questo caso ci si avvale del visitor `LVMVisitorImpl.java`, per visitare il bytecode, mantenendo un array `code` di interi in cui vengono inseriti i codici delle istruzioni macchina man mano che vengono lette.
 Successivamente l'array `code` viene passato alla **LVM** che lo esegue, istruzione per istruzione.
 
-
-
-
 # Conclusioni
 
+È possibile dimostrare la Turing-Completezza del linguaggio *Linf* dimostrando che è on grado di calcolare tutte e sole le funzioni **generali ricorsive** dette anche $\mu$-ricorsive. Le funzioni generali ricorsive sono funzioni parziali ricorsive che prendono tuple finite di numeri naturali e ritornano un singolo numero naturale. Sono la più piccola classe di funzioni parziali che include le funzioni iniziali ed è chiusa per composizione, ricorsione primitiva e minimizzazione non limitata.
+
+## Funzioni Costanti
+
+```Javascript
+const(var int out) {
+    out = 0;
+}
+```
+
+## Funzione Successore
+
+```Javascript
+s(int n, var int out){
+    out = n + 1;
+}
+```
+
+## Funzione Proiezione
+
+```Javascript
+proj1(int x1, int x2, int x3, var int out) {
+    out = x1;
+}
+
+proj2(int x1, int x2, int x3, var int out) {
+    out = x2;
+}
+```
+
+## Composizione
+
+```Javascript
+h(int a, int b, int c, int d, var int out){
+    out = a + b + c + d;
+    print out;
+}
+
+g1(int x, var int out){
+    out = x * x;
+}
+
+g2(int x, var int out){
+    out = x + x;
+}
+
+g3(int x, var int out){
+    out = x * 2 * x;
+}
+
+g4(int x, var int out){
+    out = x / 2 * x;
+}
+
+compose(int a, var int out){
+    int a1 = -1;
+    int b1 = -1;
+    int c1 = -1;
+    int d1 = -1;
+
+    g1(a, a1);
+    g2(a, b1);
+    g3(a, c1);
+    g4(a, d1);
+
+    h(a1, b1, c1, d1, out);
+}
+```
+
+## Ricorsione primitiva
+
+```Javascript
+f(int a, int b, var int out) {
+    out = a + b;
+}
+
+p(int a, int b, int c, int d, var int out){
+     out = a + b - c + d;
+}
+
+rho(
+    int x0,
+    int x1,
+    int x2,
+    var int out)
+{
+   f(x1, x2, out);
+
+   innerRho(int x0, int x1, int x2, int i, var int out) {
+        if (i < x0) then {
+            p(i,out,x1,x2,out);
+            innerRho(x0, x1, x2, i + 1, out);
+         } else {}
+    }
+
+   innerRho(x0,x1,x2,0,out);
+}
+```
+
+## Minimizzazione non limitata
+
+```Javascript
+fun(int a, int b, int c, var int out) {
+    out = a - b + c;
+}
+
+mu(
+    int x1,
+    int x2,
+    var int out)
+{
+    innerMu(int i, int x1, int x2, var int out) {
+        fun(i,x1,x2, out);
+        if (out == 0) then {
+            out = i;
+        } else {
+            innerMu(i + 1, x1, x2, out);
+        }
+    }
+
+    innerMu(0, x1, x2, out);
+}
+```
 
 # Test
 
-## Test 1
+## Fattoriale
 
 ```Javascript
-int x = 1;
-
-f(int y){
-    if (y == 0) then {      print(x);
-    } else {
-        f(y-1);
+int ONE = 1;
+printfactorial(int x) {
+    fact(var int out, int x) {
+          if ( x > 1 ) then {
+              fact(out, x - 1);
+              out = x * out;
+          } else {
+              out = ONE;
+          }
     }
 
-f(54);
-```
-Restituisce 1.
+   int out = 1;
+   {{ fact(out, x); }}
 
-## Test 2
+    print out;
+}
+
+printfactorial(10);
+```
+
+Stampa 3628800.
+
+## Fibonacci
 
 ```Javascript
-int u = 1 ;
-
-f(var int x, int n){
-
-	if (n == 0) then { print(x); }
-
-	else { int y = x*n; f(y,n-1); }
-
-	delete x ;
-
+fibonacci(int x, var int out) {
+    if (x <= 1) then {
+       out = x;
+    } else {
+        fibonacci(x - 1, out);
+        int old = out;
+        fibonacci(x - 2, out);
+        out = out + old;
+    }
 }
+int out = 0;
 
-f(u,6) ;
+fibonacci(0, out);
+print out;
+
+fibonacci(1, out);
+print out;
+
+fibonacci(7, out);
+print out;
 ```
-Restituisce l'errore `IncompatibleBehaviour` in quanto la delete cancella la var x del chiamante visto che è passata per riferimento.
+
+Stampa 0, 1, 13.
 
 
-## Test 3
+## IsEven/IsOdd
 
 ```Javascript
-f(int m, int n){
+bool out = false;
 
-	if (m>n) { print(m+n) ;}
+isEven(int x, var bool out);
+isOdd(int x, var bool out);
 
-	else { int x = 1; f(m+1,n+1); }
-
+isEven(int x, var bool out) {
+    if (x == 0) then {
+        out = true;
+    } else {
+        isOdd(x - 1, out);
+    }
 }
 
-f(5,4);
-
-```
-Restituisce 9.
-
-
-## Test 4
-
-```
-f(int m, int n){
-
-	if (m>n) { print(m+n);}
-
-	else { int x = 1; f(m+1,n+1); }
-
+isOdd(int x, var bool out) {
+    if (x == 0) then {
+        out = false;
+    } else {
+        isEven(x - 1, out);
+    }
 }
 
-f(4,5) ;
+isEven(10, out);
+print out;
 
+isOdd(10, out);
+print out;
 ```
-Restituisce stack overflow.
 
-# Setup
+Stampa 1 e 0.
 
-## Aggiornamento ANTLR
 
-> **N.B.** È necessario usare la versione ANTLR `4.7.2.`
+## Funzione di Ackermann
 
-### Eclipse
+```Javascript
+int out = -1;
 
-1. Lanciare Eclipse ed aprire il progetto desiderato
-2. Effettuare un click **destro** sul progetto nella vista ad albero e selezionare l'opzione *properties*
-3. Selezionare *Java Build Path* sulla sinistra, e quindi aprire la tab *Libraries*
-4. Selezionare il comando *Add External JARs* sulla destra e infine selezionare il `.jar` di ANTLR presente in `lib/`
+ack(int m, int n, var int out) {
+    if (m == 0) then {
+        out = n + 1;
+    } else {}
 
-### Intellij IDEA
+    if ((m > 0) && (n == 0)) then {
+        ack(m - 1, 1, out);
+    } else {}
 
-1. Effettuare un click **destro** sul progetto nel pannello *Project Explorer*
-2. Selezionare *Open Module Settings* e aprire la tab *Dependencies*
-3. Selezionare il comando *Add* (icona a forma di +) e quindi selezionare la voce *JARs or directories*
-4. Selezionare il jar presente in `lib/` contenente la versione `4.7.2` di ANTLR
+    if ((m > 0) && (n > 0)) then {
+        ack(m, n - 1, out);
+        ack(m - 1, out, out);
+    } else {}
+}
 
-# References
+ack(1, 2, out);
+print out;
+```
 
+Stampa 4.

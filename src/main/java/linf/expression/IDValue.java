@@ -55,15 +55,14 @@ public class IDValue extends LinfValue {
     private String codeGen(String op) {
         int distance = nestingLevel - entry.getNestinglevel();
         if (entry.getType().isReference()) {
-            STentry referred = entry.getType().getRefTo();
+            String code;
             if (distance > 0) {
-                return LinfLib.followCl(distance) +
-                        "lw $al " + entry.getOffset() + "($al)\n" +
-                        String.format("%s $a0 " + referred.getOffset() + "($al)\n", op);
+                code = LinfLib.followCl(distance) +
+                        "lw $al " + entry.getOffset() + "($al)\n";
             } else {
-                return "lw $al " + entry.getOffset() + "($fp)\n" +
-                        String.format("%s $a0 0($al)\n", op);
+                code = "lw $al " + entry.getOffset() + "($fp)\n";
             }
+            return code + String.format("%s $a0 0($al)\n", op);
         } else if (distance > 0) {
             // free variable
             return LinfLib.followAl(distance) +

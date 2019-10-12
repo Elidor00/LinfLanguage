@@ -4,6 +4,8 @@ int out = -1;
 ping(var int out);
 pong(var int out);
 
+// when called with an even number or a negative number returns 1000
+// otherwise returns 1001
 ping(var int out){
         if (out <= 0) then { print 1000;} else {
              out = out  - 1;
@@ -11,6 +13,8 @@ ping(var int out){
         }
 }
 
+// when called with an even number or a negative number returns 1001
+// otherwise returns 1000
 pong(var int out){
         if (out <= 0) then { print 1001;} else {
              out = out  - 1;
@@ -18,11 +22,27 @@ pong(var int out){
         }
 }
 
+// negative number
 ping(out);
 
+// even number
+out = 50;
+ping(out);
+
+// odd number
+out = 477;
+ping(out);
+
+// even number
 out = 12;
 pong(out);
 
-out = 50;
-ping(out);
+// negative number
+out = -12;
+pong(out);
+
+//  odd number
+out = 127;
+pong(out);
+
 }

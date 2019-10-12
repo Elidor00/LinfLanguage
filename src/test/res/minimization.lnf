@@ -1,0 +1,31 @@
+{
+int out = -999;
+
+
+fun(int a, int b, int c, var int out) {
+    out = a - b + c;
+}
+
+mu(
+    int x1,
+    int x2,
+    var int out)
+{
+    innerMu(int i, int x1, int x2, var int out) {
+        fun(i,x1,x2, out);
+        if (out == 0) then {
+            out = i;
+        } else {
+            innerMu(i + 1, x1, x2, out);
+        }
+    }
+
+    innerMu(0, x1, x2, out);
+}
+
+mu(57, 72, out);
+print out; // 129
+
+mu(31, 93, out);
+print out; // 124
+}

@@ -1,0 +1,38 @@
+{
+
+f(int a, int b, var int out) {
+    out = a + b;
+}
+
+p(int a, int b, int c, int d, var int out){
+     out = a + b - c + d;
+}
+
+int out = -1;
+
+rho(
+    int x0,
+    int x1,
+    int x2,
+    var int out)
+{
+   f(x1, x2, out);
+
+   innerRho(int x0, int x1, int x2, int i, var int out) {
+        if (i < x0) then {
+
+            p(i,out,x1,x2,out);
+            innerRho(x0, x1, x2, i + 1, out);
+
+         } else {}
+    }
+
+   innerRho(x0,x1,x2,0,out);
+}
+
+rho(1000, 1, 2, out); // out = 496503
+print out;
+
+rho(37 , 51 , 83 , out);  // out = -4158
+print out;
+}

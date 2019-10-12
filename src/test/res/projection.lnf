@@ -1,0 +1,19 @@
+{
+proj1(int x1, int x2, int x3, var int out) {
+    out = x1;
+}
+
+proj2(int x1, int x2, int x3, var int out) {
+    out = x2;
+}
+
+int out = 0;
+
+proj1(1,2,3,out);
+
+print out;
+
+proj2(1,2,3,out);
+
+print out;
+}

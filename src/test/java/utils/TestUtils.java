@@ -13,16 +13,22 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static lvm.LVM.MEMSIZE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public final class TestUtils {
-    public static Block makeAST(String code) {
+    private static Block makeAST(String code) {
         ComplexStaticAnalysisLexer lexer = new ComplexStaticAnalysisLexer(
                 CharStreams.fromString(code)
         );
+        List<String> lexicalErrors = checkSyntax(lexer);
+        if (!lexicalErrors.isEmpty()) {
+            lexicalErrors.forEach(System.err::println);
+              System.exit(-1);
+        }
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ComplexStaticAnalysisParser parser = new ComplexStaticAnalysisParser(tokens);
         LinfVisitorImpl visitor = new LinfVisitorImpl();
@@ -30,6 +36,16 @@ public final class TestUtils {
         assertNotNull(mainBlock);
 
         return mainBlock;
+    }
+
+    private static List<String> checkSyntax(ComplexStaticAnalysisLexer lexer) {
+        List<String> errors = lexer.getAllTokens()
+                .stream()
+                .filter(t -> t.getType() == ComplexStaticAnalysisLexer.ERR)
+                .map(t -> "line " + t.getLine() + ":" + t.getCharPositionInLine() + " Illegal token: " + t.getText())
+                .collect(Collectors.toList());
+        lexer.reset();
+        return errors;
     }
 
     public static List<SemanticError> checkSemantics(String code) {

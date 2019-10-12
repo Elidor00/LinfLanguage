@@ -951,7 +951,7 @@ public class FunCallTest {
                 "li $a0 0\n" +
                 "lw $al 2($fp)\n" +
                 "lw $al 5($al)\n" +
-                "sw $a0 5($al)\n" +  // <----------
+                "sw $a0 0($al)\n" +  // <----------
 
                 "lw $fp 2($sp)\n" +
                 "addi $sp $sp 3\n" +

@@ -1,0 +1,12 @@
+{
+s(int n, var int out){
+    out = n + 1;
+    print out;
+}
+
+int out = 0;
+
+s(out, out);
+s(out, out);
+s(out, out);
+}

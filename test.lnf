@@ -1,36 +1,128 @@
 {
+// General recursive functions or μ-recursive functions are
+// partial functions that take finite tuples of natural numbers and
+//return a single natural number.
 
-millanti di millanti
+// They are the smallest class of partial functions that includes the
+// initial functions and is closed under composition, primitive recursion,
+// and the μ operator.
 
+// The μ-recursive functions are precisely the functions that can
+// be computed by Turing machines.
 
-/*
-f(int x, var int out);
-g(int x, var int out);
+// Initial functions
 
-f(int x, var int out) {
-    if (x < 0) then {
-         out = 600 / 2;
-    } else {
-        g(x - 1, out);
-    }
+// 1. Constant function
+const(var int out) {
+    out = 0;
 }
 
-g(int x, var int out){
-    if (out < 0) then {
-        out = 600 / 4;
-    } else {
-        f(x - 1 , out);
-    }
+// 2. Successor function
+s(int n, var int out){
+    out = n + 1;
 }
 
-int out = 600;
+// 3. Projection function
 
-g(out, out);
+proj1(int x1, int x2, int x3, var int out) {
+    out = x1;
+}
+
+proj2(int x1, int x2, int x3, var int out) {
+    out = x2;
+}
+
+// Operators
+// 1. Composition operator
+
+h(int a, int b, int c, int d, var int out){
+    out = a + b + c + d;
+    print out;
+}
+
+g1(int x, var int out){
+    out = x * x;
+}
+
+g2(int x, var int out){
+    out = x + x;
+}
+
+g3(int x, var int out){
+    out = x * 2 * x;
+}
+
+g4(int x, var int out){
+    out = x / 2 * x;
+}
+
+compose(int a, var int out){
+    int a1 = -1;
+    int b1 = -1;
+    int c1 = -1;
+    int d1 = -1;
+
+    g1(a, a1);
+    g2(a, b1);
+    g3(a, c1);
+    g4(a, d1);
+
+    h(a1, b1, c1, d1, out);
+}
+
+// 2. Primitive recursion
+f(int a, int b, var int out) {
+    out = a + b;
+}
+
+p(int a, int b, int c, int d, var int out){
+     out = a + b - c + d;
+}
+
+rho(
+    int x0,
+    int x1,
+    int x2,
+    var int out)
+{
+   f(x1, x2, out);
+
+   innerRho(int x0, int x1, int x2, int i, var int out) {
+        if (i < x0) then {
+
+            p(i,out,x1,x2,out);
+            innerRho(x0, x1, x2, i + 1, out);
+
+         } else {}
+    }
+
+   innerRho(x0,x1,x2,0,out);
+}
+
+
+// 3. Minimization operator
+fun(int a, int b, int c, var int out) {
+    out = a - b + c;
+}
+
+mu(
+    int x1,
+    int x2,
+    var int out)
+{
+    innerMu(int i, int x1, int x2, var int out) {
+        fun(i,x1,x2, out);
+        if (out == 0) then {
+            out = i;
+        } else {
+            innerMu(i + 1, x1, x2, out);
+        }
+    }
+
+    innerMu(0, x1, x2, out);
+}
+
+int out = -1;
+mu(1031,987, out);
 print out;
-
-f(out, out);
-print out;
-*/
-
-
 }
