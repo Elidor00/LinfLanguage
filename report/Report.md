@@ -118,10 +118,10 @@ Gli errori di tipo che possono essere catturati sono:
 - `DoubleDeletion`: un id viene cancellato due o più volte
 - `IncompatibleBehaviour`: un identificatore a cui si accede in lettura e/o scrittura, è stata cancellata
 - `IncompatibleTypes`: il tipo di lhs e rhs non coincidono
-- `MismatchedPrototype`: il tipo dei parametri formali non corrisponde con quelli attuali
-- `ReferenceParameter`: il parametro attuale è un'espressione invece che l'identificatore di una variabile, mentre il parametro formale è l'identificatore di una variabile passata per riferimento
-- `UnbalancedDeletionBehaviour`: i branch dell'if-then-else sono sbilanciati per quanto riguarda la delete
-- `WrongParameterType`: il tipo dei parametri formali della funzione non corrisponde con quello dei parametri attuali
+- `MismatchedPrototype`: il tipo del prototipo della funzione non corrisponde con la dichiarazione
+- `ReferenceParameter`: il parametro attuale è un'espressione invece che l'identificatore di una variabile, mentre il parametro formale è passato per riferimento
+- `UnbalancedDeletionBehaviour`: i branch dell'if-then-else non cancellano gli stessi identificatori
+- `WrongParameterType`: il tipo del parametro formale della funzione non corrisponde con quello del parametro attuale
 
 ## Generazione di codice
 
@@ -157,7 +157,7 @@ Successivamente l'array `code` viene passato alla **LVM** che lo esegue, istruzi
 
 # Conclusioni
 
-È possibile dimostrare la Turing-Completezza del linguaggio *Linf* dimostrando che è on grado di calcolare tutte e sole le funzioni **generali ricorsive** dette anche $\mu$-ricorsive. Le funzioni generali ricorsive sono funzioni parziali ricorsive che prendono tuple finite di numeri naturali e ritornano un singolo numero naturale. Sono la più piccola classe di funzioni parziali che include le funzioni iniziali ed è chiusa per composizione, ricorsione primitiva e minimizzazione non limitata.
+È possibile dimostrare la Turing-Completezza del linguaggio *Linf* dimostrando che è in grado di calcolare tutte e sole le funzioni **generali ricorsive** dette anche $\mu$-ricorsive. Le funzioni generali ricorsive sono funzioni parziali ricorsive che prendono tuple finite di numeri naturali e ritornano un singolo numero naturale. Sono la più piccola classe di funzioni parziali che include le funzioni iniziali ed è chiusa per composizione, ricorsione primitiva e minimizzazione non limitata.
 
 ## Funzioni Costanti
 
