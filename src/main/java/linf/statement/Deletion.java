@@ -34,7 +34,7 @@ public class Deletion extends LinfStmt {
 
     @Override
     public List<SemanticError> checkSemantics(Environment env) {
-        entry = env.getLastEntry(id.toString(), env.nestingLevel);
+        entry = env.getLastEntry(id.toString(), env.getNestingLevel());
         ArrayList<SemanticError> res = new ArrayList<>();
         List<SemanticError> idErrs = id.checkSemantics(env);
         if (entry != null) {

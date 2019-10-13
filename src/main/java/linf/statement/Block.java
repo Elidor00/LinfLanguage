@@ -4,7 +4,6 @@ import linf.error.semantic.SemanticError;
 import linf.error.type.DoubleDeletionError;
 import linf.error.type.IncompatibleBehaviourError;
 import linf.error.type.TypeError;
-import linf.error.type.UnbalancedDeletionBehaviourError;
 import linf.expression.IDValue;
 import linf.type.LinfType;
 import linf.utils.Environment;
@@ -110,7 +109,7 @@ public class Block extends LinfStmt {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope(localEnv);
-        nestingLevel = env.nestingLevel;
+        nestingLevel = env.getNestingLevel();
 
         for (LinfStmt stmt : stmtList) {
             List<SemanticError> errs = stmt.checkSemantics(env);
@@ -120,13 +119,14 @@ public class Block extends LinfStmt {
                 if (stmt instanceof Deletion) {
                     Deletion del = (Deletion) stmt;
                     deletedIDs.add(del.getEntry());
-                }
-                if (stmt instanceof VarDec) {
+                } else if (stmt instanceof VarDec) {
                     rwIDs.addAll(((VarDec) stmt).getExp().getRwIDs());
                 } else if (stmt instanceof Assignment) {
                     IDValue id = ((Assignment) stmt).getId();
-                    rwIDs.add(env.getLastEntry(id.toString(), env.nestingLevel));
+                    rwIDs.add(env.getLastEntry(id.toString(), nestingLevel));
                     rwIDs.addAll(((Assignment) stmt).getExp().getRwIDs());
+                } else if (stmt instanceof Print) {
+                    rwIDs.addAll(((Print) stmt).getExp().getRwIDs());
                 }
             }
         }
