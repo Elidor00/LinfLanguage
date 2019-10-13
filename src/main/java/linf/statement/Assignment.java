@@ -54,8 +54,8 @@ public class Assignment extends LinfStmt {
             res.add(new UnboundSymbolError(id));
         } else {
             lhSideType = entry.getType();
-            nestingLevel = env.nestingLevel;
-            if (!env.isLocalName(id)) {
+            nestingLevel = env.getNestingLevel();
+            if (!env.isLocalName(id.toString())) {
                 lhSideType.setRwAccess();
             }
             res.addAll(id.checkSemantics(env));

@@ -77,7 +77,7 @@ public class FunCall extends LinfStmt {
             res.add(new UnboundSymbolError(id));
         } else {
             entry = env.getStEntry(id);
-            nestingLevel = env.nestingLevel;
+            nestingLevel = env.getNestingLevel();
             if (entry.getType() instanceof FunType) {
                 FunType type = (FunType) entry.getType();
                 rwIDs.addAll(type.getRwIDs());

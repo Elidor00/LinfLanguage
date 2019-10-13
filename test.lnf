@@ -123,6 +123,6 @@ mu(
 }
 
 int out = -1;
-mu(1031,987, out);
+mu(1031,987, out); // 2018
 print out;
 }

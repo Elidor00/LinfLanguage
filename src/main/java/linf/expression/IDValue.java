@@ -41,13 +41,13 @@ public class IDValue extends LinfValue {
     public List<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> res = new ArrayList<>();
         STentry envEntry = env.getStEntry(value);
-        nestingLevel = env.nestingLevel;
+        nestingLevel = env.getNestingLevel();
 
         if (envEntry == null) {
             res.add(new UnboundSymbolError(this));
         } else {
             setEntry(envEntry);
-            setType(env.getType(this));
+            setType(envEntry.getType());
         }
         return res;
     }
