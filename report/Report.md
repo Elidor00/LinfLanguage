@@ -62,6 +62,7 @@ In questa fase si visita l'albero di sintassi astratto costruito dal parser e si
 Per ogni nuovo identificatore che viene dichiarato, si aggiunge una entry corrispondente nell'environment (implementato tramite lista di tabelle hash).
 
 Ogni entry della tabella dei simboli è formata da:
+
 - il suo nesting level
 - il suo offset all'interno del nesting level
 - il tipo relativo al nodo a cui fa riferimento
@@ -143,9 +144,11 @@ dunque il *frame pointer* all'interno di un blocco punta sempre alla prima locaz
 
 Se l'identificatore è stato definito nel blocco in cui viene utilizzato la generazione di codice si riduce ad una istruzione che accede ad un determinato offset dal valore del frame pointer.
 
-Quando una funzione, mentre genera codice per i suoi argomenti, deve generare il codice di un parametro passato per riferimento, invece che pusharne il valore, **risale all'indirizzo** della locazione di memoria puntata dal parametro attuale (che può essere a sua volta un parametro per riferimento di un'eventuale funzione chiamante) e lo pusha al posto del valore dell'identificatore.
+Quando una chiamata di funzione, mentre genera codice per i suoi argomenti, deve generare il codice di un parametro passato per riferimento, invece che pusharne il valore, **risale all'indirizzo** della locazione di memoria puntata dal parametro attuale (che può essere a sua volta un parametro per riferimento di un'eventuale funzione chiamante) e lo pusha al posto del valore dell'identificatore.
 
-Nel caso di un accesso ad identificatori **non locali** si presentano due possibilità: l'identificatore è un parametro passato per riferimento e quindi rappresenta una cella di memoria che può essere acceduta solo risalendo il control link fino a giungere al blocco della chiamata che contiene l'indirizzo della locazione riferita, oppure l'identificatore è una variabile libera e quindi va cercata a partire dall'ambiente in cui è stato definito il blocco seguendo prima l'access link ed eventualmente il control link se l'identificatore non è definito nello stesso ambiente in cui è definito il blocco.
+Nel caso di un accesso ad identificatori **non locali** si presentano due possibilità: l'identificatore globale nell'ambiente in cui è definito è un parametro passato per riferimento e quindi rappresenta una cella di memoria che può essere acceduta solo risalendo il control link fino a giungere al blocco della chiamata che contiene tra i parametri l'indirizzo della locazione riferita.
+
+Oppure l'identificatore è una variabile libera e quindi va cercata a partire dall'ambiente in cui è stato definito il blocco seguendo prima l'access link ed eventualmente il control link se l'identificatore non è stato dichiarato nello stesso ambiente in cui è definito il blocco.
 
 
 # Linf Virtual Machine
