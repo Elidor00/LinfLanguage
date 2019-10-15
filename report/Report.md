@@ -32,10 +32,68 @@ Il progetto è realizzato in linguaggio *Java* e si basa sul framework per la ge
 
 ## Grammatica
 
-La grammatica di *Linf* è definita nel file `main/linf/parser/ComplexStaticAnalysis.g4`. La suddetta grammatica, in forma *BNF*, ci è stata fornita direttamente dal professore e non è stata in alcun modo modificata.
+La grammatica di *Linf* è definita nel file `main/linf/parser/ComplexStaticAnalysis.g4`. La suddetta grammatica, in forma *BNF*, ci è stata fornita direttamente dal professore.
 
 Al contrario, il linguaggio completo per il bytecode non ci è stato fornito, ma è stato definito ex novo all'interno di `main/lvm/parser/LVM.g4`.
 
+### Prototipi di funzione
+
+Al fine di supportare la mutua ricorsione si è fatto ricorso ad uno dei metodi più usati storicamente dai linguaggi a scope statico (ad esempio C) ovvero i prototipi di funzione.
+
+In *Linf* il prototipo di funzione segue la seguente sintassi
+
+```ANTLR
+prototype : ID '(' ( parameter ( ',' parameter)* )? ');'
+```
+
+ed ha lo scopo di inserire la firma di una funzione $f$ nell'ambiente senza legarla ad un blocco, permettendo quindi l'analisi statica di un blocco in cui $f$ viene chiamata prima che sia dichiarata come nelle funzioni mutualmente ricorsive.
+
+Prendiamo in considerazione le funzioni `isEven` e `isOdd`:
+
+```Javascript
+isEven(int x, var bool out) {
+    if (x == 0) then {
+        out = true;
+    } else {
+        isOdd(x - 1, out);
+    }
+}
+```
+
+```Javascript
+isOdd(int x, var bool out) {
+    if (x == 0) then {
+        out = false;
+    } else {
+        isEven(x - 1, out);
+    }
+}
+```
+
+Supponiamo che il compilatore *Linf* stia eseguendo l'analisi statica del ramo *else* di una delle due funzioni per esempio `isEven`. Il compilatore non ha alcun modo di stabilire se la chiamata ad `isOdd` è ben formata o meno in quanto il tipo della funzione non è ancora stato inserito nell'ambiente e invertire le due dichiarazioni sposterebbe il problema sul ramo *else* di `isOdd`.
+
+I prototipi di funzione risolvono esattamente questo problema con un overhead costante per controllare che la dichiarazione di una funzione corrisponda al suo eventuale prototipo. In questo modo è possibile ovviare al problema ed il seguente codice è completamente legale ed eseguibile in *Linf*.
+
+```Javascript
+isEven(int x, var bool out);
+isOdd(int x, var bool out);
+
+isEven(int x, var bool out) {
+    if (x == 0) then {
+        out = true;
+    } else {
+        isOdd(x - 1, out);
+    }
+}
+
+isOdd(int x, var bool out) {
+    if (x == 0) then {
+        out = false;
+    } else {
+        isEven(x - 1, out);
+    }
+}
+```
 
 # Compilatore Linf
 
@@ -98,7 +156,7 @@ La definizione di tipo comportamentale utilizzata nel compilatore ricalca dirett
 1. Una locazione di memoria non può essere acceduta nello stesso blocco sia in scrittura/lettura che in cancellazione
 2. Le locazioni di memoria cancellate dai due branch di un *if-then-else* devono essere le stesse
 
-In *Linf* dunque il comportamento di un blocco è stato definito come l'insieme dei comportamenti degli statement contenuti in quel blocco. Più formalmente possiamo definire il comportamento di un blocco $B$ come la coppia di insiemi di identificatori
+In *Linf* dunque il comportamento di un blocco è stato definito come l'unione dei comportamenti degli statement $s$ contenuti in quel blocco. Più formalmente possiamo definire il comportamento di un blocco $B$ come la coppia di insiemi di identificatori
 
 $$RW = \mathop{\bigcup}_{s \in B} RW_s$$
 
