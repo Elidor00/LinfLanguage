@@ -34,7 +34,6 @@ public class LVM {
         LVMLexer lvmLexer = new LVMLexer(CharStreams.fromString(code));
         CommonTokenStream lvmTokens = new CommonTokenStream(lvmLexer);
         LVMParser lvmParser = new LVMParser(lvmTokens);
-        lvmParser.setBuildParseTree(true);
         LVMVisitorImpl lvmVisitor = new LVMVisitorImpl();
         lvmVisitor.visitProgram(lvmParser.program());
         return lvmVisitor.getCode();
