@@ -115,7 +115,7 @@ In caso di errore, viene restituita la riga di codice e la posizione del token c
 
 ## Analisi semantica
 
-In questa fase si visita l'albero di sintassi astratto costruito dal parser e si cercano eventuali errori semantici.
+In questa fase si visita l'albero di sintassi astratta costruito dal parser e si cercano eventuali errori semantici.
 
 Per ogni nuovo identificatore che viene dichiarato, si aggiunge una entry corrispondente nell'environment (implementato tramite lista di tabelle hash).
 
@@ -168,14 +168,16 @@ Ogni blocco al termine del proprio controllo di tipo confronta propri insiemi $R
 
 Per quanto riguarda l'*if-then-else*, in fase di controllo di tipo il compilatore verifica che gli insiemi $DEL$ del ramo *then* e del ramo *else* siano uguali.
 
-Il comportamento delle funzioni è simile. Quando una funzione viene dichiarata, si inseriscono nell'environment oltre al tipo della funzione anche gli insiemi $RW$ e $DEL$ della funzione, successivamente, quando la funzione viene invocata, si controlla che gli identificatori cancellati dalla funzione (compresi i parametri passati per riferimento) non siano già presenti nell'insieme $DEL$ del blocco chiamante e nel caso viene sollevato l'errore `DoubleDeletionError`. Non è possibile cancellare l'identificatore di una funzione nel corpo stesso della funzione.
+Il comportamento delle funzioni è simile. Quando una funzione viene dichiarata si inseriscono nell'environment, oltre al tipo della funzione, anche i suoi insiemi $RW$ e $DEL$. Successivamente, quando la funzione viene invocata, si controlla che gli identificatori cancellati dalla funzione (compresi i parametri passati per riferimento) non siano già presenti nell'insieme $DEL$ del blocco chiamante e nel caso viene sollevato l'errore `DoubleDeletionError`. 
+
+Inoltre, non è possibile cancellare l'identificatore di una funzione nel corpo stesso della funzione.
 
 ### Errori di tipo
 
 Gli errori di tipo che possono essere catturati sono:
 
 - `DoubleDeletion`: un id viene cancellato due o più volte
-- `IncompatibleBehaviour`: un identificatore a cui si accede in lettura e/o scrittura, è stata cancellata
+- `IncompatibleBehaviour`: un identificatore a cui si accede in lettura e/o scrittura, è stata cancellato
 - `IncompatibleTypes`: il tipo di lhs e rhs non coincidono
 - `MismatchedPrototype`: il tipo del prototipo della funzione non corrisponde con la dichiarazione
 - `ReferenceParameter`: il parametro attuale è un'espressione invece che l'identificatore di una variabile, mentre il parametro formale è passato per riferimento
@@ -190,8 +192,8 @@ La generazione di codice del compilatore *Linf* rispetta l'invariante che l'esec
 
 Ogni blocco riserva le prime tre locazioni di memoria per:
 
-1. **Control link**: detto anche *dynamic link* ovvero il valore del *frame pointer* nell'ambiente chiamante
-2. **Access link**: detto anche *static link* ovvero il valore del *frame pointer* nell'ambiente in cui è stata definito il blocco
+1. **Control link**: detto anche *dynamic link*, ovvero il valore del *frame pointer* nell'ambiente chiamante
+2. **Access link**: detto anche *static link*, ovvero il valore del *frame pointer* nell'ambiente in cui è stato definito il blocco
 3. **Indirizzo di ritorno**: l'indirizzo dell'istruzione successiva alla chiamata della funzione
 
 dunque il *frame pointer* all'interno di un blocco punta sempre alla prima locazione di memoria dopo l'indirizzo di ritorno.
