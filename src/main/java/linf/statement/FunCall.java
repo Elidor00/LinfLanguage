@@ -1,9 +1,7 @@
 package linf.statement;
 
 import linf.error.semantic.*;
-import linf.error.type.ReferenceParameterError;
-import linf.error.type.TypeError;
-import linf.error.type.WrongParameterTypeError;
+import linf.error.type.*;
 import linf.expression.Exp;
 import linf.expression.IDValue;
 import linf.type.FunType;
@@ -50,6 +48,11 @@ public class FunCall extends LinfStmt {
 
     @Override
     public LinfType checkType() throws TypeError {
+
+        if (getDeletedIDs().contains(entry)){
+            throw new IncompatibleBehaviourError(entry.getName());
+        }
+
         for (int i = 0; i < formalParTypes.size(); i++) {
             Exp exp = actualParList.get(i);
             LinfType formalType = formalParTypes.get(i);
