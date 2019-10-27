@@ -1,5 +1,6 @@
 package semantic;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,7 @@ import static utils.TestUtils.checkSemantics;
 @RunWith(JUnit4.class)
 public class FunCallTest {
     @Test
-    public void CheckSemantics_ShouldPass_WithSimpleFunCall() {
+    public void CheckSemantics_ShouldPass_WithSimpleFunCall() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "f(int x) { print x; }"
@@ -24,7 +25,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithUndeclaredFunction() {
+    public void CheckSemantics_ShouldFail_WithUndeclaredFunction() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "g(int x) { print x; }"
@@ -39,7 +40,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithVariableUsedAsFunction() {
+    public void CheckSemantics_ShouldFail_WithVariableUsedAsFunction() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "bool f = true;"
@@ -54,7 +55,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WrongParameterNumberErrorGreater() {
+    public void CheckSemantics_ShouldFail_WrongParameterNumberErrorGreater() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{" +
                         "f(int x, bool y){" +
@@ -71,7 +72,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WrongParameterNumberErrorLess() {
+    public void CheckSemantics_ShouldFail_WrongParameterNumberErrorLess() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{" +
                         "f(int x, bool y){" +
@@ -86,7 +87,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarParameter() {
+    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarParameter() throws BehaviourError {
         List<SemanticError> errors = checkSemantics("{\n" +
                 "\n" +
                 "f(var int x, var int y){ delete x; delete y; }\n" +
@@ -101,7 +102,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_WithDoubleDeletion_OnVarId2() {
+    public void CheckType_ShouldFail_WithDoubleDeletion_OnVarId2() throws BehaviourError {
         List<SemanticError> errors = checkSemantics("{\n" +
 
                 "g(var int x, var int y){ delete x ; delete y ;}\n" +
@@ -119,7 +120,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarId3() {
+    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarId3() throws BehaviourError {
         List<SemanticError> errors = checkSemantics("{\n" +
 
                 "g(var bool x, var bool y){ delete x ; delete y ;}\n" +
@@ -138,7 +139,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarId4() {
+    public void CheckSemantics_ShouldFail_WithDoubleDeletion_OnVarId4() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{" +
                         "int z = 5;" +
@@ -162,7 +163,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled() {
+    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{" +
                         "int x = 5;" +
@@ -180,7 +181,7 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled2() {
+    public void CheckSemantics_ShouldFail_FunctionIdDeletedBeforeCalled2() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{" +
                         "f(int x) {" +
@@ -189,11 +190,41 @@ public class FunCallTest {
                         "}" +
                         "int y = 2;" +
                         "f(y);" +
-                        "f(y);" +
                         "}");
         assertEquals(1, errors.size());
-        assertEquals(UnboundSymbolError.class, errors.get(0).getClass());
-        assertEquals("f", (((UnboundSymbolError) errors.get(0)).getId()));
+        assertEquals(FunctionNameDeletionError.class, errors.get(0).getClass());
+        assertEquals("f", (((FunctionNameDeletionError) errors.get(0)).getId()));
     }
 
+    @Test
+    public void CheckType_ShouldFail_DeleteFunctionIdAndCall() throws BehaviourError {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "f(){" +
+                        "delete f;" +
+                        "}" +
+                        "f();" +
+                        "}"
+        );
+        assertEquals(1, errors.size());
+        assertEquals(FunctionNameDeletionError.class, errors.get(0).getClass());
+        assertEquals("f", (((FunctionNameDeletionError) errors.get(0)).getId()));
+    }
+
+
+    @Test
+    public void CheckSemantics_ShouldFail_ReferenceParameterError() throws BehaviourError {
+        List<SemanticError> errors = checkSemantics(
+                "{" +
+                        "int x = 6;" +
+                        "f(var int x) {" +
+                        "x = x - 7;" +
+                        "}" +
+                        "f(x + 42);" +
+                        "}"
+        );
+        assertEquals(1, errors.size());
+        assertEquals(ReferenceParameterError.class, errors.get(0).getClass());
+        assertEquals("f", (((ReferenceParameterError) errors.get(0)).getId()));
+    }
 }

@@ -131,8 +131,11 @@ Ogni entry della tabella dei simboli è formata da:
 Gli errori semantici che possono essere catturati sono:
 
 - `DoubleDeclaration`: una variabile può essere dichiarata, nello stesso scope, al massimo una volta
+- `DoubleDeletion`: un id viene cancellato due o più volte
+- `FunctionNameDeletion`: l'id della funzione viene cancellato all'interno del corpo della funzione stessa
 - `FunctionNameShadowing`: l'id della funzione e gli id dei parametri formali devono essere diversi
 - `IllegalDeletion`: un id può essere cancellato al più una volta
+- `ReferenceParameter`: il parametro attuale è un'espressione invece che l'identificatore di una variabile, mentre il parametro formale è passato per riferimento
 - `SymbolUsedAsFunction`: un id non può essere usato come simbolo di funzione se è di tipo diverso
 - `UnboundSymbol`: l'id non è presente (o è stato cancellato) nello scope attuale
 - `VarParameterDoubleDeletion`: cancellazione multipla di un parametro attuale passato per riferimento ad una funzione
@@ -172,16 +175,18 @@ Il comportamento delle funzioni è simile. Quando una funzione viene dichiarata 
 
 Inoltre, non è possibile cancellare l'identificatore di una funzione nel corpo stesso della funzione.
 
+### Errori comportamentali
+
+L'errore relativo ai tipi comportamentali che può essere catturato è:
+
+- `UnbalancedDeletionBehaviour`: i branch dell'if-then-else non cancellano gli stessi identificatori
+
 ### Errori di tipo
 
 Gli errori di tipo che possono essere catturati sono:
 
-- `DoubleDeletion`: un id viene cancellato due o più volte
-- `IncompatibleBehaviour`: un identificatore a cui si accede in lettura e/o scrittura, è stata cancellato
 - `IncompatibleTypes`: il tipo di lhs e rhs non coincidono
 - `MismatchedPrototype`: il tipo del prototipo della funzione non corrisponde con la dichiarazione
-- `ReferenceParameter`: il parametro attuale è un'espressione invece che l'identificatore di una variabile, mentre il parametro formale è passato per riferimento
-- `UnbalancedDeletionBehaviour`: i branch dell'if-then-else non cancellano gli stessi identificatori
 - `WrongParameterType`: il tipo del parametro formale della funzione non corrisponde con quello del parametro attuale
 
 ## Generazione di codice

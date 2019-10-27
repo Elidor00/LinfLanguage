@@ -19,10 +19,6 @@ public class IDValue extends LinfValue {
         setValue(value);
     }
 
-    public int getNestingLevel() {
-        return nestingLevel;
-    }
-
     public STentry getEntry() {
         return entry;
     }

@@ -1,7 +1,7 @@
 package linf.error.semantic;
 
 public class WrongParameterNumberError extends SemanticError {
-    private String id;
+    private final String id;
 
     public WrongParameterNumberError(String id, int formal, int actual) {
         super(msg(id, formal, actual));

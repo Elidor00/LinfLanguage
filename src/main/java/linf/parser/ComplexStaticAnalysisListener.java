@@ -1,4 +1,4 @@
-// Generated from /home/orang3/IdeaProjects/complex-extended-static-analysis/src/main/java/linf/parser/ComplexStaticAnalysis.g4 by ANTLR 4.7.2
+// Generated from /home/tino/linf/src/main/java/linf/parser/ComplexStaticAnalysis.g4 by ANTLR 4.7.2
 package linf.parser;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -7,7 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * This interface defines a complete listener for a parse tree produced by
  * {@link ComplexStaticAnalysisParser}.
  */
-public interface ComplexStaticAnalysisListener extends ParseTreeListener {
+interface ComplexStaticAnalysisListener extends ParseTreeListener {
     /**
      * Enter a parse tree produced by {@link ComplexStaticAnalysisParser#block}.
      *

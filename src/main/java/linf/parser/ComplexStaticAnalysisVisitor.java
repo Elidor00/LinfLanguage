@@ -1,4 +1,4 @@
-// Generated from /home/orang3/IdeaProjects/complex-extended-static-analysis/src/main/java/linf/parser/ComplexStaticAnalysis.g4 by ANTLR 4.7.2
+// Generated from /home/tino/linf/src/main/java/linf/parser/ComplexStaticAnalysis.g4 by ANTLR 4.7.2
 package linf.parser;
 
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  * @param <T> The return type of the visit operation. Use {@link Void} for
  *            operations with no return type.
  */
-public interface ComplexStaticAnalysisVisitor<T> extends ParseTreeVisitor<T> {
+interface ComplexStaticAnalysisVisitor<T> extends ParseTreeVisitor<T> {
     /**
      * Visit a parse tree produced by {@link ComplexStaticAnalysisParser#block}.
      *

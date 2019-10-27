@@ -1,5 +1,6 @@
 package linf.expression;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.utils.Environment;
 import linf.utils.STentry;
@@ -28,13 +29,14 @@ public class Exp extends BinaryOp<Term, Exp> {
         Factor factor = term.getFactor();
         LinfValue value = factor.getValue();
 
-        return term.getRight() == null &&
+        return getRight() == null &&
+                term.getRight() == null &&
                 factor.getRight() == null &&
                 value instanceof IDValue;
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         List<SemanticError> res = super.checkSemantics(env);
         // populates rwIDs with all identifiers which are not local to this scope
         if (isID() && !(env.isLocalName(this.toString()))) {
@@ -47,12 +49,6 @@ public class Exp extends BinaryOp<Term, Exp> {
             }
             if (right != null) {
                 rwIDs.addAll(right.getRwIDs());
-            }
-        }
-
-        for (STentry entry : rwIDs) {
-            if (entry != null) {
-                entry.getType().setRwAccess();
             }
         }
         return res;

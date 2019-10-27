@@ -13,20 +13,15 @@ import static utils.TestUtils.checkType;
 public class FunDecTest {
 
     @Test
-    public void CheckType_ShouldPass_SimpleFunDec() {
-        try {
-            checkType(
-                    "{" +
-                            "f(int x, bool y){" +
-                            "x = 7;" +
-                            "y = true;" +
-                            "}" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SimpleFunDec() throws TypeError {
+        checkType(
+                "{" +
+                        "f(int x, bool y){" +
+                        "x = 7;" +
+                        "y = true;" +
+                        "}" +
+                        "}"
+        );
     }
 
     @Test

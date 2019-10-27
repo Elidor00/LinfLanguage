@@ -1,6 +1,7 @@
 package type;
 
-import linf.error.type.*;
+import linf.error.type.TypeError;
+import linf.error.type.WrongParameterTypeError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -12,20 +13,15 @@ import static utils.TestUtils.checkType;
 public class FunCallTest {
 
     @Test
-    public void CheckType_ShouldPass_SimpleFunCall() {
-        try {
-            checkType(
-                    "{" +
-                            "f(int x){" +
-                            "x = x + 2;" +
-                            "}" +
-                            "f(40);" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SimpleFunCall() throws TypeError {
+        checkType(
+                "{" +
+                        "f(int x){" +
+                        "x = x + 2;" +
+                        "}" +
+                        "f(40);" +
+                        "}"
+        );
     }
 
     @Test
@@ -42,68 +38,14 @@ public class FunCallTest {
     }
 
     @Test
-    public void CheckType_ShouldFail_ReferenceParameterErrorInt() {
-        assertThrows(ReferenceParameterError.class, () -> checkType(
+    public void CheckType_ShouldPass_DeleteFunctionIdNotCall() throws TypeError {
+        checkType(
                 "{" +
-                        "int x = 6;" +
-                        "f(var int x) {" +
-                        "x = x - 7;" +
+                        "f(){" +
+                        "delete f;" +
                         "}" +
-                        "f(42);" +
                         "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_ReferenceParameterErrorBool() {
-        assertThrows(ReferenceParameterError.class, () -> checkType(
-                "{" +
-                        "bool x = true;" +
-                        "f(var bool x) {" +
-                        "x = x || false;" +
-                        "}" +
-                        "f(false);" +
-                        "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_WithDoubleDeletionBehaviour() {
-        assertThrows(DoubleDeletionError.class, () -> checkType("{\n" +
-
-                "int x = 1;\n" +
-
-                "foo(){delete x;}\n" +
-
-                "{\n" +
-                "int x = 2; foo();\n" +
-                "}\n" +
-
-                "foo();\n" +
-                "}"));
-    }
-
-    @Test
-    public void CheckType_ShouldFail_WithIncompatibleBehaviour() {
-        assertThrows(IncompatibleBehaviourError.class, () -> checkType("{\n" +
-                "int x = 3;\n" +
-
-                "foo(var int a) {\n" +
-                "    a = x + 1;\n" +
-                "    delete a;\n" +
-                "    x = 35;\n" +
-                "}\n" +
-
-                "int y = 2;\n" +
-
-                "foo(y);\n" +
-                "foo(x); // <--- QUI DEVE DARE ERRORE!\n" +
-
-                "bar(var int a){\n" +
-                "    a = a + 1;\n" +
-                "    delete a;\n" +
-                "}\n" +
-                "}"));
+        );
     }
 
 }
