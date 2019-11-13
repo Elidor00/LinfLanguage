@@ -99,7 +99,7 @@ public class Block extends LinfStmt {
                 rwIDs.addAll(thenRw);
                 rwIDs.addAll(elseRw);
             }
-            checkBehavior(rwIDs, deletedIDs);
+            checkBehavior(getRwIDs(), getDeletedIDs());
         }
         return null;
     }

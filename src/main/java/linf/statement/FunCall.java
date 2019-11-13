@@ -131,13 +131,19 @@ public class FunCall extends LinfStmt {
         return res;
     }
 
-    /**
-     * f() { g(); }
-     * g() { print 0; }
+    /**{ int x = 0;
+     *       f() { g(); }
+     *       g() { print 0; print x;}
+     * }
+     *
+     *
+     *
      * 1. actual parameters
      * 2. the control link which points to AR of caller of g
      * 3. the ACCESS/STATIC link
      * 4. the return address
+     * 6. var1 <-------- fp
+     * 6. var2  <-------------------- sp
      */
     @Override
     public String codeGen() {
