@@ -1,6 +1,7 @@
 package app;
 
 import linf.LinfVisitorImpl;
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
 import linf.parser.ComplexStaticAnalysisLexer;
@@ -39,7 +40,7 @@ class App {
                     exit(-1);
                 }
             }
-        } catch (IOException | TypeError | LVMError e) {
+        } catch (BehaviourError | IOException | TypeError | LVMError e) {
             e.printStackTrace();
         }
     }

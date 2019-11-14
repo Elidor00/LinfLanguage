@@ -1,7 +1,7 @@
 package linf.statement;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
-import linf.error.semantic.UnboundSymbolError;
 import linf.error.type.IncompatibleTypesError;
 import linf.error.type.TypeError;
 import linf.expression.Exp;
@@ -11,13 +11,14 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-public class Assignment extends LinfStmt {
+public class Assignment implements RWStatement {
     private final IDValue id;
     private final Exp exp;
     private LinfType lhSideType;
-    private int nestingLevel;
+    private HashSet<STentry> rwSet = new HashSet<>();
 
     public Assignment(String name, Exp exp) {
         this.exp = exp;
@@ -33,6 +34,11 @@ public class Assignment extends LinfStmt {
     }
 
     @Override
+    public HashSet<STentry> getRWSet() {
+        return rwSet;
+    }
+
+    @Override
     public LinfType checkType() throws TypeError {
         LinfType rhSideType = exp.checkType();
         //lhSideType may be null
@@ -45,22 +51,17 @@ public class Assignment extends LinfStmt {
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         //create result list
-        ArrayList<SemanticError> res = new ArrayList<>();
-        STentry entry = env.getStEntry(id);
-
-        if (entry == null) {
-            res.add(new UnboundSymbolError(id));
-        } else {
-            lhSideType = entry.getType();
-            nestingLevel = env.getNestingLevel();
-            if (!env.isLocalName(id.toString())) {
-                lhSideType.setRwAccess();
-            }
-            res.addAll(id.checkSemantics(env));
-        }
+        ArrayList<SemanticError> res = new ArrayList<>(id.checkSemantics(env));
         res.addAll(exp.checkSemantics(env));
+        STentry entry = id.getEntry();
+
+        if (res.size() == 0) {
+            lhSideType = entry.getType();
+            rwSet.add(entry);
+            rwSet.addAll(exp.getRwIDs());
+        }
         return res;
     }
 

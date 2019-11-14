@@ -1,6 +1,9 @@
 package type;
 
-import linf.error.type.*;
+import linf.error.behaviour.IncompatibleBehaviourError;
+import linf.error.type.ReferenceParameterError;
+import linf.error.type.TypeError;
+import linf.error.type.WrongParameterTypeError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -67,21 +70,6 @@ public class FunCallTest {
         ));
     }
 
-    @Test
-    public void CheckType_ShouldFail_WithDoubleDeletionBehaviour() {
-        assertThrows(DoubleDeletionError.class, () -> checkType("{\n" +
-
-                "int x = 1;\n" +
-
-                "foo(){delete x;}\n" +
-
-                "{\n" +
-                "int x = 2; foo();\n" +
-                "}\n" +
-
-                "foo();\n" +
-                "}"));
-    }
 
     @Test
     public void CheckType_ShouldFail_WithIncompatibleBehaviour() {
@@ -109,12 +97,12 @@ public class FunCallTest {
     @Test
     public void CheckType_ShouldFail_DeleteFunctionIdAndCall() {
         assertThrows(IncompatibleBehaviourError.class, () -> checkType(
-            "{" +
-                    "f(){" +
-                    "delete f;" +
-                    "}" +
-                    "f();" +
-                "}"
+                "{" +
+                        "f(){" +
+                        "delete f;" +
+                        "}" +
+                        "f();" +
+                        "}"
         ));
     }
 
@@ -126,7 +114,7 @@ public class FunCallTest {
                             "f(){" +
                             "delete f;" +
                             "}" +
-                        "}"
+                            "}"
             );
         } catch (TypeError e) {
             e.printStackTrace();

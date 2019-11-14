@@ -1,12 +1,10 @@
 package type;
 
-import linf.error.type.DoubleDeletionError;
 import linf.error.type.TypeError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.junit.Assert.assertThrows;
 import static utils.TestUtils.checkType;
 
 @RunWith(JUnit4.class)
@@ -133,21 +131,6 @@ public class DeletionTest {
             e.printStackTrace();
             assert false;
         }
-    }
-
-    @Test
-    public void CheckType_ShouldFail_DoubleDeletionError1() {
-        assertThrows(DoubleDeletionError.class, () -> checkType(
-                "{" +
-                        "int x = 1;" + // always delete this x
-                        "f(int y){" +
-                        "delete x;" +
-                        "}" +
-                        "f(42);" +
-                        "int x = 6;" +
-                        "f(41);" +
-                        "}"
-        ));
     }
 
 }

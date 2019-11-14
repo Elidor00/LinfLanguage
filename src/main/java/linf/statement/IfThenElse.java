@@ -1,8 +1,9 @@
 package linf.statement;
 
+import linf.error.behaviour.BehaviourError;
+import linf.error.behaviour.UnbalancedDeletionBehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
-import linf.error.type.UnbalancedDeletionBehaviourError;
 import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class IfThenElse extends LinfStmt {
+public class IfThenElse implements DeletingStatement, RWStatement {
 
     private final Exp exp;
     private final Block thenBranch;
@@ -23,6 +24,18 @@ public class IfThenElse extends LinfStmt {
         this.exp = exp;
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
+    }
+
+    @Override
+    public HashSet<STentry> getRWSet() {
+        HashSet<STentry> set = thenBranch.getRWSet();
+        set.addAll(elseBranch.getRWSet());
+        return set;
+    }
+
+    @Override
+    public HashSet<STentry> getDelSet() {
+        return thenBranch.getDelSet();
     }
 
     Block getThenBranch() {
@@ -38,19 +51,21 @@ public class IfThenElse extends LinfStmt {
         exp.checkType();
         thenBranch.checkType();
         elseBranch.checkType();
-        HashSet<STentry> thenDel = thenBranch.getDeletedIDs();
-        HashSet<STentry> elseDel = elseBranch.getDeletedIDs();
-        if (!thenDel.equals(elseDel)) {
-            throw new UnbalancedDeletionBehaviourError();
-        }
         return null;
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         ArrayList<SemanticError> res = new ArrayList<>(exp.checkSemantics(env));
         res.addAll(thenBranch.checkSemantics(env));
         res.addAll(elseBranch.checkSemantics(env));
+        HashSet<STentry> thenDel = thenBranch.getDelSet();
+        HashSet<STentry> elseDel = elseBranch.getDelSet();
+
+        if (!thenDel.equals(elseDel)) {
+            throw new UnbalancedDeletionBehaviourError();
+        }
+
         return res;
     }
 

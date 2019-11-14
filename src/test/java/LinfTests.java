@@ -1,4 +1,4 @@
-import linf.error.type.IncompatibleBehaviourError;
+import linf.error.behaviour.IncompatibleBehaviourError;
 import lvm.LVM;
 import lvm.error.StackOverflowError;
 import org.antlr.v4.runtime.CharStreams;
@@ -110,7 +110,12 @@ public class LinfTests {
     @Test
     public void test2() {
         String t2 = getCode("test2.lnf");
-        assertThrows(IncompatibleBehaviourError.class, () -> checkType(t2));
+        LVM vm = runScript(t2);
+        assertNotNull(vm);
+
+        List<String> out = vm.getStdOut();
+        assertEquals(1, out.size());
+        assertEquals("720", out.get(0));
     }
 
     @Test

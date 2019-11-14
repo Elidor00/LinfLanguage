@@ -1,5 +1,7 @@
 package linf.utils;
 
+import linf.error.behaviour.BehaviourError;
+import linf.error.behaviour.IncompatibleBehaviourError;
 import linf.expression.IDValue;
 import linf.type.FunType;
 import linf.type.LinfType;
@@ -10,6 +12,7 @@ public class Environment {
     // List of hash tables
     private final LinkedList<HashMap<String, STentry>> symbolsTable = new LinkedList<>();
     private final LinkedList<HashSet<STentry>> deletedIDs = new LinkedList<>();
+    private final LinkedList<HashSet<STentry>> rwIDs = new LinkedList<>();
     private int nestingLevel = -1;
     private int offset = 0;
 
@@ -63,6 +66,7 @@ public class Environment {
             if (isDeleted(entry, here)) {
                 return getStEntry(id, here - 1);
             } else {
+                rwIDs.peek().add(entry);
                 return entry;
             }
         } else {
@@ -124,6 +128,7 @@ public class Environment {
     public void openScope(HashMap<String, STentry> scope) {
         symbolsTable.push(Objects.requireNonNullElseGet(scope, HashMap::new));
         deletedIDs.push(new HashSet<>());
+        rwIDs.push(new HashSet<>());
         nestingLevel++;
         resetOffset();
     }
@@ -135,6 +140,7 @@ public class Environment {
     public void closeScope() {
         symbolsTable.pop();
         deletedIDs.pop();
+        rwIDs.pop();
         nestingLevel--;
         restoreOffset();
     }
@@ -158,15 +164,6 @@ public class Environment {
         return getStEntry(id.toString());
     }
 
-    public STentry getLastEntry(String id, int nestingLevel) {
-        int here = lookupName(id, nestingLevel);
-        if (here > -1) {
-            return symbolsTable.get(here).get(id);
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Remove the variable with the given id from the first scope that contains it
      * notice that if the variable exists in an outer scope it will have
@@ -174,17 +171,21 @@ public class Environment {
      *
      * @param id
      */
-    public void deleteName(String id) {
+    public void deleteName(String id) throws BehaviourError {
         deleteName(id, nestingLevel);
     }
 
-    public void deleteName(String id, int nestingLevel) {
+    private void deleteName(String id, int nestingLevel) throws BehaviourError {
         int here = lookupName(id, nestingLevel);
         if (here > -1) {
             STentry entry = symbolsTable.get(here).get(id);
-            LinfType type = entry.getType();
-            deletedIDs.peek().add(entry);
-            type.setDeleted(true);
+            if (entry.getNestinglevel() != nestingLevel && rwIDs.get(nestingLevel).contains(entry)) {
+                throw new IncompatibleBehaviourError(entry.getType() + " " + entry.getName());
+            } else {
+                LinfType type = entry.getType();
+                deletedIDs.peek().add(entry);
+                type.setDeleted(true);
+            }
         }
     }
 
@@ -192,7 +193,7 @@ public class Environment {
         return isDeleted(entry, nestingLevel);
     }
 
-    public boolean isDeleted(STentry entry, int nestingLevel) {
+    private boolean isDeleted(STentry entry, int nestingLevel) {
         if (deletedIDs.get(nestingLevel).contains(entry)) {
             return true;
         } else if (nestingLevel > 0) {

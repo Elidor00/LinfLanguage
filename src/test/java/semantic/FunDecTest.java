@@ -1,5 +1,6 @@
 package semantic;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.DoubleDeclarationError;
 import linf.error.semantic.FunctionNameShadowingError;
 import linf.error.semantic.SemanticError;
@@ -15,7 +16,7 @@ import static utils.TestUtils.checkSemantics;
 @RunWith(JUnit4.class)
 public class FunDecTest {
     @Test
-    public void CheckSemantics_ShouldPass_WithSimpleDeclaration() {
+    public void CheckSemantics_ShouldPass_WithSimpleDeclaration() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "f(var int x, bool y) {"
@@ -28,7 +29,7 @@ public class FunDecTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithParameterFunctionShadowing() {
+    public void CheckSemantics_ShouldFail_WithParameterFunctionShadowing() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int x = 7;"
@@ -42,7 +43,7 @@ public class FunDecTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithAlreadyDeclaredID() {
+    public void CheckSemantics_ShouldFail_WithAlreadyDeclaredID() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "f(var int x, bool y) {"

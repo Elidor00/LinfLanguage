@@ -1,5 +1,6 @@
 package semantic;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.DoubleDeclarationError;
 import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;
@@ -15,13 +16,13 @@ import static utils.TestUtils.checkSemantics;
 @RunWith(JUnit4.class)
 public class VarDecTest {
     @Test
-    public void CheckSemantics_ShouldPass_WithSimpleAssignment() {
+    public void CheckSemantics_ShouldPass_WithSimpleAssignment() throws BehaviourError {
         List<SemanticError> errors = checkSemantics("{ int x = 1 ; }");
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void CheckSemantics_ShouldPass_WithWellFormedRecAssignment() {
+    public void CheckSemantics_ShouldPass_WithWellFormedRecAssignment() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int y = 701;"
@@ -32,7 +33,7 @@ public class VarDecTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithUnboundRecAssignment() {
+    public void CheckSemantics_ShouldFail_WithUnboundRecAssignment() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int x = y + 1;"
@@ -43,7 +44,7 @@ public class VarDecTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithAlreadyDeclaredID() {
+    public void CheckSemantics_ShouldFail_WithAlreadyDeclaredID() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int x = 10 + 1;"

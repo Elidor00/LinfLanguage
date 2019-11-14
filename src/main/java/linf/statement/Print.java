@@ -1,14 +1,17 @@
 package linf.statement;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
 import linf.expression.Exp;
 import linf.type.LinfType;
 import linf.utils.Environment;
+import linf.utils.STentry;
 
+import java.util.HashSet;
 import java.util.List;
 
-public class Print extends LinfStmt {
+public class Print implements RWStatement {
     private final Exp exp;
 
     public Print(Exp exp) {
@@ -26,7 +29,12 @@ public class Print extends LinfStmt {
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public HashSet<STentry> getRWSet() {
+        return exp.getRwIDs();
+    }
+
+    @Override
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         return exp.checkSemantics(env);
     }
 

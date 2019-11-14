@@ -1,5 +1,6 @@
 package linf.statement;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.MismatchedPrototype;
 import linf.error.type.TypeError;
@@ -44,7 +45,7 @@ public class FunDec extends FunPrototype {
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         envEntry = env.getStEntry(id);
         List<SemanticError> res = super.checkSemantics(env);
         HashMap<String, STentry> scope = new HashMap<>();
@@ -53,8 +54,8 @@ public class FunDec extends FunPrototype {
         }
         body.setLocalEnv(scope);
         res.addAll(body.checkSemantics(env));
-        HashSet<STentry> delIDs = body.getDeletedIDs();
-        HashSet<STentry> rwIDs = body.getRwIDs();
+        HashSet<STentry> delIDs = body.getDelSet();
+        HashSet<STentry> rwIDs = body.getRWSet();
         for (int i = 0; i < getParList().size(); i++) {
             Parameter par = getParList().get(i);
             if (envEntry != null) {

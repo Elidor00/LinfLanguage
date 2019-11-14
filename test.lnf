@@ -1,19 +1,6 @@
 {
 
-g(int x) {// bensi qui
-
-print x;
-
-
-
-// non è dichiarata qui
-
-x = x + 1 ;
-print x;
-delete x;
-}
-
-g(20000000000000);
 
 
 }
+

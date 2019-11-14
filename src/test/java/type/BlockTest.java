@@ -1,6 +1,6 @@
 package type;
 
-import linf.error.type.IncompatibleBehaviourError;
+import linf.error.behaviour.IncompatibleBehaviourError;
 import linf.error.type.TypeError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,29 +29,6 @@ public class BlockTest {
     }
 
 
-    @Test
-    public void CheckType_ShouldFail_WithIncompatibleBehaviour2() {
-        assertThrows(IncompatibleBehaviourError.class, () -> checkType("{\n" +
-                "\n" +
-                "f(var int x, var int y){ int z = x ; delete x ; y = y+z ;}\n" +
-                "\n" +
-                "int x = 3 ; f(x,x) ;\n" +
-                "\n" +
-                "}"));
-    }
 
-    @Test
-    public void CheckType_ShouldFail_IncompatibleBehaviourError() {
-        assertThrows(IncompatibleBehaviourError.class, () -> checkType(
-                "{" +
-                        "int y = 1;" +
-                        "f() {" +
-                        "y = y + 4;" +
-                        "delete y;" +
-                        "}" +
-                        "f();" +
-                        "}"
-        ));
-    }
 
 }

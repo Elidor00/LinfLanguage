@@ -1,7 +1,10 @@
 package linf.statement;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.*;
-import linf.error.type.*;
+import linf.error.type.ReferenceParameterError;
+import linf.error.type.TypeError;
+import linf.error.type.WrongParameterTypeError;
 import linf.expression.Exp;
 import linf.expression.IDValue;
 import linf.type.FunType;
@@ -16,7 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 
 
-public class FunCall extends LinfStmt {
+public class FunCall implements DeletingStatement, RWStatement {
     private String id;
     private List<Exp> actualParList = new ArrayList<>();
     private List<LinfType> formalParTypes = new ArrayList<>();
@@ -38,20 +41,16 @@ public class FunCall extends LinfStmt {
         actualParList.add(exp);
     }
 
-    HashSet<STentry> getRwIDs() {
+    public HashSet<STentry> getRWSet() {
         return rwIDs;
     }
 
-    HashSet<STentry> getDeletedIDs() {
+    public HashSet<STentry> getDelSet() {
         return deletedIDs;
     }
 
     @Override
     public LinfType checkType() throws TypeError {
-
-        if (getDeletedIDs().contains(entry)){
-            throw new IncompatibleBehaviourError(entry.getName());
-        }
 
         for (int i = 0; i < formalParTypes.size(); i++) {
             Exp exp = actualParList.get(i);
@@ -73,7 +72,7 @@ public class FunCall extends LinfStmt {
 
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         ArrayList<SemanticError> res = new ArrayList<>();
 
         if (!env.containsName(id)) {
@@ -91,35 +90,38 @@ public class FunCall extends LinfStmt {
                     // checking number of parameters
                     res.add(new WrongParameterNumberError(id, formalParTypes.size(), actualParList.size()));
                 } else {
-                    for (Exp exp : actualParList) {
-                        res.addAll(exp.checkSemantics(env));
-                    }
-                    for (STentry entry : deletedIDs) {
-                        if (env.isDeleted(entry, this.entry.getNestinglevel())) {
-                            res.add(new IllegalDeletionError(entry.getName()));
-                        } else {
-                            env.deleteName(entry.getName(), this.entry.getNestinglevel());
-                        }
-                    }
                     for (int i = 0; i < formalParTypes.size(); i++) {
                         Exp exp = actualParList.get(i);
+                        res.addAll(exp.checkSemantics(env));
                         LinfType formalType = formalParTypes.get(i);
-                        if (exp.isID() && formalType.isReference()) {
-                            env.setReference(type.getParEntries().get(i), exp.toIDValue().getEntry());
-                            // checking deleted parameters
-                            IDValue idValue = exp.toIDValue();
-                            STentry entry = env.getLastEntry(idValue.toString(), idValue.getNestingLevel());
-                            if (formalType.isDeleted()) {
-                                env.deleteName(idValue.toString());
-                                if (deletedIDs.contains(entry)) {
-                                    res.add(new VarParameterDoubleDeletionError(idValue, this));
-                                } else {
-                                    deletedIDs.add(entry);
+
+                        if (res.size() != 0) {
+                            return res;
+                        }
+
+                        if (exp.isID()) {
+                            rwIDs.add(entry);
+                            if (formalType.isReference()) {
+                                env.setReference(type.getParEntries().get(i), exp.toIDValue().getEntry());
+                                // checking deleted parameters
+                                IDValue idValue = exp.toIDValue();
+                                //STentry entry = env.getLastEntry(idValue.toString(), idValue.getNestingLevel());
+                                //if (formalType.isDeleted()) {
+                                STentry entry = env.getStEntry(idValue.toString());
+                                if (formalType.isDeleted()) {
+                                    if (deletedIDs.contains(entry)) {
+                                        res.add(new VarParameterDoubleDeletionError(idValue, this));
+                                    } else {
+                                        deletedIDs.add(entry);
+                                    }
                                 }
+
                             }
-                            if (formalType.isRwAccess()) {
-                                rwIDs.add(entry);
-                            }
+                        }
+                    }
+                    for (STentry entry : deletedIDs) {
+                        if (env.isDeleted(entry)) {
+                            res.add(new IllegalDeletionError(entry.getName()));
                         }
                     }
                 }
@@ -131,13 +133,14 @@ public class FunCall extends LinfStmt {
         return res;
     }
 
-    /**{ int x = 0;
-     *       f() { g(); }
-     *       g() { print 0; print x;}
+    /**
+     * { int x = 0;
+     * f() { g(); }
+     * g() { print 0; print x;}
      * }
-     *
-     *
-     *
+     * <p>
+     * <p>
+     * <p>
      * 1. actual parameters
      * 2. the control link which points to AR of caller of g
      * 3. the ACCESS/STATIC link
