@@ -1,7 +1,6 @@
 package semantic;
 
 import linf.error.behaviour.BehaviourError;
-import linf.error.semantic.DoubleDeletionError;
 import linf.error.semantic.IllegalDeletionError;
 import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;

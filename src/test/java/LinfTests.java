@@ -1,4 +1,3 @@
-import linf.error.behaviour.IncompatibleBehaviourError;
 import lvm.LVM;
 import lvm.error.StackOverflowError;
 import org.antlr.v4.runtime.CharStreams;
@@ -11,7 +10,8 @@ import java.util.List;
 
 import static lvm.LVM.MEMSIZE;
 import static org.junit.Assert.*;
-import static utils.TestUtils.*;
+import static utils.TestUtils.cgen;
+import static utils.TestUtils.runScript;
 
 @RunWith(JUnit4.class)
 public class LinfTests {

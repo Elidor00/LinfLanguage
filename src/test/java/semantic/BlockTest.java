@@ -3,7 +3,6 @@ package semantic;
 
 import linf.error.behaviour.BehaviourError;
 import linf.error.behaviour.IncompatibleBehaviourError;
-import linf.error.semantic.IllegalDeletionError;
 import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static utils.TestUtils.checkSemantics;
-import static utils.TestUtils.checkType;
 
 @RunWith(JUnit4.class)
 public class BlockTest {
