@@ -52,10 +52,6 @@ public class FunCall implements DeletingStatement, RWStatement {
     @Override
     public LinfType checkType() throws TypeError {
 
-        if (getDeletedIDs().contains(entry)){
-            throw new IncompatibleBehaviourError(entry.getName());
-        }
-
         for (int i = 0; i < formalParTypes.size(); i++) {
             Exp exp = actualParList.get(i);
             LinfType formalType = formalParTypes.get(i);

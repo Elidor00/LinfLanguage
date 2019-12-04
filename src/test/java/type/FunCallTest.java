@@ -48,32 +48,4 @@ public class FunCallTest {
         );
     }
 
-    @Test
-    public void CheckType_ShouldFail_DeleteFunctionIdAndCall() {
-        assertThrows(IncompatibleBehaviourError.class, () -> checkType(
-            "{" +
-                    "f(){" +
-                    "delete f;" +
-                    "}" +
-                    "f();" +
-                "}"
-        ));
-    }
-
-    @Test
-    public void CheckType_ShouldPass_DeleteFunctionIdNotCall() {
-        try {
-            checkType(
-                    "{" +
-                            "f(){" +
-                            "delete f;" +
-                            "}" +
-                        "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
 }
