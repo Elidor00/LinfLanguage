@@ -16,7 +16,7 @@ public abstract class LinfValue implements Node {
         return type;
     }
 
-    public void setType(LinfType type) {
+    void setType(LinfType type) {
         this.type = type;
     }
 

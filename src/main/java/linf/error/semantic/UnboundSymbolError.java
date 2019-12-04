@@ -4,7 +4,7 @@ import linf.expression.IDValue;
 
 public class UnboundSymbolError extends SemanticError {
     private static final String msg = " identifier is not bound in current scope.";
-    private String id;
+    private final String id;
 
     public UnboundSymbolError(String id) {
         super(id + msg);

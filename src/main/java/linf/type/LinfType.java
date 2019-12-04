@@ -8,7 +8,6 @@ public abstract class LinfType implements Node {
     private STentry refTo;
     private boolean isReference = false;
     private boolean isDeleted = false;
-    private boolean rwAccess = false;
 
     public STentry getRefTo() {
         return refTo;
@@ -25,14 +24,6 @@ public abstract class LinfType implements Node {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
-    }
-
-    public boolean isRwAccess() {
-        return rwAccess;
-    }
-
-    public void setRwAccess() {
-        this.rwAccess = true;
     }
 
     public boolean isReference() {
@@ -55,5 +46,14 @@ public abstract class LinfType implements Node {
     @Override
     public int hashCode() {
         return (isReference ? 1 : 0);
+    }
+
+    @Override
+    public String toString() {
+        if (isReference()) {
+            return "var ";
+        } else {
+            return "";
+        }
     }
 }

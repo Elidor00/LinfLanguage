@@ -336,7 +336,6 @@ public class LVMTest {
 
     @Test
     public void Halt() {
-        LVM vm = runBytecode("halt li $sp 200");
-
+        runBytecode("halt li $sp 200");
     }
 }

@@ -8,23 +8,21 @@ import linf.utils.Environment;
 import linf.utils.STentry;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
-public class Deletion extends LinfStmt {
+public class Deletion implements DeletingStatement {
     private final IDValue id;
-    private STentry entry;
 
     public Deletion(String name) {
         this.id = new IDValue(name);
     }
 
-    public IDValue getId() {
-        return id;
-    }
-
-    STentry getEntry() {
-        return entry;
+    public HashSet<STentry> getDelSet() {
+        HashSet<STentry> set = new HashSet<>();
+        set.add(id.getEntry());
+        return set;
     }
 
     @Override
@@ -34,17 +32,10 @@ public class Deletion extends LinfStmt {
 
     @Override
     public List<SemanticError> checkSemantics(Environment env) {
-        entry = env.getLastEntry(id.toString(), env.getNestingLevel());
-        ArrayList<SemanticError> res = new ArrayList<>();
-        List<SemanticError> idErrs = id.checkSemantics(env);
-        if (entry != null) {
-            if (env.isDeleted(entry)) {
-                res.add(new IllegalDeletionError(id.toString()));
-            } else if (idErrs.size() == 0) {
-                env.deleteName(id.toString());
-            }
+        ArrayList<SemanticError> res = new ArrayList<>(id.checkSemantics(env));
+        if (res.size() == 0 && env.isDeleted(id.getEntry())) {
+            res.add(new IllegalDeletionError(id.toString()));
         }
-        res.addAll(idErrs);
         return res;
     }
 

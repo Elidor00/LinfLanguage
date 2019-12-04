@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FunType extends LinfType {
-    private List<STentry> parEntries = new ArrayList<>();
-    private HashSet<STentry> rwIDs = new HashSet<>();
-    private HashSet<STentry> deletedIDs = new HashSet<>();
+    private final List<STentry> parEntries = new ArrayList<>();
+    private final HashSet<STentry> rwIDs = new HashSet<>();
+    private final HashSet<STentry> deletedIDs = new HashSet<>();
     private boolean isPrototype = true;
     private String funLabel = LinfLib.freshFunLabel();
 

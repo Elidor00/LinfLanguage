@@ -1,6 +1,6 @@
 package lvm.utils;
 
-public class Strings {
+class Strings {
     static final String ACC = "$a0";
     static final String TMP = "$t1";
     static final String SP = "$sp";

@@ -13,90 +13,65 @@ import static utils.TestUtils.checkType;
 public class AssignmentTest {
 
     @Test
-    public void CheckType_ShouldPass_SimpleIntAssignment() {
-        try {
-            checkType(
-                    "{" +
-                            "int x = 2;" +
-                            "int y = 42;" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SimpleIntAssignment() throws TypeError {
+        checkType(
+                "{" +
+                        "int x = 2;" +
+                        "int y = 42;" +
+                        "}"
+        );
     }
 
     @Test
-    public void CheckType_ShouldPass_SomeSimpleIntAssignment() {
-        try {
-            checkType(
-                    "{" +
-                            "int x = 2;" +
-                            "int y = 42;" +
-                            "x = x + y;" +
-                            "x = x * y;" +
-                            "x = x - y;" +
-                            "x = x / y;" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SomeSimpleIntAssignment() throws TypeError {
+        checkType(
+                "{" +
+                        "int x = 2;" +
+                        "int y = 42;" +
+                        "x = x + y;" +
+                        "x = x * y;" +
+                        "x = x - y;" +
+                        "x = x / y;" +
+                        "}"
+        );
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleBoolAssignment() {
-        try {
-            checkType(
-                    "{" +
-                            "bool x = true;" +
-                            "bool y = false;" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SimpleBoolAssignment() throws TypeError {
+        checkType(
+                "{" +
+                        "bool x = true;" +
+                        "bool y = false;" +
+                        "}"
+        );
     }
 
     @Test
-    public void CheckType_ShouldPass_SimpleBoolAssignment1() {
-        try {
-            checkType(
-                    "{" +
-                            "int a = 3;" +
-                            "bool b = true;" +
-                            "b = false && (((a + 5) < 10) || (1 == 1));" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SimpleBoolAssignment1() throws TypeError {
+        checkType(
+                "{" +
+                        "int a = 3;" +
+                        "bool b = true;" +
+                        "b = false && (((a + 5) < 10) || (1 == 1));" +
+                        "}"
+        );
     }
 
     @Test
-    public void CheckType_ShouldPass_SomeSimpleBoolAssignment() {
-        try {
-            checkType(
-                    "{" +
-                            "int a = 3;" +
-                            "bool b = true;" +
-                            "b = false && (((a + 5) < 10) || (1 == 1));" +
-                            "b = a == 2;" +
-                            "b = a > 2;" +
-                            "b = a < 2;" +
-                            "b = a <= 2;" +
-                            "b = a >= 2;" +
-                            "b = a != 2;" +
-                            "}"
-            );
-        } catch (TypeError e) {
-            e.printStackTrace();
-            assert false;
-        }
+    public void CheckType_ShouldPass_SomeSimpleBoolAssignment() throws TypeError {
+        checkType(
+                "{" +
+                        "int a = 3;" +
+                        "bool b = true;" +
+                        "b = false && (((a + 5) < 10) || (1 == 1));" +
+                        "b = a == 2;" +
+                        "b = a > 2;" +
+                        "b = a < 2;" +
+                        "b = a <= 2;" +
+                        "b = a >= 2;" +
+                        "b = a != 2;" +
+                        "}"
+        );
     }
 
     @Test

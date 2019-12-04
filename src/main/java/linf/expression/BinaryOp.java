@@ -1,6 +1,7 @@
 package linf.expression;
 
 import linf.Node;
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.IncompatibleTypesError;
 import linf.error.type.TypeError;
@@ -52,7 +53,7 @@ public abstract class BinaryOp<LeftType extends Node, RightType extends Node> ex
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         ArrayList<SemanticError> res = new ArrayList<>(left.checkSemantics(env));
 
         if (right != null) {

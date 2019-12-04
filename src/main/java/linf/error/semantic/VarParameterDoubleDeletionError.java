@@ -5,8 +5,8 @@ import linf.statement.FunCall;
 
 public class VarParameterDoubleDeletionError extends SemanticError {
     private static final String msg = " is double deleted in function ";
-    private IDValue id;
-    private FunCall fun;
+    private final IDValue id;
+    private final FunCall fun;
 
 
     public VarParameterDoubleDeletionError(IDValue id, FunCall f) {

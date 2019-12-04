@@ -44,7 +44,7 @@ public class STentry {
 
         if (nestingLevel != sTentry.nestingLevel) return false;
         if (offset != sTentry.offset) return false;
-        return type.equals(sTentry.type);
+        return type.equals(sTentry.type) && name.equals(sTentry.name);
     }
 
     @Override

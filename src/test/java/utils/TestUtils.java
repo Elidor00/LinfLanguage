@@ -1,6 +1,7 @@
 package utils;
 
 import linf.LinfVisitorImpl;
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
 import linf.parser.ComplexStaticAnalysisLexer;
@@ -27,7 +28,7 @@ public final class TestUtils {
         List<String> lexicalErrors = checkSyntax(lexer);
         if (!lexicalErrors.isEmpty()) {
             lexicalErrors.forEach(System.err::println);
-              System.exit(-1);
+            System.exit(-1);
         }
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ComplexStaticAnalysisParser parser = new ComplexStaticAnalysisParser(tokens);
@@ -48,20 +49,26 @@ public final class TestUtils {
         return errors;
     }
 
-    public static List<SemanticError> checkSemantics(String code) {
+    public static List<SemanticError> checkSemantics(String code) throws BehaviourError {
         return makeAST(code).checkSemantics(new Environment());
     }
 
     public static Block checkType(String code) throws TypeError {
-        Block mainBlock = makeAST(code);
-        List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
-        if (errors.size() > 0) {
-            for (SemanticError e : errors) {
-                System.out.println(e);
+        try {
+            Block mainBlock = makeAST(code);
+            List<SemanticError> errors = mainBlock.checkSemantics(new Environment());
+            if (errors.size() > 0) {
+                for (SemanticError e : errors) {
+                    System.out.println(e);
+                }
             }
+            mainBlock.checkType();
+            return mainBlock;
+        } catch (BehaviourError e) {
+            e.printStackTrace();
+            assert false;
+            return null;
         }
-        mainBlock.checkType();
-        return mainBlock;
     }
 
     public static String cgen(String linfCode) {
@@ -69,6 +76,7 @@ public final class TestUtils {
             return checkType(linfCode).codeGen();
         } catch (TypeError e) {
             e.printStackTrace();
+            assert false;
             return null;
         }
     }

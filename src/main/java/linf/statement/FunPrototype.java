@@ -1,5 +1,6 @@
 package linf.statement;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.FunctionNameShadowingError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
@@ -26,7 +27,7 @@ public class FunPrototype extends StmtDec {
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         List<SemanticError> errors = super.checkSemantics(env);
         for (Parameter par : parList) {
             String parID = par.getId();

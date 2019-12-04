@@ -1,19 +1,11 @@
 {
 
-g(int x) {// bensi qui
-
-print x;
-
-
-
-// non è dichiarata qui
-
-x = x + 1 ;
-print x;
-delete x;
+g(var int x) {
+if (x==0) then {delete x;} else {x = x-1; print x; g(x);}
 }
 
-g(20000000000000);
+int u = 90;
 
-
+g(u);
+//print u;
 }

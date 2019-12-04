@@ -8,7 +8,7 @@ import linf.utils.STentry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Parameter extends LinfStmt {
+public class Parameter implements LinfStmt {
     private final String id;
     private LinfType type;
     private STentry entry;
@@ -27,10 +27,6 @@ public class Parameter extends LinfStmt {
 
     STentry getEntry() {
         return entry;
-    }
-
-    public LinfType getType() {
-        return type;
     }
 
     public String getId() {

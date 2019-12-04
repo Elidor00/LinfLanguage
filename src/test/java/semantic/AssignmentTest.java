@@ -1,5 +1,6 @@
 package semantic;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.semantic.UnboundSymbolError;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import static utils.TestUtils.checkSemantics;
 @RunWith(JUnit4.class)
 public class AssignmentTest {
     @Test
-    public void CheckSemantics_ShouldPass_WithSimpleAssignment() {
+    public void CheckSemantics_ShouldPass_WithSimpleAssignment() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int x = 7;"
@@ -26,7 +27,7 @@ public class AssignmentTest {
     }
 
     @Test
-    public void CheckSemantics_ShouldFail_WithUnboundLHSSymbol() {
+    public void CheckSemantics_ShouldFail_WithUnboundLHSSymbol() throws BehaviourError {
         List<SemanticError> errors = checkSemantics(
                 "{ "
                         + "int x = 7;"

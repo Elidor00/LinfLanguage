@@ -1,5 +1,6 @@
 package linf;
 
+import linf.error.behaviour.BehaviourError;
 import linf.error.semantic.SemanticError;
 import linf.error.type.TypeError;
 import linf.type.LinfType;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface Node {
 
-    List<SemanticError> checkSemantics(Environment env);
+    List<SemanticError> checkSemantics(Environment env) throws BehaviourError;
 
     LinfType checkType() throws TypeError;
 

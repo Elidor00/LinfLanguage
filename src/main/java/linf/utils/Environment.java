@@ -52,9 +52,8 @@ public class Environment {
     }
 
     /**
-     * Given an id determines its type inside the environment
-     *
-     * @param id
+     * Given an id check if is bound in the current scope,
+     * otherwise search the father.
      */
     private STentry getStEntry(String id, int nl) {
         int here = lookupName(id, nl);
@@ -158,27 +157,10 @@ public class Environment {
         return getStEntry(id.toString());
     }
 
-    public STentry getLastEntry(String id, int nestingLevel) {
-        int here = lookupName(id, nestingLevel);
-        if (here > -1) {
-            return symbolsTable.get(here).get(id);
-        } else {
-            return null;
-        }
-    }
-
     /**
-     * Remove the variable with the given id from the first scope that contains it
-     * notice that if the variable exists in an outer scope it will have
-     * that value
-     *
-     * @param id
+     * Remove the variable with the given id from the first scope that contains it.
      */
     public void deleteName(String id) {
-        deleteName(id, nestingLevel);
-    }
-
-    public void deleteName(String id, int nestingLevel) {
         int here = lookupName(id, nestingLevel);
         if (here > -1) {
             STentry entry = symbolsTable.get(here).get(id);
@@ -192,7 +174,7 @@ public class Environment {
         return isDeleted(entry, nestingLevel);
     }
 
-    public boolean isDeleted(STentry entry, int nestingLevel) {
+    private boolean isDeleted(STentry entry, int nestingLevel) {
         if (deletedIDs.get(nestingLevel).contains(entry)) {
             return true;
         } else if (nestingLevel > 0) {

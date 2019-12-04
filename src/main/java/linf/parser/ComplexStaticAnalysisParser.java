@@ -1,4 +1,4 @@
-// Generated from /home/orang3/IdeaProjects/complex-extended-static-analysis/src/main/java/linf/parser/ComplexStaticAnalysis.g4 by ANTLR 4.7.2
+// Generated from /home/tino/linf/src/main/java/linf/parser/ComplexStaticAnalysis.g4 by ANTLR 4.7.2
 package linf.parser;
 
 import org.antlr.v4.runtime.*;
@@ -15,6 +15,13 @@ import java.util.List;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class ComplexStaticAnalysisParser extends Parser {
+    static {
+        RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION);
+    }
+
+    protected static final DFA[] _decisionToDFA;
+    protected static final PredictionContextCache _sharedContextCache =
+            new PredictionContextCache();
     public static final int
             T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
             T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
@@ -25,70 +32,43 @@ public class ComplexStaticAnalysisParser extends Parser {
             RULE_print = 4, RULE_functioncall = 5, RULE_ifthenelse = 6, RULE_declaration = 7,
             RULE_type = 8, RULE_parameter = 9, RULE_exp = 10, RULE_term = 11, RULE_factor = 12,
             RULE_value = 13;
+
+    private static String[] makeRuleNames() {
+        return new String[]{
+                "block", "statement", "assignment", "deletion", "print", "functioncall",
+                "ifthenelse", "declaration", "type", "parameter", "exp", "term", "factor",
+                "value"
+        };
+    }
+
     public static final String[] ruleNames = makeRuleNames();
+
+    private static String[] makeLiteralNames() {
+        return new String[]{
+                null, "'{'", "'}'", "';'", "'='", "'delete'", "'print'", "'('", "','",
+                "')'", "'if'", "'then'", "'else'", "'int'", "'bool'", "'var'", "'-'",
+                "'+'", "'*'", "'/'", "'&&'", "'||'", "'true'", "'false'"
+        };
+    }
+
+    private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+    private static String[] makeSymbolicNames() {
+        return new String[]{
+                null, null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null, null, null,
+                "ROP", "INTEGER", "ID", "WS", "LINECOMENTS", "BLOCKCOMENTS", "ERR"
+        };
+    }
+
+    private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
+    public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+
     /**
      * @deprecated Use {@link #VOCABULARY} instead.
      */
     @Deprecated
     public static final String[] tokenNames;
-    public static final String _serializedATN =
-            "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3 \u009d\4\2\t\2\4" +
-                    "\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t" +
-                    "\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\3\2\7\2!\n\2\f\2\16\2$\13" +
-                    "\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3" +
-                    "\5\3\67\n\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3" +
-                    "\7\7\7H\n\7\f\7\16\7K\13\7\5\7M\n\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3" +
-                    "\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\7\te\n\t\f\t\16" +
-                    "\th\13\t\5\tj\n\t\3\t\3\t\3\t\5\to\n\t\5\tq\n\t\3\n\3\n\3\13\5\13v\n\13" +
-                    "\3\13\3\13\3\13\3\f\5\f|\n\f\3\f\3\f\3\f\5\f\u0081\n\f\3\r\3\r\3\r\5\r" +
-                    "\u0086\n\r\3\16\3\16\3\16\5\16\u008b\n\16\3\16\3\16\3\16\5\16\u0090\n" +
-                    "\16\5\16\u0092\n\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u009b\n\17" +
-                    "\3\17\2\2\20\2\4\6\b\n\f\16\20\22\24\26\30\32\34\2\7\3\2\17\20\3\2\22" +
-                    "\23\3\2\24\25\3\2\26\27\3\2\30\31\2\u00a5\2\36\3\2\2\2\4\66\3\2\2\2\6" +
-                    "8\3\2\2\2\b<\3\2\2\2\n?\3\2\2\2\fB\3\2\2\2\16P\3\2\2\2\20p\3\2\2\2\22" +
-                    "r\3\2\2\2\24u\3\2\2\2\26{\3\2\2\2\30\u0082\3\2\2\2\32\u0091\3\2\2\2\34" +
-                    "\u009a\3\2\2\2\36\"\7\3\2\2\37!\5\4\3\2 \37\3\2\2\2!$\3\2\2\2\" \3\2\2" +
-                    "\2\"#\3\2\2\2#%\3\2\2\2$\"\3\2\2\2%&\7\4\2\2&\3\3\2\2\2\'(\5\6\4\2()\7" +
-                    "\5\2\2)\67\3\2\2\2*+\5\b\5\2+,\7\5\2\2,\67\3\2\2\2-.\5\n\6\2./\7\5\2\2" +
-                    "/\67\3\2\2\2\60\61\5\f\7\2\61\62\7\5\2\2\62\67\3\2\2\2\63\67\5\16\b\2" +
-                    "\64\67\5\20\t\2\65\67\5\2\2\2\66\'\3\2\2\2\66*\3\2\2\2\66-\3\2\2\2\66" +
-                    "\60\3\2\2\2\66\63\3\2\2\2\66\64\3\2\2\2\66\65\3\2\2\2\67\5\3\2\2\289\7" +
-                    "\34\2\29:\7\6\2\2:;\5\26\f\2;\7\3\2\2\2<=\7\7\2\2=>\7\34\2\2>\t\3\2\2" +
-                    "\2?@\7\b\2\2@A\5\26\f\2A\13\3\2\2\2BC\7\34\2\2CL\7\t\2\2DI\5\26\f\2EF" +
-                    "\7\n\2\2FH\5\26\f\2GE\3\2\2\2HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2JM\3\2\2\2" +
-                    "KI\3\2\2\2LD\3\2\2\2LM\3\2\2\2MN\3\2\2\2NO\7\13\2\2O\r\3\2\2\2PQ\7\f\2" +
-                    "\2QR\7\t\2\2RS\5\26\f\2ST\7\13\2\2TU\7\r\2\2UV\5\2\2\2VW\7\16\2\2WX\5" +
-                    "\2\2\2X\17\3\2\2\2YZ\5\22\n\2Z[\7\34\2\2[\\\7\6\2\2\\]\5\26\f\2]^\7\5" +
-                    "\2\2^q\3\2\2\2_`\7\34\2\2`i\7\t\2\2af\5\24\13\2bc\7\n\2\2ce\5\24\13\2" +
-                    "db\3\2\2\2eh\3\2\2\2fd\3\2\2\2fg\3\2\2\2gj\3\2\2\2hf\3\2\2\2ia\3\2\2\2" +
-                    "ij\3\2\2\2jk\3\2\2\2kn\7\13\2\2lo\7\5\2\2mo\5\2\2\2nl\3\2\2\2nm\3\2\2" +
-                    "\2oq\3\2\2\2pY\3\2\2\2p_\3\2\2\2q\21\3\2\2\2rs\t\2\2\2s\23\3\2\2\2tv\7" +
-                    "\21\2\2ut\3\2\2\2uv\3\2\2\2vw\3\2\2\2wx\5\22\n\2xy\7\34\2\2y\25\3\2\2" +
-                    "\2z|\7\22\2\2{z\3\2\2\2{|\3\2\2\2|}\3\2\2\2}\u0080\5\30\r\2~\177\t\3\2" +
-                    "\2\177\u0081\5\26\f\2\u0080~\3\2\2\2\u0080\u0081\3\2\2\2\u0081\27\3\2" +
-                    "\2\2\u0082\u0085\5\32\16\2\u0083\u0084\t\4\2\2\u0084\u0086\5\30\r\2\u0085" +
-                    "\u0083\3\2\2\2\u0085\u0086\3\2\2\2\u0086\31\3\2\2\2\u0087\u008a\5\34\17" +
-                    "\2\u0088\u0089\7\32\2\2\u0089\u008b\5\34\17\2\u008a\u0088\3\2\2\2\u008a" +
-                    "\u008b\3\2\2\2\u008b\u0092\3\2\2\2\u008c\u008f\5\34\17\2\u008d\u008e\t" +
-                    "\5\2\2\u008e\u0090\5\34\17\2\u008f\u008d\3\2\2\2\u008f\u0090\3\2\2\2\u0090" +
-                    "\u0092\3\2\2\2\u0091\u0087\3\2\2\2\u0091\u008c\3\2\2\2\u0092\33\3\2\2" +
-                    "\2\u0093\u009b\7\33\2\2\u0094\u009b\t\6\2\2\u0095\u0096\7\t\2\2\u0096" +
-                    "\u0097\5\26\f\2\u0097\u0098\7\13\2\2\u0098\u009b\3\2\2\2\u0099\u009b\7" +
-                    "\34\2\2\u009a\u0093\3\2\2\2\u009a\u0094\3\2\2\2\u009a\u0095\3\2\2\2\u009a" +
-                    "\u0099\3\2\2\2\u009b\35\3\2\2\2\22\"\66ILfinpu{\u0080\u0085\u008a\u008f" +
-                    "\u0091\u009a";
-    public static final ATN _ATN =
-            new ATNDeserializer().deserialize(_serializedATN.toCharArray());
-    protected static final DFA[] _decisionToDFA;
-    protected static final PredictionContextCache _sharedContextCache =
-            new PredictionContextCache();
-    private static final String[] _LITERAL_NAMES = makeLiteralNames();
-    private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
-    public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
-
-    static {
-        RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION);
-    }
 
     static {
         tokenNames = new String[_SYMBOLIC_NAMES.length];
@@ -102,42 +82,6 @@ public class ComplexStaticAnalysisParser extends Parser {
                 tokenNames[i] = "<INVALID>";
             }
         }
-    }
-
-    static {
-        _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
-        for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
-            _decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
-        }
-    }
-
-    public ComplexStaticAnalysisParser(TokenStream input) {
-        super(input);
-        _interp = new ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
-    }
-
-    private static String[] makeRuleNames() {
-        return new String[]{
-                "block", "statement", "assignment", "deletion", "print", "functioncall",
-                "ifthenelse", "declaration", "type", "parameter", "exp", "term", "factor",
-                "value"
-        };
-    }
-
-    private static String[] makeLiteralNames() {
-        return new String[]{
-                null, "'{'", "'}'", "';'", "'='", "'delete'", "'print'", "'('", "','",
-                "')'", "'if'", "'then'", "'else'", "'int'", "'bool'", "'var'", "'-'",
-                "'+'", "'*'", "'/'", "'&&'", "'||'", "'true'", "'false'"
-        };
-    }
-
-    private static String[] makeSymbolicNames() {
-        return new String[]{
-                null, null, null, null, null, null, null, null, null, null, null, null,
-                null, null, null, null, null, null, null, null, null, null, null, null,
-                "ROP", "INTEGER", "ID", "WS", "LINECOMENTS", "BLOCKCOMENTS", "ERR"
-        };
     }
 
     @Override
@@ -170,6 +114,49 @@ public class ComplexStaticAnalysisParser extends Parser {
     @Override
     public ATN getATN() {
         return _ATN;
+    }
+
+    public ComplexStaticAnalysisParser(TokenStream input) {
+        super(input);
+        _interp = new ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
+    }
+
+    public static class BlockContext extends ParserRuleContext {
+        public List<StatementContext> statement() {
+            return getRuleContexts(StatementContext.class);
+        }
+
+        public StatementContext statement(int i) {
+            return getRuleContext(StatementContext.class, i);
+        }
+
+        public BlockContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_block;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterBlock(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitBlock(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitBlock(this);
+            else return visitor.visitChildren(this);
+        }
     }
 
     public final BlockContext block() throws RecognitionException {
@@ -206,6 +193,64 @@ public class ComplexStaticAnalysisParser extends Parser {
             exitRule();
         }
         return _localctx;
+    }
+
+    public static class StatementContext extends ParserRuleContext {
+        public AssignmentContext assignment() {
+            return getRuleContext(AssignmentContext.class, 0);
+        }
+
+        public DeletionContext deletion() {
+            return getRuleContext(DeletionContext.class, 0);
+        }
+
+        public PrintContext print() {
+            return getRuleContext(PrintContext.class, 0);
+        }
+
+        public FunctioncallContext functioncall() {
+            return getRuleContext(FunctioncallContext.class, 0);
+        }
+
+        public IfthenelseContext ifthenelse() {
+            return getRuleContext(IfthenelseContext.class, 0);
+        }
+
+        public DeclarationContext declaration() {
+            return getRuleContext(DeclarationContext.class, 0);
+        }
+
+        public BlockContext block() {
+            return getRuleContext(BlockContext.class, 0);
+        }
+
+        public StatementContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_statement;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterStatement(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitStatement(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitStatement(this);
+            else return visitor.visitChildren(this);
+        }
     }
 
     public final StatementContext statement() throws RecognitionException {
@@ -283,6 +328,44 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
+    public static class AssignmentContext extends ParserRuleContext {
+        public TerminalNode ID() {
+            return getToken(ComplexStaticAnalysisParser.ID, 0);
+        }
+
+        public ExpContext exp() {
+            return getRuleContext(ExpContext.class, 0);
+        }
+
+        public AssignmentContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_assignment;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterAssignment(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitAssignment(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitAssignment(this);
+            else return visitor.visitChildren(this);
+        }
+    }
+
     public final AssignmentContext assignment() throws RecognitionException {
         AssignmentContext _localctx = new AssignmentContext(_ctx, getState());
         enterRule(_localctx, 4, RULE_assignment);
@@ -306,6 +389,40 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
+    public static class DeletionContext extends ParserRuleContext {
+        public TerminalNode ID() {
+            return getToken(ComplexStaticAnalysisParser.ID, 0);
+        }
+
+        public DeletionContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_deletion;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterDeletion(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitDeletion(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitDeletion(this);
+            else return visitor.visitChildren(this);
+        }
+    }
+
     public final DeletionContext deletion() throws RecognitionException {
         DeletionContext _localctx = new DeletionContext(_ctx, getState());
         enterRule(_localctx, 6, RULE_deletion);
@@ -327,6 +444,40 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
+    public static class PrintContext extends ParserRuleContext {
+        public ExpContext exp() {
+            return getRuleContext(ExpContext.class, 0);
+        }
+
+        public PrintContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_print;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterPrint(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitPrint(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitPrint(this);
+            else return visitor.visitChildren(this);
+        }
+    }
+
     public final PrintContext print() throws RecognitionException {
         PrintContext _localctx = new PrintContext(_ctx, getState());
         enterRule(_localctx, 8, RULE_print);
@@ -346,6 +497,48 @@ public class ComplexStaticAnalysisParser extends Parser {
             exitRule();
         }
         return _localctx;
+    }
+
+    public static class FunctioncallContext extends ParserRuleContext {
+        public TerminalNode ID() {
+            return getToken(ComplexStaticAnalysisParser.ID, 0);
+        }
+
+        public List<ExpContext> exp() {
+            return getRuleContexts(ExpContext.class);
+        }
+
+        public ExpContext exp(int i) {
+            return getRuleContext(ExpContext.class, i);
+        }
+
+        public FunctioncallContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_functioncall;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterFunctioncall(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitFunctioncall(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitFunctioncall(this);
+            else return visitor.visitChildren(this);
+        }
     }
 
     public final FunctioncallContext functioncall() throws RecognitionException {
@@ -398,6 +591,48 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
+    public static class IfthenelseContext extends ParserRuleContext {
+        public ExpContext exp() {
+            return getRuleContext(ExpContext.class, 0);
+        }
+
+        public List<BlockContext> block() {
+            return getRuleContexts(BlockContext.class);
+        }
+
+        public BlockContext block(int i) {
+            return getRuleContext(BlockContext.class, i);
+        }
+
+        public IfthenelseContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_ifthenelse;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterIfthenelse(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitIfthenelse(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitIfthenelse(this);
+            else return visitor.visitChildren(this);
+        }
+    }
+
     public final IfthenelseContext ifthenelse() throws RecognitionException {
         IfthenelseContext _localctx = new IfthenelseContext(_ctx, getState());
         enterRule(_localctx, 12, RULE_ifthenelse);
@@ -429,6 +664,60 @@ public class ComplexStaticAnalysisParser extends Parser {
             exitRule();
         }
         return _localctx;
+    }
+
+    public static class DeclarationContext extends ParserRuleContext {
+        public TypeContext type() {
+            return getRuleContext(TypeContext.class, 0);
+        }
+
+        public TerminalNode ID() {
+            return getToken(ComplexStaticAnalysisParser.ID, 0);
+        }
+
+        public ExpContext exp() {
+            return getRuleContext(ExpContext.class, 0);
+        }
+
+        public BlockContext block() {
+            return getRuleContext(BlockContext.class, 0);
+        }
+
+        public List<ParameterContext> parameter() {
+            return getRuleContexts(ParameterContext.class);
+        }
+
+        public ParameterContext parameter(int i) {
+            return getRuleContext(ParameterContext.class, i);
+        }
+
+        public DeclarationContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_declaration;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterDeclaration(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitDeclaration(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitDeclaration(this);
+            else return visitor.visitChildren(this);
+        }
     }
 
     public final DeclarationContext declaration() throws RecognitionException {
@@ -521,6 +810,36 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
+    public static class TypeContext extends ParserRuleContext {
+        public TypeContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_type;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterType(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitType(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitType(this);
+            else return visitor.visitChildren(this);
+        }
+    }
+
     public final TypeContext type() throws RecognitionException {
         TypeContext _localctx = new TypeContext(_ctx, getState());
         enterRule(_localctx, 16, RULE_type);
@@ -546,6 +865,44 @@ public class ComplexStaticAnalysisParser extends Parser {
             exitRule();
         }
         return _localctx;
+    }
+
+    public static class ParameterContext extends ParserRuleContext {
+        public TypeContext type() {
+            return getRuleContext(TypeContext.class, 0);
+        }
+
+        public TerminalNode ID() {
+            return getToken(ComplexStaticAnalysisParser.ID, 0);
+        }
+
+        public ParameterContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_parameter;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterParameter(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitParameter(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitParameter(this);
+            else return visitor.visitChildren(this);
+        }
     }
 
     public final ParameterContext parameter() throws RecognitionException {
@@ -578,6 +935,47 @@ public class ComplexStaticAnalysisParser extends Parser {
             exitRule();
         }
         return _localctx;
+    }
+
+    public static class ExpContext extends ParserRuleContext {
+        public TermContext left;
+        public ExpContext right;
+
+        public TermContext term() {
+            return getRuleContext(TermContext.class, 0);
+        }
+
+        public ExpContext exp() {
+            return getRuleContext(ExpContext.class, 0);
+        }
+
+        public ExpContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_exp;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterExp(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitExp(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitExp(this);
+            else return visitor.visitChildren(this);
+        }
     }
 
     public final ExpContext exp() throws RecognitionException {
@@ -629,6 +1027,47 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
+    public static class TermContext extends ParserRuleContext {
+        public FactorContext left;
+        public TermContext right;
+
+        public FactorContext factor() {
+            return getRuleContext(FactorContext.class, 0);
+        }
+
+        public TermContext term() {
+            return getRuleContext(TermContext.class, 0);
+        }
+
+        public TermContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_term;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterTerm(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitTerm(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitTerm(this);
+            else return visitor.visitChildren(this);
+        }
+    }
+
     public final TermContext term() throws RecognitionException {
         TermContext _localctx = new TermContext(_ctx, getState());
         enterRule(_localctx, 22, RULE_term);
@@ -666,6 +1105,52 @@ public class ComplexStaticAnalysisParser extends Parser {
             exitRule();
         }
         return _localctx;
+    }
+
+    public static class FactorContext extends ParserRuleContext {
+        public ValueContext left;
+        public Token op;
+        public ValueContext right;
+
+        public List<ValueContext> value() {
+            return getRuleContexts(ValueContext.class);
+        }
+
+        public ValueContext value(int i) {
+            return getRuleContext(ValueContext.class, i);
+        }
+
+        public TerminalNode ROP() {
+            return getToken(ComplexStaticAnalysisParser.ROP, 0);
+        }
+
+        public FactorContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_factor;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterFactor(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitFactor(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitFactor(this);
+            else return visitor.visitChildren(this);
+        }
     }
 
     public final FactorContext factor() throws RecognitionException {
@@ -733,6 +1218,48 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
+    public static class ValueContext extends ParserRuleContext {
+        public TerminalNode INTEGER() {
+            return getToken(ComplexStaticAnalysisParser.INTEGER, 0);
+        }
+
+        public ExpContext exp() {
+            return getRuleContext(ExpContext.class, 0);
+        }
+
+        public TerminalNode ID() {
+            return getToken(ComplexStaticAnalysisParser.ID, 0);
+        }
+
+        public ValueContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_value;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).enterValue(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof ComplexStaticAnalysisListener)
+                ((ComplexStaticAnalysisListener) listener).exitValue(this);
+        }
+
+        @Override
+        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+            if (visitor instanceof ComplexStaticAnalysisVisitor)
+                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitValue(this);
+            else return visitor.visitChildren(this);
+        }
+    }
+
     public final ValueContext value() throws RecognitionException {
         ValueContext _localctx = new ValueContext(_ctx, getState());
         enterRule(_localctx, 26, RULE_value);
@@ -794,581 +1321,59 @@ public class ComplexStaticAnalysisParser extends Parser {
         return _localctx;
     }
 
-    public static class BlockContext extends ParserRuleContext {
-        public BlockContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public List<StatementContext> statement() {
-            return getRuleContexts(StatementContext.class);
-        }
-
-        public StatementContext statement(int i) {
-            return getRuleContext(StatementContext.class, i);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_block;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterBlock(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitBlock(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitBlock(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class StatementContext extends ParserRuleContext {
-        public StatementContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public AssignmentContext assignment() {
-            return getRuleContext(AssignmentContext.class, 0);
-        }
-
-        public DeletionContext deletion() {
-            return getRuleContext(DeletionContext.class, 0);
-        }
-
-        public PrintContext print() {
-            return getRuleContext(PrintContext.class, 0);
-        }
-
-        public FunctioncallContext functioncall() {
-            return getRuleContext(FunctioncallContext.class, 0);
-        }
-
-        public IfthenelseContext ifthenelse() {
-            return getRuleContext(IfthenelseContext.class, 0);
-        }
-
-        public DeclarationContext declaration() {
-            return getRuleContext(DeclarationContext.class, 0);
-        }
-
-        public BlockContext block() {
-            return getRuleContext(BlockContext.class, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_statement;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterStatement(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitStatement(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitStatement(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class AssignmentContext extends ParserRuleContext {
-        public AssignmentContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public TerminalNode ID() {
-            return getToken(ComplexStaticAnalysisParser.ID, 0);
-        }
-
-        public ExpContext exp() {
-            return getRuleContext(ExpContext.class, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_assignment;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterAssignment(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitAssignment(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitAssignment(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class DeletionContext extends ParserRuleContext {
-        public DeletionContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public TerminalNode ID() {
-            return getToken(ComplexStaticAnalysisParser.ID, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_deletion;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterDeletion(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitDeletion(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitDeletion(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class PrintContext extends ParserRuleContext {
-        public PrintContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public ExpContext exp() {
-            return getRuleContext(ExpContext.class, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_print;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterPrint(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitPrint(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitPrint(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class FunctioncallContext extends ParserRuleContext {
-        public FunctioncallContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public TerminalNode ID() {
-            return getToken(ComplexStaticAnalysisParser.ID, 0);
-        }
-
-        public List<ExpContext> exp() {
-            return getRuleContexts(ExpContext.class);
-        }
-
-        public ExpContext exp(int i) {
-            return getRuleContext(ExpContext.class, i);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_functioncall;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterFunctioncall(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitFunctioncall(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitFunctioncall(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class IfthenelseContext extends ParserRuleContext {
-        public IfthenelseContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public ExpContext exp() {
-            return getRuleContext(ExpContext.class, 0);
-        }
-
-        public List<BlockContext> block() {
-            return getRuleContexts(BlockContext.class);
-        }
-
-        public BlockContext block(int i) {
-            return getRuleContext(BlockContext.class, i);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_ifthenelse;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterIfthenelse(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitIfthenelse(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitIfthenelse(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class DeclarationContext extends ParserRuleContext {
-        public DeclarationContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public TypeContext type() {
-            return getRuleContext(TypeContext.class, 0);
-        }
-
-        public TerminalNode ID() {
-            return getToken(ComplexStaticAnalysisParser.ID, 0);
-        }
-
-        public ExpContext exp() {
-            return getRuleContext(ExpContext.class, 0);
-        }
-
-        public BlockContext block() {
-            return getRuleContext(BlockContext.class, 0);
-        }
-
-        public List<ParameterContext> parameter() {
-            return getRuleContexts(ParameterContext.class);
-        }
-
-        public ParameterContext parameter(int i) {
-            return getRuleContext(ParameterContext.class, i);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_declaration;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterDeclaration(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitDeclaration(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitDeclaration(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class TypeContext extends ParserRuleContext {
-        public TypeContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_type;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterType(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitType(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitType(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class ParameterContext extends ParserRuleContext {
-        public ParameterContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public TypeContext type() {
-            return getRuleContext(TypeContext.class, 0);
-        }
-
-        public TerminalNode ID() {
-            return getToken(ComplexStaticAnalysisParser.ID, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_parameter;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterParameter(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitParameter(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitParameter(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class ExpContext extends ParserRuleContext {
-        public TermContext left;
-        public ExpContext right;
-
-        public ExpContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public TermContext term() {
-            return getRuleContext(TermContext.class, 0);
-        }
-
-        public ExpContext exp() {
-            return getRuleContext(ExpContext.class, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_exp;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterExp(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitExp(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitExp(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class TermContext extends ParserRuleContext {
-        public FactorContext left;
-        public TermContext right;
-
-        public TermContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public FactorContext factor() {
-            return getRuleContext(FactorContext.class, 0);
-        }
-
-        public TermContext term() {
-            return getRuleContext(TermContext.class, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_term;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterTerm(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitTerm(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitTerm(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class FactorContext extends ParserRuleContext {
-        public ValueContext left;
-        public Token op;
-        public ValueContext right;
-
-        public FactorContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public List<ValueContext> value() {
-            return getRuleContexts(ValueContext.class);
-        }
-
-        public ValueContext value(int i) {
-            return getRuleContext(ValueContext.class, i);
-        }
-
-        public TerminalNode ROP() {
-            return getToken(ComplexStaticAnalysisParser.ROP, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_factor;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterFactor(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitFactor(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitFactor(this);
-            else return visitor.visitChildren(this);
-        }
-    }
-
-    public static class ValueContext extends ParserRuleContext {
-        public ValueContext(ParserRuleContext parent, int invokingState) {
-            super(parent, invokingState);
-        }
-
-        public TerminalNode INTEGER() {
-            return getToken(ComplexStaticAnalysisParser.INTEGER, 0);
-        }
-
-        public ExpContext exp() {
-            return getRuleContext(ExpContext.class, 0);
-        }
-
-        public TerminalNode ID() {
-            return getToken(ComplexStaticAnalysisParser.ID, 0);
-        }
-
-        @Override
-        public int getRuleIndex() {
-            return RULE_value;
-        }
-
-        @Override
-        public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).enterValue(this);
-        }
-
-        @Override
-        public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof ComplexStaticAnalysisListener)
-                ((ComplexStaticAnalysisListener) listener).exitValue(this);
-        }
-
-        @Override
-        public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-            if (visitor instanceof ComplexStaticAnalysisVisitor)
-                return ((ComplexStaticAnalysisVisitor<? extends T>) visitor).visitValue(this);
-            else return visitor.visitChildren(this);
+    public static final String _serializedATN =
+            "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3 \u009d\4\2\t\2\4" +
+                    "\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t" +
+                    "\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\3\2\7\2!\n\2\f\2\16\2$\13" +
+                    "\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3" +
+                    "\5\3\67\n\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3" +
+                    "\7\7\7H\n\7\f\7\16\7K\13\7\5\7M\n\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3" +
+                    "\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\7\te\n\t\f\t\16" +
+                    "\th\13\t\5\tj\n\t\3\t\3\t\3\t\5\to\n\t\5\tq\n\t\3\n\3\n\3\13\5\13v\n\13" +
+                    "\3\13\3\13\3\13\3\f\5\f|\n\f\3\f\3\f\3\f\5\f\u0081\n\f\3\r\3\r\3\r\5\r" +
+                    "\u0086\n\r\3\16\3\16\3\16\5\16\u008b\n\16\3\16\3\16\3\16\5\16\u0090\n" +
+                    "\16\5\16\u0092\n\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u009b\n\17" +
+                    "\3\17\2\2\20\2\4\6\b\n\f\16\20\22\24\26\30\32\34\2\7\3\2\17\20\3\2\22" +
+                    "\23\3\2\24\25\3\2\26\27\3\2\30\31\2\u00a5\2\36\3\2\2\2\4\66\3\2\2\2\6" +
+                    "8\3\2\2\2\b<\3\2\2\2\n?\3\2\2\2\fB\3\2\2\2\16P\3\2\2\2\20p\3\2\2\2\22" +
+                    "r\3\2\2\2\24u\3\2\2\2\26{\3\2\2\2\30\u0082\3\2\2\2\32\u0091\3\2\2\2\34" +
+                    "\u009a\3\2\2\2\36\"\7\3\2\2\37!\5\4\3\2 \37\3\2\2\2!$\3\2\2\2\" \3\2\2" +
+                    "\2\"#\3\2\2\2#%\3\2\2\2$\"\3\2\2\2%&\7\4\2\2&\3\3\2\2\2\'(\5\6\4\2()\7" +
+                    "\5\2\2)\67\3\2\2\2*+\5\b\5\2+,\7\5\2\2,\67\3\2\2\2-.\5\n\6\2./\7\5\2\2" +
+                    "/\67\3\2\2\2\60\61\5\f\7\2\61\62\7\5\2\2\62\67\3\2\2\2\63\67\5\16\b\2" +
+                    "\64\67\5\20\t\2\65\67\5\2\2\2\66\'\3\2\2\2\66*\3\2\2\2\66-\3\2\2\2\66" +
+                    "\60\3\2\2\2\66\63\3\2\2\2\66\64\3\2\2\2\66\65\3\2\2\2\67\5\3\2\2\289\7" +
+                    "\34\2\29:\7\6\2\2:;\5\26\f\2;\7\3\2\2\2<=\7\7\2\2=>\7\34\2\2>\t\3\2\2" +
+                    "\2?@\7\b\2\2@A\5\26\f\2A\13\3\2\2\2BC\7\34\2\2CL\7\t\2\2DI\5\26\f\2EF" +
+                    "\7\n\2\2FH\5\26\f\2GE\3\2\2\2HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2JM\3\2\2\2" +
+                    "KI\3\2\2\2LD\3\2\2\2LM\3\2\2\2MN\3\2\2\2NO\7\13\2\2O\r\3\2\2\2PQ\7\f\2" +
+                    "\2QR\7\t\2\2RS\5\26\f\2ST\7\13\2\2TU\7\r\2\2UV\5\2\2\2VW\7\16\2\2WX\5" +
+                    "\2\2\2X\17\3\2\2\2YZ\5\22\n\2Z[\7\34\2\2[\\\7\6\2\2\\]\5\26\f\2]^\7\5" +
+                    "\2\2^q\3\2\2\2_`\7\34\2\2`i\7\t\2\2af\5\24\13\2bc\7\n\2\2ce\5\24\13\2" +
+                    "db\3\2\2\2eh\3\2\2\2fd\3\2\2\2fg\3\2\2\2gj\3\2\2\2hf\3\2\2\2ia\3\2\2\2" +
+                    "ij\3\2\2\2jk\3\2\2\2kn\7\13\2\2lo\7\5\2\2mo\5\2\2\2nl\3\2\2\2nm\3\2\2" +
+                    "\2oq\3\2\2\2pY\3\2\2\2p_\3\2\2\2q\21\3\2\2\2rs\t\2\2\2s\23\3\2\2\2tv\7" +
+                    "\21\2\2ut\3\2\2\2uv\3\2\2\2vw\3\2\2\2wx\5\22\n\2xy\7\34\2\2y\25\3\2\2" +
+                    "\2z|\7\22\2\2{z\3\2\2\2{|\3\2\2\2|}\3\2\2\2}\u0080\5\30\r\2~\177\t\3\2" +
+                    "\2\177\u0081\5\26\f\2\u0080~\3\2\2\2\u0080\u0081\3\2\2\2\u0081\27\3\2" +
+                    "\2\2\u0082\u0085\5\32\16\2\u0083\u0084\t\4\2\2\u0084\u0086\5\30\r\2\u0085" +
+                    "\u0083\3\2\2\2\u0085\u0086\3\2\2\2\u0086\31\3\2\2\2\u0087\u008a\5\34\17" +
+                    "\2\u0088\u0089\7\32\2\2\u0089\u008b\5\34\17\2\u008a\u0088\3\2\2\2\u008a" +
+                    "\u008b\3\2\2\2\u008b\u0092\3\2\2\2\u008c\u008f\5\34\17\2\u008d\u008e\t" +
+                    "\5\2\2\u008e\u0090\5\34\17\2\u008f\u008d\3\2\2\2\u008f\u0090\3\2\2\2\u0090" +
+                    "\u0092\3\2\2\2\u0091\u0087\3\2\2\2\u0091\u008c\3\2\2\2\u0092\33\3\2\2" +
+                    "\2\u0093\u009b\7\33\2\2\u0094\u009b\t\6\2\2\u0095\u0096\7\t\2\2\u0096" +
+                    "\u0097\5\26\f\2\u0097\u0098\7\13\2\2\u0098\u009b\3\2\2\2\u0099\u009b\7" +
+                    "\34\2\2\u009a\u0093\3\2\2\2\u009a\u0094\3\2\2\2\u009a\u0095\3\2\2\2\u009a" +
+                    "\u0099\3\2\2\2\u009b\35\3\2\2\2\22\"\66ILfinpu{\u0080\u0085\u008a\u008f" +
+                    "\u0091\u009a";
+    public static final ATN _ATN =
+            new ATNDeserializer().deserialize(_serializedATN.toCharArray());
+
+    static {
+        _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+        for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+            _decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
         }
     }
 }

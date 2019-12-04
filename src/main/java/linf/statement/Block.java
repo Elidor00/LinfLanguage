@@ -1,10 +1,9 @@
 package linf.statement;
 
+import linf.error.behaviour.BehaviourError;
+import linf.error.semantic.DoubleDeletionError;
 import linf.error.semantic.SemanticError;
-import linf.error.type.DoubleDeletionError;
-import linf.error.type.IncompatibleBehaviourError;
 import linf.error.type.TypeError;
-import linf.expression.IDValue;
 import linf.type.LinfType;
 import linf.utils.Environment;
 import linf.utils.STentry;
@@ -15,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 
 
-public class Block extends LinfStmt {
+public class Block implements DeletingStatement, RWStatement {
     private final List<LinfStmt> stmtList;
     private final HashSet<STentry> deletedIDs = new HashSet<>();
     private final HashSet<STentry> rwIDs = new HashSet<>();
@@ -41,11 +40,11 @@ public class Block extends LinfStmt {
         return ids;
     }
 
-    HashSet<STentry> getDeletedIDs() {
+    public HashSet<STentry> getDelSet() {
         return filterLocalIDs(deletedIDs);
     }
 
-    HashSet<STentry> getRwIDs() {
+    public HashSet<STentry> getRWSet() {
         return filterLocalIDs(rwIDs);
     }
 
@@ -53,81 +52,48 @@ public class Block extends LinfStmt {
         isAR = true;
     }
 
-    private void checkBehavior(HashSet<STentry> rwSet, HashSet<STentry> delSet) throws TypeError {
-        for (STentry id : rwSet) {
-            if (delSet.contains(id)) {
-                throw new IncompatibleBehaviourError(id.getName());
-            }
-        }
-    }
-
-    private void checkDeletions(HashSet<STentry> rwSet, HashSet<STentry> delSet) throws TypeError {
-        for (STentry id : delSet) {
-            if (deletedIDs.contains(id)) {
-                throw new DoubleDeletionError(id.getName());
-            }
-        }
-        checkBehavior(rwSet, delSet);
-    }
-
     @Override
     public LinfType checkType() throws TypeError {
         for (LinfStmt stmt : stmtList) {
             stmt.checkType();
-            // check deletions
-            if (stmt instanceof FunCall) {
-                FunCall funCall = (FunCall) stmt;
-                checkDeletions(funCall.getRwIDs(), funCall.getDeletedIDs());
-                deletedIDs.addAll(funCall.getDeletedIDs());
-                rwIDs.addAll(funCall.getRwIDs());
-            } else if (stmt instanceof Block) {
-                Block blk = (Block) stmt;
-                checkDeletions(blk.getRwIDs(), blk.getDeletedIDs());
-                deletedIDs.addAll(blk.getDeletedIDs());
-                rwIDs.addAll(blk.getRwIDs());
-            } else if (stmt instanceof IfThenElse) {
-                IfThenElse ite = (IfThenElse) stmt;
-                Block thenB = ite.getThenBranch();
-                Block elseB = ite.getElseBranch();
-                HashSet<STentry> thenDel = thenB.getDeletedIDs();
-                HashSet<STentry> elseDel = elseB.getDeletedIDs();
-                HashSet<STentry> thenRw = thenB.getRwIDs();
-                HashSet<STentry> elseRw = elseB.getRwIDs();
-                checkDeletions(thenRw, thenDel);
-                checkDeletions(elseRw, elseDel);
-                deletedIDs.addAll(thenDel);
-                rwIDs.addAll(thenRw);
-                rwIDs.addAll(elseRw);
-            }
-            checkBehavior(getRwIDs(), getDeletedIDs());
         }
         return null;
     }
 
     @Override
-    public List<SemanticError> checkSemantics(Environment env) {
+    public List<SemanticError> checkSemantics(Environment env) throws BehaviourError {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         env.openScope(localEnv);
         nestingLevel = env.getNestingLevel();
 
+        outer:
         for (LinfStmt stmt : stmtList) {
             List<SemanticError> errs = stmt.checkSemantics(env);
             errors.addAll(errs);
 
             if (errs.size() == 0) {
-                if (stmt instanceof Deletion) {
-                    Deletion del = (Deletion) stmt;
-                    deletedIDs.add(del.getEntry());
-                } else if (stmt instanceof VarDec) {
-                    rwIDs.addAll(((VarDec) stmt).getExp().getRwIDs());
-                } else if (stmt instanceof Assignment) {
-                    IDValue id = ((Assignment) stmt).getId();
-                    rwIDs.add(env.getLastEntry(id.toString(), nestingLevel));
-                    rwIDs.addAll(((Assignment) stmt).getExp().getRwIDs());
-                } else if (stmt instanceof Print) {
-                    rwIDs.addAll(((Print) stmt).getExp().getRwIDs());
+                if (stmt instanceof RWStatement) {
+                    HashSet<STentry> rwSet = ((RWStatement) stmt).getRWSet();
+                    for (STentry e : rwSet) {
+                        rwIDs.add(e);
+                        env.containsName(e.getName());
+                    }
                 }
+                if (stmt instanceof DeletingStatement) {
+                    HashSet<STentry> delSet = ((DeletingStatement) stmt).getDelSet();
+                    for (STentry e : delSet) {
+                        if (env.isDeleted(e)) {
+                            errors.add(new DoubleDeletionError(e.getType() + " " + e.getName()));
+                            break outer;
+                        } else {
+                            deletedIDs.add(e);
+                            env.deleteName(e.getName());
+                        }
+                    }
+                }
+            } else {
+                break;
             }
         }
 
